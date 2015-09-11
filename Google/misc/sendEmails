@@ -1,0 +1,42 @@
+/*
+ For each row, check first column for content.  If "X", then skips row.
+ If there is nothing, sends email to support-tech@sscps.org and
+ puts "X" in first column of row.
+
+ Assumption that first row has been added manually & written by form.
+
+ Used with "form added" trigger to send email with each new form.
+*/
+function sendEmails() {
+  var sheet = SpreadsheetApp.getActiveSheet();
+  var startRow = 2;  // First row of data to process
+  var numRows = sheet.getLastRow();   // Number of rows to process
+  var dataRange = sheet.getRange(startRow, 1, numRows, 6)
+  // Fetch values for each row in the Range.
+  var data = dataRange.getValues();
+  for (i in data) {
+    var row = data[i];
+    var currentRowNumber = Number(i)+2;
+    var sendFlag = row[0];
+    var timeStamp = row[1];
+    var submittorEmail = row[2];
+    var shortDesc = row[3];
+    var longDesc = row[4];
+    var priority = row[5];
+
+    if (sendFlag != "X") {
+      MailApp.sendEmail({
+        to: "support-tech@sscps.org",
+        subject: shortDesc,
+        htmlBody: "PRIORITY:  " + priority + "<br>" +
+                  "ROW:  " + currentRowNumber + "<br>" +
+                  "TIMESTAMP:  " + timeStamp +  "<br>" +
+                  "SUBMITTOR:  " + submittorEmail + "<br>" +
+                  "ISSUE:  " + shortDesc + "<br>" +
+                  "DETAILS:  " + longDesc + "<br>"
+      });
+      var cell = sheet.getRange(currentRowNumber,1);
+      cell.setValue("X");
+    }
+  }
+}

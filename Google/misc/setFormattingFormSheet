@@ -1,0 +1,17 @@
+// Google is no longer making new rows (from forms only?) the same format as existing rows
+//  - if the sheet has/needs "default" formatting, this can be run as trigger (form submission,
+//    nightly, when opened, etc)
+//  - uncomment each as needed
+function setFormattingFormSheet() {
+  // get the spreadsheet itself
+  var currentSpreadsheet = SpreadsheetApp.getActiveSpreadsheet();
+  var currentSheet = currentSpreadsheet.setActiveSheet(currentSpreadsheet.getSheets()[0]);
+  var currentRange = currentSheet.getDataRange();
+  // basic formatting
+  currentRange.setHorizontalAlignment("center");
+  currentRange.setVerticalAlignment("middle");
+  currentRange.setWrap(true);
+  // color code specific columns
+  var currentRange = currentSheet.getRange(1,4,currentSheet.getLastRow(),3);
+  currentRange.setBackground('#ADD8E6');
+}
