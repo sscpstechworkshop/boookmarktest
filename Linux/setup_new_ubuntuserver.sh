@@ -25,7 +25,7 @@ apt-get -y install openssh-server
 # download regular update script
 mkdir -p /home/System/scripts/
 cd /home/System/scripts/
-wget https://raw.githubusercontent.com/SSCPS/TechTools-Linux/master/update_bruteforce.sh
+wget https://raw.githubusercontent.com/SSCPS/TechTools/master/Linux/update_bruteforce.sh
 chmod a+x /home/System/scripts/update_bruteforce.sh
 # cleanup after everything is done
 apt-get -y autoremove
