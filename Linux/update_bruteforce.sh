@@ -1,5 +1,5 @@
 # do updates without "looking" & cleanup afterwards
-# quick link to master copy = http://goo.gl/V8GjhV
+# quick link to master copy = https://goo.gl/SViJLz
 apt-get update
 # doing both because Kernels not done in former, and system utils not done in later
 apt-get -y upgrade
