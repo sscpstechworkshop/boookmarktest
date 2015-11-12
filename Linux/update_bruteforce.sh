@@ -1,5 +1,6 @@
 # do updates without "looking" & cleanup afterwards
 # quick link to master copy = https://goo.gl/SViJLz
+# long link to master copy = https://raw.githubusercontent.com/SSCPS/TechTools/master/Linux/update_bruteforce.sh
 echo ===============================
 echo   Retreiving updated packages
 echo ===============================
