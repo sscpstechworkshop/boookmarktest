@@ -1,10 +1,7 @@
 #!/bin/bash
-# This script reindexes the profile manager database in OS X Server 3.0
-# Please use the backupPSQL.sh to make a backup first (maybe implemented later here)
+# This script reindexes the profile manager database in OS X Server
 # Modified from the krypted.com website:
 # http://krypted.com/iphone/backing-up-and-reindexing-the-profile-manager-database-in-lion-server/
-# Antti Pettinen
-# 04.11.2013
 
 # test if run as sudo/root
 if [ $(whoami) != "root" ]; then
