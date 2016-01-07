@@ -18,6 +18,8 @@ mkdir -p /home/System/scripts
 # update system first
 apt-get update
 apt-get -y install aptitude
+apt-get -y upgrade
+# force held-back packages
 aptitude -y --full-resolver safe-upgrade
 # clean up everything, drives are big, but images should be small.  :-)
 apt-get -y autoremove
