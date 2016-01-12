@@ -1,3 +1,4 @@
+# SCRIPT NOT COMPLETED 
 # This script will delete all local user home folders in /Users
 # except sscpslocal, student, teacher, Shared
 # that are 14 days or older or until 10GB space is free
