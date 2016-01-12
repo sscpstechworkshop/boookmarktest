@@ -14,25 +14,29 @@ if [ freeDiskSpace > targetFreeDiskSpace ]; then
    exit
 
 # create array of local users to keep
-declare -a exceptions=(sscpslocal student teacher Shared)
+exceptions=(sscpslocal student teacher Shared)
 
 # use find to single out folders older than 14 days
 # and populate them to array folders
-folders=(`find /Users -maxdepth 1 -mindepth 1 -type d -ctime +14`)
+
+folders=(`find /Users -maxdepth 1 -mindepth 1 -type d -ctime +14 | cut -c 8-28`)
+# Note: cut command here takes the 8th character to possible 28th
+# (stripping out /Users/) since AD is limited to 20 characters for account names
 
 # loop through array and delete folders not in exceptions array
 # until 10GB disk space is free, then exit
-
-while ($f in folders); do
-   # check free space, if over target exit
-   if [ freeDiskSpace > targetFreeDiskSpace ]; then
-      break
-   fi
+while [ $f in folders ] 
+do
    # check if folder is in exception array, skip if true
-   if [[ " ${exceptions[@]}" =~ " $f " ]]; then
+   if (( " ${exceptions[@]}" =~ " $f " ))
+   then
       continue
    else
-      rm -rf $f
+      rm -rf /Users/$f
       freeDiskSpace=df -k | grep -E '^/dev/disk1' | awk '{print $4}'
+   # check free space, if over target exit
+   if ( freeDiskSpace > targetFreeDiskSpace )
+   then
+      exit
 done
 
