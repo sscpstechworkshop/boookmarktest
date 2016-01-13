@@ -40,8 +40,7 @@ do
       rm -rf /Users/$f
       freeDiskSpace=(`df -k | grep -E '^/dev/disk1' | awk '{print $4}'`)
    # check free space, if over target exit
-   if ( freeDiskSpace > targetFreeDiskSpace )
-   then
+   if [ freeDiskSpace > targetFreeDiskSpace ]; then
       exit
 done
 
