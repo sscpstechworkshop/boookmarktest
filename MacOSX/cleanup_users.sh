@@ -13,15 +13,26 @@ targetFreeDiskSpace=10000000
 if [ freeDiskSpace > targetFreeDiskSpace ]; then
    exit
 
-# create array of local users to keep
-exceptions=(sscpslocal student teacher Shared)
-
 # Populate the folders array with all folders in /Users 
 # sorted by oldest first
-folders=(`ls -rt)
+folders=(`ls -rt`)
+
+# modify folders array to exclude exceptions
+# (including users in SG_Policy_MacWriteLocal AD group)
+exceptions=(sscpslocal student teacher Shared)
+for f in "${folders[@]}"
+do
+   groups=$(id -Gn $f)
+      if [[ $groups =~ "SG_Policy_MacWriteLocal" ]]; then
+	       exceptions+=($f)
+done
 
 # remove exceptions from folders array
-TODO
+TODO loop through exceptions array and remove all items from folders array
+for e in "${exceptions[@]}"
+do
+   folders=(${folders[@]/$e})
+done
 
 # loop through folders array and delete items
 # until 10GB disk space is free, then exit
