@@ -16,22 +16,17 @@ if [ freeDiskSpace > targetFreeDiskSpace ]; then
 # create array of local users to keep
 exceptions=(sscpslocal student teacher Shared)
 
-# use find to single out folders older than 14 days
-# and populate them to array folders
+# Populate the folders array with all folders in /Users 
+# sorted by oldest first
+folders=(`ls -rt)
 
-folders=(`find /Users -maxdepth 1 -mindepth 1 -type d -ctime +14 | cut -c 8-28`)
-# Note: cut command here takes the 8th character to possible 28th
-# (stripping out /Users/) since AD is limited to 20 characters for account names
+# remove exceptions from folders array
+TODO
 
-# loop through array and delete folders not in exceptions array
+# loop through folders array and delete items
 # until 10GB disk space is free, then exit
 while [ $f in folders ] 
 do
-   # check if folder is in exception array, skip if true
-   if (( " ${exceptions[@]}" =~ " $f " ))
-   then
-      continue
-   else
       rm -rf /Users/$f
       freeDiskSpace=df -k | grep -E '^/dev/disk1' | awk '{print $4}'
    # check free space, if over target exit
