@@ -38,7 +38,7 @@ done
 while [ $f in folders ] 
 do
       rm -rf /Users/$f
-      freeDiskSpace=df -k | grep -E '^/dev/disk1' | awk '{print $4}'
+      freeDiskSpace=(`df -k | grep -E '^/dev/disk1' | awk '{print $4}'`)
    # check free space, if over target exit
    if ( freeDiskSpace > targetFreeDiskSpace )
    then
