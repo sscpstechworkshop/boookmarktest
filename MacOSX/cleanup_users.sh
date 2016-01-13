@@ -5,7 +5,7 @@
 # until 10GB space is free
 
 # how much space is free?
-freeDiskSpace=df -k | grep -E '^/dev/disk1' | awk '{print $4}'
+freeDiskSpace=(`df -k | grep -E '^/dev/disk1' | awk '{print $4}'`)
 
 # How much space do we want free (in kilobytes)?
 targetFreeDiskSpace=10000000
@@ -20,15 +20,15 @@ folders=(`ls -rt`)
 
 # create exceptions array
 exceptions=(sscpslocal student teacher Shared)
-for f in "${folders[@]}"
+for f in "${folders[@]}";
 do
    groups=$(id -Gn $f)
       if [[ $groups =~ "SG_Policy_MacWriteLocal" ]]; then
-	       exceptions+=($f)
+      	exceptions+=($f)
 done
 
 # remove exceptions from folders array
-for e in "${exceptions[@]}"
+for e in "${exceptions[@]}";
 do
    folders=(${folders[@]/$e})
 done
