@@ -13,6 +13,7 @@ targetFreeDiskSpace=10000000
 # exit immediately if free space is okay
 if [ freeDiskSpace > targetFreeDiskSpace ]; then
    exit
+fi
 
 # Populate the folders array with all folders in /Users 
 # sorted by oldest first
@@ -23,8 +24,9 @@ exceptions=(sscpslocal student teacher Shared)
 for f in "${folders[@]}";
 do
    groups=$(id -Gn $f)
-      if [[ $groups =~ "SG_Policy_MacWriteLocal" ]]; then
-      	exceptions+=($f)
+   if [[ $groups =~ "SG_Policy_MacWriteLocal" ]]; then
+   	exceptions+=($f)
+   fi
 done
 
 # remove exceptions from folders array
@@ -42,5 +44,6 @@ do
    # check free space, if over target exit
    if [ freeDiskSpace > targetFreeDiskSpace ]; then
       exit
+   fi
 done
 
