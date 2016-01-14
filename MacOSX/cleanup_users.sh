@@ -11,7 +11,7 @@ freeDiskSpace=(`df -k | grep -E '^/dev/disk1' | awk '{print $4}'`)
 targetFreeDiskSpace=10000000
 
 # exit immediately if free space is okay
-if [ $freeDiskSpace > $targetFreeDiskSpace ]; then
+if [ $freeDiskSpace -gt $targetFreeDiskSpace ]; then
    exit
 fi
 
@@ -42,7 +42,7 @@ do
       rm -rf /Users/$f
       freeDiskSpace=(`df -k | grep -E '^/dev/disk1' | awk '{print $4}'`)
    # check free space, if over target exit
-   if [ $freeDiskSpace > $targetFreeDiskSpace ]; then
+   if [ $freeDiskSpace -gt $targetFreeDiskSpace ]; then
       exit
    fi
 done
