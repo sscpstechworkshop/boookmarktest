@@ -37,7 +37,7 @@ wget https://raw.githubusercontent.com/SSCPS/TechTools-Linux/master/update_brute
 chmod a+x /home/System/scripts/update_bruteforce.sh
 #
 # install DE in case needed to use Ubuntu Server CD for install
-apt-get -y install kubuntu-desktop
+apt-get -y install lubuntu-desktop
 # clean up everything, drives are big, but images should be small.  :-)
 apt-get -y autoremove
 apt-get clean
@@ -51,11 +51,11 @@ update-grub
 update-initramfs -u
 #
 # remove unneeded apps and add other needed apps.
-apt-get -y remove kpat ktorrent akregator kopete quassel
-apt-get -y install kubuntu-restricted-extras wine firefox filezilla
+apt-get -y remove xpad mtpaint pidgin sylpheed* transmission* abiword gnumeric* audacious* xfburn
+apt-get -y install lubuntu-restricted-extras wine firefox filezilla
 apt-get -y install ubuntu-wallpapers kde-wallpapers kde-wallpapers-default kdewallpapers peace-wallpapers tropic-wallpapers lubuntu-artwork xubuntu-wallpapers
-apt-get -y install kscreensaver screensaver-default-images
-apt-get -y install libreoffice-impress libreoffice-pdfimport libreoffice-kde libreoffice-templates openclipart-libreoffice openclipart2-libreoffice
+apt-get -y install screensaver-default-images
+apt-get -y install libreoffice-calc libreoffice-impress libreoffice-writer libreoffice-draw libreoffice-gtk libreoffice-help-en-us libreoffice-pdfimport libreoffice-templates openclipart-libreoffice openclipart2-libreoffice
 apt-get -y install vlc gimp marble inkscape audacity blender
 apt-get -y remove flashplugin-installer
 apt-get -y install flashplugin-installer
