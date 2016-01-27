@@ -3,7 +3,7 @@ mac-login-scripts
 
 Mac Login Scripts (helper scripts for using in school network)
 
-There are currently 2 bash scripts and their associated PLIST file.  The script is run when a user logs in.
+There are currently 4 bash scripts and their associated PLIST file.  The script is run when a user logs in, with the exception of cleanup_users.sh, which runs on boot up.
 
 The scripts are:
 
