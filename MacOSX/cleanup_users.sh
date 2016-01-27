@@ -5,7 +5,8 @@
 
 # how much space is free?
 # NOTE:  be mindful of external USB/drives as they will be mounted and confuse df command here
-freeDiskSpace=(`df -k | grep -E '^/' | awk '{print $4}'`)
+# changing df command to add / might be the fix
+freeDiskSpace=(`df -k / | grep -E '^/' | awk '{print $4}'`)
 #echo "Initial free disk space is " $freeDiskSpace
 
 # How much space do we want free (in kilobytes)?
@@ -60,7 +61,7 @@ for f in ${folders[@]}
 do
 #    echo "Deleting user folder:  "$f
     rm -rf /Users/$f
-    freeDiskSpace=(`df -k | grep -E '^/' | awk '{print $4}'`)
+    freeDiskSpace=(`df -k / | grep -E '^/' | awk '{print $4}'`)
 #    echo "After deleting "$f" there is "$freeDiskSpace" space left"
     # check free space, if over target exit
     if [ $freeDiskSpace -gt $targetFreeDiskSpace ]; then
