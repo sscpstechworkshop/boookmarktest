@@ -14,3 +14,5 @@ The scripts are:
                           directory authentication integration.  PLEASE READ FILE FOR MORE INFORMATION.
 
   - reset_chrome.sh     - this script erases the local student/teacher Chrome support files to remove any user data
+  - cleanup_users.sh    - cleans up older user folders in /Users when drive is less than 10GB free.   Matching 
+                          plist file (cleanup_users.plist) goes in /Library/LaunchDaemons/
