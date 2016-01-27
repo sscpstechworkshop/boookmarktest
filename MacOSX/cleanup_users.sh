@@ -38,3 +38,33 @@ do
    fi
 done
 
+# remove exceptions from folders array
+for e in ${exceptions[@]}
+do
+   echo "Removing from folders array because it is an exception: "$e
+
+   # TODO FIX THE FOLLOWING LINE
+   folders=(${folders[@]/$e})
+done
+
+# Troubleshooting loop
+for i in ${folders[@]}
+do
+   echo "In folders array after exceptions loop: " $i
+done
+
+# loop through folders array and delete until
+# target disk space is free, then exit
+#for f in "${folders[@]}"
+#do
+#    echo "Deleting user folder:  "$f
+#    rm -rf /Users/$f
+#    freeDiskSpace=(`df -k | grep -E '^/' | awk '{print $4}'`)
+#    echo "After deleting "$f" there is "$freeDiskSpace" space left"
+#    # check free space, if over target exit
+#    if [ $freeDiskSpace -gt $targetFreeDiskSpace ]; then
+#       echo "Exiting script because free space is fine after deleting "$f
+#       exit 0
+#    fi
+#done
+
