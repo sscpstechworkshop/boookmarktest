@@ -44,6 +44,7 @@ do
    echo "Removing from folders array because it is an exception: "$e
 
    # TODO FIX THE FOLLOWING LINE
+   # folders are getting truncated at underscore ("joe_")
    folders=(${folders[@]/$e})
 done
 
