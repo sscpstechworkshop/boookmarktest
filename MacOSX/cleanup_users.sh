@@ -29,7 +29,7 @@ do
 done
 
 # create exceptions array
-exceptions=( sscpslocal student teacher Shared )
+exceptions=( sscpslocal "student" teacher Shared .localized)
 for f in ${folders[@]}
 do
    groups=$(id -Gn $f)
