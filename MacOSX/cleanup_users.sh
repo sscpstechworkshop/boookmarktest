@@ -1,7 +1,7 @@
 # This script will delete all local user home folders in /Users
 # except items in exceptions array
-# and any AD users in SG_Policy_MacWriteLocal group
-# until 10GB space is free
+# and any AD users in SG_Policy_MacWriteLocal group until 10GB space is free
+# place this file in /usr/sbin/ and chmod +x it
 
 # how much space is free?
 freeDiskSpace=(`df -k / | grep -E '^/' | awk '{print $4}'`)
