@@ -44,7 +44,8 @@ do
    echo "Removing from folders array because it is an exception: "$e
 
    # TODO FIX THE FOLLOWING LINE
-   # folders are getting truncated at underscore ("joe_")
+   # test folders that end _student are getting "student" removed because of static exception
+   # I can live with that for now, need to get this done because drives are filling up
    folders=(${folders[@]/$e})
 done
 
