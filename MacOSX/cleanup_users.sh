@@ -5,11 +5,12 @@
 # until 10GB space is free
 
 # how much space is free?
+# NOTE:  be mindful of external USB/drives as they will be mounted and confuse df command here
 freeDiskSpace=(`df -k | grep -E '^/' | awk '{print $4}'`)
 echo "Initial free disk space is " $freeDiskSpace
 
 # How much space do we want free (in kilobytes)?
-targetFreeDiskSpace=15000000
+targetFreeDiskSpace=10000000
 
 # exit immediately if free space is okay
 if [ $freeDiskSpace -gt $targetFreeDiskSpace ]; then
@@ -42,8 +43,6 @@ done
 for e in ${exceptions[@]}
 do
    echo "Removing from folders array because it is an exception: "$e
-
-   # TODO FIX THE FOLLOWING LINE
    # test folders that end _student are getting "student" removed because of static exception
    # I can live with that for now, need to get this done because drives are filling up
    folders=(${folders[@]/$e})
@@ -57,16 +56,16 @@ done
 
 # loop through folders array and delete until
 # target disk space is free, then exit
-#for f in "${folders[@]}"
-#do
-#    echo "Deleting user folder:  "$f
-#    rm -rf /Users/$f
-#    freeDiskSpace=(`df -k | grep -E '^/' | awk '{print $4}'`)
-#    echo "After deleting "$f" there is "$freeDiskSpace" space left"
-#    # check free space, if over target exit
-#    if [ $freeDiskSpace -gt $targetFreeDiskSpace ]; then
-#       echo "Exiting script because free space is fine after deleting "$f
-#       exit 0
-#    fi
-#done
+for f in ${folders[@]}
+do
+    echo "Deleting user folder:  "$f
+    rm -rf /Users/$f
+    freeDiskSpace=(`df -k | grep -E '^/' | awk '{print $4}'`)
+    echo "After deleting "$f" there is "$freeDiskSpace" space left"
+    # check free space, if over target exit
+    if [ $freeDiskSpace -gt $targetFreeDiskSpace ]; then
+       echo "Exiting script because free space is fine after deleting "$f
+       exit 0
+    fi
+done
 
