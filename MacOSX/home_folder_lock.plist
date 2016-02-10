@@ -6,7 +6,7 @@
 <string>folder_lock</string>
 <key>ProgramArguments</key>
 <array>
-<string>/usr/sbin/home_folder_lock.sh</string>
+<string>/usr/local/bin/home_folder_lock.sh</string>
 </array>
 <key>RunAtLoad</key>
 <true/>
