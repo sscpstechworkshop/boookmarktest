@@ -6,7 +6,7 @@
 <string>cleanup_users</string>
 <key>ProgramArguments</key>
 <array>
-<string>/usr/sbin/cleanup_users.sh</string>
+<string>/usr/local/bin/cleanup_users.sh</string>
 </array>
 <key>RunAtLoad</key>
 <true/>
