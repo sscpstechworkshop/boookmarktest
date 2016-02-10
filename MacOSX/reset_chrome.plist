@@ -6,7 +6,7 @@
 <string>reset_chrome</string>
 <key>ProgramArguments</key>
 <array>
-<string>/usr/sbin/reset_chrome.sh</string>
+<string>/usr/local/bin/reset_chrome.sh</string>
 </array>
 <key>RunAtLoad</key>
 <true/>
