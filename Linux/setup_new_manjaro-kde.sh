@@ -8,7 +8,8 @@ sudo pacman -Sc
 # update whole system
 sudo pmacman -Syyuu
 # install packages as needed
-sudo pacman -S binutils kdeadmin-kuser
+sudo pacman -S base-devel binutils git
+sudo pacman -S kdeadmin-kuser
 sudo pacman -S wine
 sudo pacman -S gimp inkscape audacity blender
 sudo pacman -S filezilla
