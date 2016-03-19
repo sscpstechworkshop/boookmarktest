@@ -14,7 +14,8 @@ sudo pacman -S kdeadmin-kuser
 sudo pacman -S wine
 sudo pacman -S gimp inkscape audacity blender
 sudo pacman -S filezilla
-sudo pacman -S lxqt lxterminal oxygen-icons lxappearance obconf manjaro-settings-manager gvfs gvfs-afc leafpad qpdfview speedcrunch xscreensaver lxtask gvfs-mtp gvfs-gphoto2 octopi-repoeditor octopi-cachecleaner libdvdcss
+sudo pacman -S lxqt lxterminal oxygen-icons lxappearance obconf manjaro-settings-manager gvfs gvfs-afc gvfs-mtp gvfs-gphoto2 octopi-repoeditor octopi-cachecleaner libdvdcss
+sudo pacman -S leafpad qpdfview speedcrunch xscreensaver lxtask menda-themes-dark menda-themes openbox-themes xcursor-menda
 # these can't be run as root
 yaourt -S google-chrome
 yaourt -S atom-editor
