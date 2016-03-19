@@ -1,4 +1,5 @@
- keyring issue on installs from 12.15 download
+# based on install KDE, might try XFCE or wait until 16.## is ready for LXDE/LXQT
+# keyring issue on installs from 12.15 download
 sudo pacman-key --init 
 sudo pacman-key --populate archlinux manjaro 
 sudo dirmngr < /dev/null
