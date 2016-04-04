@@ -23,6 +23,7 @@
 #                 201604041233 - Ralph deGennaro - Finished loop, cleaned up variables.
 #                 201604041434 - Ralph deGennaro - Basic backup works, need to add log
 #                   summary.
+#                 201604041554 - Ralph deGennaro - Added grep for log summary.
 #
 ##########################################################################################
 
@@ -30,17 +31,23 @@
 ##########################################################################################
 # defining variables specific to scenario being used.
 ##########################################################################################
+
 # define script name, used in log file name creation & working folders/mounts
 vScriptName="BACKUP_rsync_windows"
+
 # define where all log files go, carefule not to step on other logs
-vLogPath="/Logs""/""$vScriptName"
+vLogPath="/full/path/to/log/files""/""$vScriptName"
+
 # location filesystems will be mounted, sub-folder is $vScriptName/server_directory
 vMountPath='/Volumes/Backups/mounts'
+
 # location filesystems will be duplicated to, folder for each backup is server/directory
-vBackupPath='/Volumes/Backups/Backups-Test'
+vBackupPath='/full/path/to/backup/destination'
+
 # define location of file containing info for what to exclude
 vExclusionFileFullPath="/full/path/including/file/name/file_exclusions.txt"
-# define the task to be performed.  either "backup" or "restore"
+
+# define the task to be performed.  either "backup" or "restore" (late to be added)
 vTaskToExecute="backup"
 
 # define array for what to backup
@@ -89,8 +96,11 @@ do
     vLogFileErrorFullPathName="$vLogPathCurrentRun""/""$vSourceServerNameShort"-"$vSourceShareNameCleaned"-"$vSourceDirectoryName"-"$vDateTimeYYYYMMDDHHMMSS"-error.log
     vBackupMountFullPath="$vMountPath""/""$vSourceServerNameShort"-"$vSourceShareNameCleaned"
     vBackupDestination="$vBackupPath""/""$vSourceServerNameShort""/""$vSourceShareNameCleaned"-"$vSourceDirectoryName"
+
+    # check on variable building
     #echo "working on "$i
     #echo $vSourceServerNameShort
+    #echo $vSourceShareNameCleaned
     #echo $vSourceShareName
     #echo $vSourceDirectoryName
 
@@ -122,3 +132,29 @@ do
     echo "##########################################################################################" 1>> "$vLogFileOutputFullPathName" 2>> "$vLogFileErrorFullPathName"
 
 done
+
+
+##########################################################################################
+# now step through all logs and look for key words:
+#   error\|warning\|access\|denied\|terminated\|abnormal\|termination\|alert
+##########################################################################################
+# grep -iHn 'error\|warning\|access\|denied\|terminated\|abnormal\|termination\|alert' *.log | grep -v " is uptodate" | grep -v "Accessories"
+
+# create Backup Summary variables
+vLogBackupSummaryOutputFullPathName="$vLogPath""/""BackupSummary"-"$vDateTimeYYYYMMDDHHMMSS"-output.log
+vLogBackupSummaryErrorFullPathName="$vLogPath""/""BackupSummary"-"$vDateTimeYYYYMMDDHHMMSS"-error.log
+
+# output start of Summary
+vNowMessage="# Starting Backup Summary on "`date`
+echo "##########################################################################################" 1>> "$vLogBackupSummaryOutputFullPathName" 2>> "$vLogBackupSummaryErrorFullPathName"
+echo "$vNowMessage" 1>> "$vLogBackupSummaryOutputFullPathName" 2>> "$vLogBackupSummaryErrorFullPathName"
+echo "##########################################################################################" 1>> "$vLogBackupSummaryOutputFullPathName" 2>> "$vLogBackupSummaryErrorFullPathName"
+
+# now grep for stuff
+grep -iHn 'error\|warning\|access\|denied\|terminated\|abnormal\|termination\|alert' "$vLogPathCurrentRun""/"*.log | grep -v " is uptodate" | grep -v "Accessories" 1>> "$vLogBackupSummaryOutputFullPathName" 2>> "$vLogBackupSummaryErrorFullPathName"
+
+# output end of summary
+vNowMessage="# Finished Backup Summary on "`date`
+echo "##########################################################################################" 1>> "$vLogBackupSummaryOutputFullPathName" 2>> "$vLogBackupSummaryErrorFullPathName"
+echo "$vNowMessage" 1>> "$vLogBackupSummaryOutputFullPathName" 2>> "$vLogBackupSummaryErrorFullPathName"
+echo "##########################################################################################" 1>> "$vLogBackupSummaryOutputFullPathName" 2>> "$vLogBackupSummaryErrorFullPathName"
