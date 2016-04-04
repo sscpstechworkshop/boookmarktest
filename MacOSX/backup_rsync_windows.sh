@@ -9,7 +9,9 @@
 #                   2.  adjust adjust list of server FQDNs & shares,
 #                   3.  adjust other paths if you don't like them.
 #
-# Script Notes:   Assumed that server/share/directory will be backed up to
+# Script Notes:   Each item to backup gets own log, but there is a summar log.  Be careful
+#                   about paths; summary is in root, others are inside dated folder.
+#                 Assumed that server/share/directory will be backed up to
 #                   server/share-directory, located in defined backup location (only one).
 #                 Assumed restore is everything to origin location. If you need something
 #                   else, you're on your own.
@@ -19,6 +21,8 @@
 #                 201603301521 - Ralph deGennaro - Started variables to be used.
 #                 201604011658 - Ralph deGennaro - More variables, started loop.
 #                 201604041233 - Ralph deGennaro - Finished loop, cleaned up variables.
+#                 201604041434 - Ralph deGennaro - Basic backup works, need to add log
+#                   summary.
 #
 ##########################################################################################
 
@@ -28,15 +32,14 @@
 ##########################################################################################
 # define script name, used in log file name creation & working folders/mounts
 vScriptName="BACKUP_rsync_windows"
-# define where all log files go, name varies on server/directory
-vLogPath="/Volumes/Backups/SSCPS-Backups-Test/LogFiles/"
+# define where all log files go, carefule not to step on other logs
+vLogPath="/Logs""/""$vScriptName"
 # location filesystems will be mounted, sub-folder is $vScriptName/server_directory
-vMountPath='/Volumes/Backups/mounts/'
+vMountPath='/Volumes/Backups/mounts'
 # location filesystems will be duplicated to, folder for each backup is server/directory
-vBackupPath='/Volumes/Backups/SSCPS-Backups-Test/'
+vBackupPath='/Volumes/Backups/Backups-Test'
 # define location of file containing info for what to exclude
-#vExclusionFileFullPath="/full/path/including/file/name/file_exclusions.txt"
-vExclusionFileFullPath="/Users/automator02/Scripts/file_exclusions.txt"
+vExclusionFileFullPath="/full/path/including/file/name/file_exclusions.txt"
 # define the task to be performed.  either "backup" or "restore"
 vTaskToExecute="backup"
 
@@ -66,7 +69,8 @@ vDateTimeYYYYMMDDHHMMSS=$vDateTimeYear$vDateTimeMonth$vDateTimeDay$vDateTimeHour
 ##########################################################################################
 # generic processing, mostly making all is ready for backup loop
 ##########################################################################################
-mkdir -p "$vLogPath"
+vLogPathCurrentRun="$vLogPath""/""$vDateTimeYYYYMMDDHHMMSS"
+mkdir -p "$vLogPathCurrentRun"
 mkdir -p "$vMountPath"
 mkdir -p "$vBackupPath"
 
@@ -76,42 +80,45 @@ mkdir -p "$vBackupPath"
 ##########################################################################################
 for i in "${vBackupItemsArray[@]}"
 do
-    #echo "###################################"
-    #echo "working on "$i
     # variable extraction for specifics of backup
     IFS=',' read vSourceServerName vSourceShareName vSourceDirectoryName <<< "$i"
     # build working variables
     vSourceServerNameShort=${vSourceServerName%%.*} # was $vBackupServerShort
-    vLogFileOutputFullPathName="$vLogPath""/""$vScriptName"-"$vSourceServerNameShort"-"$vSourceDirectoryName"-"$vDateTimeYYYYMMDDHHMMSS"-output.log
-    vLogFileErrorFullPathName="$vLogPath""/""$vScriptName"-"$vSourceServerNameShort"-"$vSourceDirectoryName"-"$vDateTimeYYYYMMDDHHMMSS"-error.log
-    vBackupMountFullPath="$vMountPath""/""$vSourceServerNameShort"-"$vSourceShareName"
-    vBackupDestination="$vBackupPath""/""$vSourceServerNameShort""/""$vSourceShareName"-"$vSourceDirectoryName"
+    vSourceShareNameCleaned="${vSourceShareName//$}"
+    vLogFileOutputFullPathName="$vLogPathCurrentRun""/""$vSourceServerNameShort"-"$vSourceShareNameCleaned"-"$vSourceDirectoryName"-"$vDateTimeYYYYMMDDHHMMSS"-output.log
+    vLogFileErrorFullPathName="$vLogPathCurrentRun""/""$vSourceServerNameShort"-"$vSourceShareNameCleaned"-"$vSourceDirectoryName"-"$vDateTimeYYYYMMDDHHMMSS"-error.log
+    vBackupMountFullPath="$vMountPath""/""$vSourceServerNameShort"-"$vSourceShareNameCleaned"
+    vBackupDestination="$vBackupPath""/""$vSourceServerNameShort""/""$vSourceShareNameCleaned"-"$vSourceDirectoryName"
+    #echo "working on "$i
+    #echo $vSourceServerNameShort
+    #echo $vSourceShareName
+    #echo $vSourceDirectoryName
 
-    # output start of backup to log file
-    vNowMessage=`date` " - Starting backup for: "$i
-    echo "##########################################################################################" 1>> "$vLogFileOutputFullPath" 2>> "$vLogFileErrorFullPath"
-    echo "$vNowMessage" 1>> "$vLogFileOutputFullPath" 2>> "$vLogFileErrorFullPath"
-    echo "##########################################################################################" 1>> "$vLogFileOutputFullPath" 2>> "$vLogFileErrorFullPath"
+    vNowMessage="# Starting backup for: "$i" on "`date`
+    echo "##########################################################################################" 1>> "$vLogFileOutputFullPathName" 2>> "$vLogFileErrorFullPathName"
+    echo "$vNowMessage" 1>> "$vLogFileOutputFullPathName" 2>> "$vLogFileErrorFullPathName"
+    echo "##########################################################################################" 1>> "$vLogFileOutputFullPathName" 2>> "$vLogFileErrorFullPathName"
 
     # mount location, NOTE authentication string fails as variable for some reason
-    mkdir -p "$vBackupMountFullPath" 1>> "$vLogFileOutputFullPath" 2>> "$vLogFileErrorFullPath"
+    mkdir -p "$vBackupMountFullPath" 1>> "$vLogFileOutputFullPathName" 2>> "$vLogFileErrorFullPathName"
+    mkdir -p "$vBackupDestination" 1>> "$vLogFileOutputFullPathName" 2>> "$vLogFileErrorFullPathName"
     # if password has special characters, they need to be html safe, e.g. %23
-    /sbin/mount -t smbfs //'some.domain.com;backupuser:password'@"$vSourceServerName"/"$vSourceShareName" "$vBackupMountFullPath" 1>> "$vLogFileOutputFullPath" 2>> "$vLogFileErrorFullPath"
+    /sbin/mount -t smbfs //'ad.example.com;backupuser:password'@"$vBackupServer"/"$vBackupShare" "$vBackupMountFullPath" 1>> "$vLogFileOutputFullPathName" 2>> "$vLogFileErrorFullPathName"
 
     # rsync filesystem to destination
-    rsync -v -v -r -t -W --exclude-from="$vExclusionFileFullPath" --exclude=\$RECYCLE.BIN --delete --delete-after --log-file="$vLogFileOutputFullPath" -h "$vBackupMountFullPath"/"$vSourceDirectoryName" "$vBackupDestination" 1>> "$vLogFileOutputFullPath" 2>> "$vLogFileErrorFullPath"
+    rsync -v -v -r -t -W --exclude-from="$vExclusionFileFullPath" --exclude=\$RECYCLE.BIN --delete --delete-after --log-file="$vLogFileOutputFullPathName" -h "$vBackupMountFullPath"/"$vSourceDirectoryName" "$vBackupDestination" 1>> "$vLogFileOutputFullPathName" 2>> "$vLogFileErrorFullPathName"
 
     # unmount filesystem
-    /sbin/umount "$vBackupMountFullPath" 1>> "$vLogFileOutputFullPath" 2>> "$vLogFileErrorFullPath"
+    /sbin/umount "$vBackupMountFullPath" 1>> "$vLogFileOutputFullPathName" 2>> "$vLogFileErrorFullPathName"
     sleep 5
     if [ -d "$vBackupMountFullPath" ]; then
-         rmdir "$vBackupMountFullPath" 1>> "$vLogFileOutputFullPath" 2>> "$vLogFileErrorFullPath"
+         rmdir "$vBackupMountFullPath" 1>> "$vLogFileOutputFullPathName" 2>> "$vLogFileErrorFullPathName"
     fi
 
     # output end of backup to log file
-    vNowMessage=`date` " - Ending backup for: "$i
-    echo "##########################################################################################" 1>> "$vLogFileOutputFullPath" 2>> "$vLogFileErrorFullPath"
-    echo "$vNowMessage" 1>> "$vLogFileOutputFullPath" 2>> "$vLogFileErrorFullPath"
-    echo "##########################################################################################" 1>> "$vLogFileOutputFullPath" 2>> "$vLogFileErrorFullPath"
+    vNowMessage="# Finished backup for: "$i" on "`date`
+    echo "##########################################################################################" 1>> "$vLogFileOutputFullPathName" 2>> "$vLogFileErrorFullPathName"
+    echo "$vNowMessage" 1>> "$vLogFileOutputFullPathName" 2>> "$vLogFileErrorFullPathName"
+    echo "##########################################################################################" 1>> "$vLogFileOutputFullPathName" 2>> "$vLogFileErrorFullPathName"
 
 done
