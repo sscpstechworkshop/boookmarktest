@@ -1,6 +1,6 @@
 # based on install LXQT from 16.03 download
 # update whole system
-sudo pmacman -Syyuu
+sudo pacman -Syyuu
 # install packages as needed
 sudo pacman -R chromium
 sudo pacman -S base-devel binutils git
