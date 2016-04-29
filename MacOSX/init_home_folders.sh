@@ -10,10 +10,12 @@ for u in ${users[@]}
 do
    home_dir=(`ldapsearch -H ldap://ad.sscps.org -x -D "test@ad.sscps.org" -w test123 -b $OU -s sub "(objectClass=user)" homeDirectory | awk '/^ homeDirectory: /{print $NF}'`)
    mkdir -p $home_dir
-   chown $home_dir $u
+   chown $u $home_dir   
+   chmod u+rwX $home_dir
       for f in ${folders[@]}
       do
          mkdir -p $home_dir/${folders[@]}
-         chown $home_dir/${folders[@]} $u
+         chown $u $home_dir/${folders[@]}
+         chmod u+rwX $home_dir/${folders[@]}
       done
 done
