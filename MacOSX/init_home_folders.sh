@@ -8,7 +8,7 @@ users=(`ldapsearch -H ldap://ad.sscps.org -x -D "test@ad.sscps.org" -w test123 -
 
 for u in ${users[@]}
 do
-   home_dir=(`ldapsearch -H ldap://ad.sscps.org -x -D "test@ad.sscps.org" -w test123 -b $OU -s sub "(samaccountname=$u)" homeDirectory | awk '/^ homeDirectory: /{print $NF}'`)
+   home_dir=(`ldapsearch -H ldap://ad.sscps.org -x -D "test@ad.sscps.org" -w test123 -b $OU -s sub "(samaccountname=$u)" homeDirectory | awk '/^homeDirectory: /{print $NF}'`)
    mkdir -p $home_dir
    chown $u $home_dir   
    chmod u+rwX $home_dir
