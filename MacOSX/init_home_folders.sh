@@ -22,7 +22,7 @@ do
 
 # Check that server variable is equal to local_server variable
 # If they don't match do nothing and continue to next user   
-   if [ $local_server -ne $server ]; then
+   if [ "$local_server" != "$server" ]; then
       echo "Server mismatch for user: " $u
       continue;
    fi
