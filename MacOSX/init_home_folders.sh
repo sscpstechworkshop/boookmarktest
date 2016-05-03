@@ -31,8 +31,8 @@ do
    chmod u+rwX $new_home_dir
    for f in ${folders[@]}
    do
-      mkdir -p $new_home_dir/${folders[@]}
-      chown $u $new_home_dir/${folders[@]}
-      chmod u+rwX $new_home_dir/${folders[@]}
+      mkdir -p $new_home_dir/$f
+      chown $u $new_home_dir/$f
+      chmod u+rwX $new_home_dir/$f
    done
 done
