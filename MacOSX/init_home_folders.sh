@@ -8,7 +8,7 @@ local_server="TEST-MAC-FS"
 # Populate users array with objects in specified OU, using test/test123 AD account
 users=(`ldapsearch -H ldap://ad.sscps.org -x -D "test@ad.sscps.org" -w test123 -b $OU -s sub "(objectClass=user)" sAMAccountName | awk '/^sAMAccountName: /{print $NF}'`)
 
-for u in "${users[@]}"
+for u in ${users[@]}
 do
    home_dir=(`ldapsearch -H ldap://ad.sscps.org -x -D "test@ad.sscps.org" -w test123 -b $OU -s sub "(samaccountname=$u)" homeDirectory | awk '/^homeDirectory: /{print $NF}'`)
 # Create different variables for server, share and user root folder
@@ -29,10 +29,10 @@ do
    mkdir -p $new_home_dir
    chown $u $new_home_dir 
    chmod u+rwX $new_home_dir
-   for f in "${folders[@]}"
+   for f in ${folders[@]}
    do
-      mkdir -p $new_home_dir/"${folders[@]}"
-      chown $u $new_home_dir/"${folders[@]}"
-      chmod u+rwX $new_home_dir/"${folders[@]}"
+      mkdir -p $new_home_dir/${folders[@]}
+      chown $u $new_home_dir/${folders[@]}
+      chmod u+rwX $new_home_dir/${folders[@]}
    done
 done
