@@ -28,11 +28,11 @@ do
    fi
    mkdir -p $new_home_dir
    chown $u $new_home_dir 
-   chmod u+rwX $new_home_dir
+   #chmod u+rwX $new_home_dir
    for f in ${folders[@]}
    do
       mkdir -p $new_home_dir/$f
       chown $u $new_home_dir/$f
-      chmod u+rwX $new_home_dir/$f
+      #chmod u+rwX $new_home_dir/$f
    done
 done
