@@ -28,13 +28,11 @@ do
    fi
    mkdir -p $new_home_dir
    chown $u $new_home_dir 
-   chmod a-rwX $new_home_dir     # remove rights from all users
-   chmod u+rwX $new_home_dir     # Give owner rights
+   chmod u+rwX,g+r,a-rwX $new_home_dir
    for f in ${folders[@]}
    do
       mkdir -p $new_home_dir/$f
       chown $u $new_home_dir/$f
-      chmod a-rwX $new_home_dir
-      chmod u+rwX $new_home_dir/$f
+      chmod u+rwX,g+r,a-rwX $new_home_dir/$f
    done
 done
