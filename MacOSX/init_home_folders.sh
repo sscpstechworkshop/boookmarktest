@@ -1,7 +1,7 @@
 # This script will query an AD OU and create user folders based on the return
 
 OU="OU=Student,OU=Users,OU=Test,OU=SSCPS,DC=ad,DC=sscps,DC=org"
-folders=( "Documents" "Downloads" "Movies" "Pictures" "Music" "Desktop" "Public" )
+folders=( Documents Downloads Movies Pictures Music Desktop Public )
 local_storage_path="/Storage"
 local_server="TEST-MAC-FS"
 
@@ -31,9 +31,8 @@ do
    chmod u+rwX $new_home_dir
    for f in "${folders[@]}"
    do
-      echo "Folder variable = " ${folders[@]}
-      mkdir -p $new_home_dir/${folders[@]}
-      chown $u $new_home_dir/${folders[@]}
-      chmod u+rwX $new_home_dir/${folders[@]}
+      mkdir -p $new_home_dir/"${folders[@]}"
+      chown $u $new_home_dir/"${folders[@]}"
+      chmod u+rwX $new_home_dir/"${folders[@]}"
    done
 done
