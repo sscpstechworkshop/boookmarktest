@@ -11,14 +11,14 @@ users=(`ldapsearch -H ldap://ad.sscps.org -x -D "test@ad.sscps.org" -w test123 -
 for u in ${users[@]}
 do
    home_dir=(`ldapsearch -H ldap://ad.sscps.org -x -D "test@ad.sscps.org" -w test123 -b $OU -s sub "(samaccountname=$u)" homeDirectory | awk '/^homeDirectory: /{print $NF}'`)
-# create different variables for server, share and user root folder
+# Create different variables for server, share and user root folder
 
    user_root_folder=${home_dir##*\\}      # "jmcsheffrey"
    share_tmp=${home_dir%\\*}              # "\\TEST-MAC_FS\StudentUserFiles"
    share=${share_tmp##*\\}                # "StudentUserFiles"
-   server_tmp=${share_tmp%\\*}            # "\TEST-MAC-FS"
-   server=${server_tmp#\\*}               # "TEST-MAC_FS"
-   new_home_dir=$local_storage_path/$share/$user_root_folder  # "StudentUserFiles/jmcsheffrey"
+   server_tmp=${share_tmp%\\*}            # "\\TEST-MAC-FS"
+   server=${server_tmp#\\\\*}             # "TEST-MAC-FS"
+   new_home_dir=$local_storage_path/$share/$user_root_folder  # "/Storage/StudentUserFiles/jmcsheffrey"
 
 # Check that server variable is equal to local_server variable
 # If they don't match do nothing and continue to next user   
