@@ -28,7 +28,7 @@ apt-get clean
 # install some tools
 add-apt-repository -y ppa:webupd8team/java
 apt-get update
-apt-get -y install oracle-java7-installer mc mutt git git-doc
+apt-get -y install oracle-java7-installer mc mutt usb-creator-kde
 apt-get -f -y install
 # download script for "unattended" updating
 cd /home/System/scripts/
@@ -52,12 +52,16 @@ update-initramfs -u
 #
 # remove unneeded apps and add other needed apps.
 apt-get -y remove kpat ktorrent akregator kopete quassel
-apt-get -y install usb-creator-kde
 apt-get -y install kubuntu-restricted-extras wine firefox filezilla
 apt-get -y install ubuntu-wallpapers kde-wallpapers kde-wallpapers-default kdewallpapers peace-wallpapers tropic-wallpapers lubuntu-artwork xubuntu-wallpapers
 apt-get -y install kscreensaver screensaver-default-images
 apt-get -y install libreoffice-impress libreoffice-pdfimport libreoffice-kde libreoffice-templates openclipart-libreoffice openclipart2-libreoffice
 apt-get -y install vlc gimp marble inkscape audacity blender
+# development apps
+#apt-get -y install git git-doc build-essential eclipse kdevelop kdev-python
+# extra media creation tools
+#apt-get -y install mediainfo-gui handbrake kdenlive kino kid3-qt digikam shotwell openshot ffmpeg
+# yeah, flash is needed for firefox
 apt-get -y remove flashplugin-installer
 apt-get -y install flashplugin-installer
 # clean up everything, drives are big, but images should be small.  :-)
