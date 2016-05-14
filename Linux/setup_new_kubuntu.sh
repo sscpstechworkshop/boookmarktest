@@ -52,6 +52,7 @@ update-initramfs -u
 #
 # remove unneeded apps and add other needed apps.
 apt-get -y remove kpat ktorrent akregator kopete quassel
+apt-get -y install usb-creator-kde
 apt-get -y install kubuntu-restricted-extras wine firefox filezilla
 apt-get -y install ubuntu-wallpapers kde-wallpapers kde-wallpapers-default kdewallpapers peace-wallpapers tropic-wallpapers lubuntu-artwork xubuntu-wallpapers
 apt-get -y install kscreensaver screensaver-default-images
