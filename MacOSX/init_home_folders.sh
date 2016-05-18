@@ -31,14 +31,14 @@ do
    chmod a-rwX $new_home_dir
    chmod g+r $new_home_dir
    chmod u+rwX $new_home_dir
-   chmod +a "AD\SG_Service_Backup allow read" $new_home_dir
+   chmod +a "AD\SG_Service_Backup allow read,file_inherit,directory_inherit" $new_home_dir
    for f in ${folders[@]}
    do
       mkdir -p $new_home_dir/$f
       chown $u $new_home_dir/$f
-      chmod a-rwX $new_home_dir
-      chmod g+r $new_home_dir
-      chmod u+rwX $new_home_dir
-      chmod +a "AD\SG_Service_Backup allow read" $new_home_dir
+      chmod a-rwX $new_home_dir/$f
+      chmod g+r $new_home_dir/$f
+      chmod u+rwX $new_home_dir/$f
+      chmod +a "AD\SG_Service_Backup allow read,file_inherit,directory_inherit" $new_home_dir/$f
    done
 done
