@@ -11,8 +11,8 @@ users=(`ldapsearch -H ldap://ad.sscps.org -x -D "test@ad.sscps.org" -w test123 -
 for u in ${users[@]}
 do
    home_dir=(`ldapsearch -H ldap://ad.sscps.org -x -D "test@ad.sscps.org" -w test123 -b $OU -s sub "(samaccountname=$u)" homeDirectory | awk '/^homeDirectory: /{print $NF}'`)
-# Create different variables for server, share and user root folder
 
+# Create different variables for server, share and user root folder
    user_root_folder=${home_dir##*\\}      # "jmcsheffrey"
    share_tmp=${home_dir%\\*}              # "\\TEST-MAC_FS\StudentUserFiles"
    share=${share_tmp##*\\}                # "StudentUserFiles"
@@ -28,11 +28,17 @@ do
    fi
    mkdir -p $new_home_dir
    chown $u $new_home_dir 
-   chmod a-rwX,u+rwX $new_home_dir
+   chmod a-rwX $new_home_dir
+   chmod g+r $new_home_dir
+   chmod u+rwX $new_home_dir
+   chmod +a "AD\SG_Service_Backup allow read" $new_home_dir
    for f in ${folders[@]}
    do
       mkdir -p $new_home_dir/$f
       chown $u $new_home_dir/$f
-      chmod a-rwX,u+rwX $new_home_dir/$f
+      chmod a-rwX $new_home_dir
+      chmod g+r $new_home_dir
+      chmod u+rwX $new_home_dir
+      chmod +a "AD\SG_Service_Backup allow read" $new_home_dir
    done
 done
