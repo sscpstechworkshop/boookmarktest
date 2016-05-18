@@ -26,6 +26,8 @@ do
       echo "Server mismatch for user: " $u
       continue;
    fi
+# TODO: Do we want to check for the folder first?   Running on top of existing folders
+#       doesn't break anything, but maybe it causes a problem that isn't readily apparent.
    mkdir -p $new_home_dir
    chown $u $new_home_dir 
    chmod a-rwX $new_home_dir
