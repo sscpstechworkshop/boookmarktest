@@ -12,6 +12,13 @@ for u in ${users[@]}
 do
    home_dir=(`ldapsearch -H ldap://ad.sscps.org -x -D "test@ad.sscps.org" -w test123 -b $OU -s sub "(samaccountname=$u)" homeDirectory | awk '/^homeDirectory: /{print $NF}'`)
 
+# Check that server variable is equal to local_server variable
+# If they don't match do nothing and continue to next user   
+   if [ "$local_server" != "$server" ]; then
+      echo "Server mismatch for user: " $u
+      continue;
+   fi
+   
 # Create different variables for server, share and user root folder
    user_root_folder=${home_dir##*\\}      # "jmcsheffrey"
    share_tmp=${home_dir%\\*}              # "\\TEST-MAC_FS\StudentUserFiles"
@@ -20,14 +27,8 @@ do
    server=${server_tmp#\\\\*}             # "TEST-MAC-FS"
    new_home_dir=$local_storage_path/$share/$user_root_folder  # "/Storage/StudentUserFiles/jmcsheffrey"
 
-# Check that server variable is equal to local_server variable
-# If they don't match do nothing and continue to next user   
-   if [ "$local_server" != "$server" ]; then
-      echo "Server mismatch for user: " $u
-      continue;
-   fi
 # TODO: Do we want to check for the folder first?   Running on top of existing folders
-#       doesn't break anything, but maybe it causes a problem that isn't readily apparent.
+#       doesn't break anything, but maybe it causes a problem that isn't readily apparent?
    mkdir -p $new_home_dir
    chown $u $new_home_dir 
    chmod a-rwX $new_home_dir
