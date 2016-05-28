@@ -53,14 +53,16 @@ update-initramfs -u
 # remove unneeded apps and add other needed apps.
 apt-get -y remove kpat ktorrent akregator kopete quassel
 apt-get -y install kubuntu-restricted-extras wine firefox filezilla
-apt-get -y install ubuntu-wallpapers kde-wallpapers kde-wallpapers-default kdewallpapers peace-wallpapers tropic-wallpapers lubuntu-artwork xubuntu-wallpapers
+apt-get -y install ubuntu-wallpapers kde-wallpapers kde-wallpapers-default kdewallpapers xubuntu-wallpapers
+apt-get -y install peace-wallpapers tropic-wallpapers lubuntu-artwork
 apt-get -y install kscreensaver screensaver-default-images
-apt-get -y install libreoffice-impress libreoffice-pdfimport libreoffice-kde libreoffice-templates openclipart-libreoffice openclipart2-libreoffice
+apt-get -y install libreoffice-kde libreoffice-impress libreoffice-pdfimport
+apt-get -y install libreoffice-templates openclipart-libreoffice openclipart2-libreoffice
 apt-get -y install vlc gimp marble inkscape audacity blender
 # development apps
 #apt-get -y install git git-doc build-essential eclipse kdevelop kdev-python
 # extra media creation tools
-#apt-get -y install mediainfo-gui handbrake kdenlive kino kid3-qt digikam shotwell openshot ffmpeg
+#apt-get -y install mediainfo-gui handbrake kdenlive kino kid3-qt digikam shotwell openshot ffmpeg kid3-qt lame
 # yeah, flash is needed for firefox
 apt-get -y remove flashplugin-installer
 apt-get -y install flashplugin-installer
