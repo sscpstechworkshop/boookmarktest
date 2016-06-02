@@ -1,6 +1,10 @@
+###############################################################################
+# This powershell script will uninstall all provisioned apps that are
+# currently installed for any user, as well as any future user that logs in
 # Open console with elevated priviledges and run "powershell"
-# In order to run a powershell script you will have to first run:
-# Set-ExecutionPolicy Unrestricted
+# NOTE:  In order to run a powershell script you will have to first run:
+#        Set-ExecutionPolicy Unrestricted
+###############################################################################
 
 #Uninstall 3D Builder:
 Get-AppxPackage *3dbuilder* -allusers | Remove-AppxPackage
