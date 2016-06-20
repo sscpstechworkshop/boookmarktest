@@ -8,9 +8,24 @@
 #       on the assumption that the machine is for Staff
 ########################################################################################
 
-name=(`ifconfig en0 | awk '/ether/{print $2}' | sed -e 's/://g'`)
-scutil --set ComputerName WKN$name
-scutil --set HostName WKN$name
-scutil --set LocalHostName WKN$name
-reboot
+if [ $# -eq 0 ]; then
+   mac_address=(`ifconfig en0 | awk '/ether/{print $2}' | sed -e 's/://g'`)
+   name=WKN$mac_address
+   # ENABLE cleanup_users.plist
+   sed -i "" 's/false/true/g' /Library/LaunchDaemons/cleanup_users.plist
+else
+   name=$1
+   # DISABLE cleanup_users.plist
+   sed -i "" 's/true/false/g' /Library/LaunchDaemons/cleanup_users.plist
+fi
+
+scutil --set ComputerName $name
+scutil --set HostName $name
+scutil --set LocalHostName $name
+tail -5 /Library/LaunchDaemons/cleanup_users.plist
+echo "Check above... after RunAtLoad true will mean cleanup script runs, false means it wont"
+echo "If correct, reboot now"
+
+
+
 
