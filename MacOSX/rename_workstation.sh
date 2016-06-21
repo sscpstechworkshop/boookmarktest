@@ -23,10 +23,9 @@ scutil --set ComputerName $name
 scutil --set HostName $name
 scutil --set LocalHostName $name
 
-echo "ComputerName, HostName and LocalHostName variables changed to:" $name
 tail -5 /Library/LaunchDaemons/cleanup_users.plist
 echo "Check above... after RunAtLoad true will mean cleanup script runs, false means it wont"
-echo "If correct, reboot now"
+echo "Computer names changed to: $name.   If correct, reboot now"
 
 
 
