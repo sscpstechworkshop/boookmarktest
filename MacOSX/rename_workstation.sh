@@ -6,6 +6,7 @@
 #
 # NOTE: This script will also disable the cleanup_users.plist if an argument is supplied
 #       on the assumption that the machine is for Staff
+# TODO: This script will also enable or disable school bell script plist
 ########################################################################################
 
 if [ $# -eq 0 ]; then
@@ -13,10 +14,14 @@ if [ $# -eq 0 ]; then
    name=WKN$mac_address
    # ENABLE cleanup_users.plist
    sed -i "" 's/false/true/g' /Library/LaunchDaemons/cleanup_users.plist
+   # ENABLE school_bell.plist
+   # sed -i "" 's/false/true/g' /Library/LaunchAgents/school_bell.plist
 else
    name=$1
    # DISABLE cleanup_users.plist
    sed -i "" 's/true/false/g' /Library/LaunchDaemons/cleanup_users.plist
+   # DISABLE school_bell.plist
+   # sed -i "" 's/true/false/g' /Library/LaunchAgents/school_bell.plist
 fi
 
 scutil --set ComputerName $name
