@@ -24,7 +24,7 @@ scutil --set HostName $name
 scutil --set LocalHostName $name
 
 tail -5 /Library/LaunchDaemons/cleanup_users.plist
-echo "Check above... after RunAtLoad true will mean cleanup script runs, false means it wont"
+echo "Check above. After RunAtLoad, true means cleanup script runs, false means it wont"
 echo "Computer names changed to: $name.   If correct, reboot now"
 
 
