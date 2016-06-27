@@ -17,13 +17,13 @@ if [ $# -eq 0 ]; then
    # ENABLE cleanup_users.plist
    sed -i "" 's/false/true/g' /Library/LaunchDaemons/cleanup_users.plist
    # DISABLE school_bell.plist
-   # sed -i "" 's/true/false/g' /Library/LaunchAgents/school_bell.plist
+   sed -i "" 's/true/false/g' /Library/LaunchAgents/school_bell.plist
 else
    name=$1
    # DISABLE cleanup_users.plist
    sed -i "" 's/true/false/g' /Library/LaunchDaemons/cleanup_users.plist
    # ENABLE school_bell.plist
-   # sed -i "" 's/false/true/g' /Library/LaunchAgents/school_bell.plist
+   sed -i "" 's/false/true/g' /Library/LaunchAgents/school_bell.plist
 fi
 
 scutil --set ComputerName $name
