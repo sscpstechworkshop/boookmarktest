@@ -1,4 +1,4 @@
-# NEED TO FIX:  shortened URL for download:  http://goo.gl/yvS79k
+# NEED TO FIX:  shortened URL for download:  https://goo.gl/TpXi4Q
 #
 # do all updates
 apt-get update
