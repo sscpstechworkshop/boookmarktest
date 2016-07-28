@@ -1,5 +1,5 @@
 #!/bin/bash
-# shortened URL = ???
+# shortened URL = https://goo.gl/8lmEYR
 # work in progress, use at your own risk
 # assumptions:
 #   1.  assumes its being run as root
