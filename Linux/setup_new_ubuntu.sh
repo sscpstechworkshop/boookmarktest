@@ -38,7 +38,7 @@ wget https://raw.githubusercontent.com/SSCPS/TechTools-Linux/master/update_brute
 chmod a+x /home/System/scripts/update_bruteforce.sh
 #
 # install DE in case needed to use Ubuntu Server CD for install
-apt-get -y install kubuntu-desktop
+#apt-get -y install kubuntu-desktop
 # clean up everything, drives are big, but images should be small.  :-)
 apt-get -y autoremove
 apt-get clean
