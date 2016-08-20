@@ -22,14 +22,19 @@ hour=`date "+%H"`
 minute=`date "+%M+`
 
 # get today's bell schedule
-todaySchedule="bellschedule_"$day".conf"
-curl -o /Users/Shared/BellSchedule/$todaySchedule 'http://files.sscps.org/<location>/$todaySchedule'
+curl -o /Users/Shared/BellSchedule/bellschedule_$day.conf 'http://files.sscps.org/<location>/bellschedule_$day'
+todaySchedule=/Users/Shared/BellSchedule/bellschedule_$day.conf
 
-# loop through schedule and ring if necessary
-# example:  05/06/2016,8:15,8:18,8:28,9:06,9:09,9:47,9:50,9:57,10:00,10:38,10:41,11:19,11:22,12:00
+# loop through schedule file and populate arrays
+# first line (standard schedule)
+# example: 00/00/0000,8:15,8:18,8:23,9:09,9:52,9:55,10:38,10:40,11:05,11:08,11:51,11:54,12:37
 
 
+# following lines in file are exception days
+# example: 05/06/2016,8:15,8:18,8:28,9:06,9:09,9:47,9:50,9:57,10:00,10:38,10:41,11:19,11:22,12:00
 
+# put system volume at about 50 percent
+osascript -e "set volume 4"
 
 
 
