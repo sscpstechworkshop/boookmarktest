@@ -76,9 +76,3 @@ for time in ${bellSchedule[@]}; do
         exit 0;
     fi
 done
-
-
-
-    
-
-
