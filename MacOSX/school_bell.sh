@@ -50,26 +50,31 @@ else
 fi
 
 for i in ${scheduleArray[@]}; do
-    if [ "$i" = "default" ]; then
-        bellSchedule=${scheduleArray[$i]}
+    echo "Line being tested is: $i" | logger -s >> /Users/Shared/BellSchedule/logs/bellschedule.log
+    IFS=','
+    currentTimeArray=(`cat $i`)
+    if [ "$currentTimeArray[0]" = "default" ]; then
+        bellScheduleArray=${currentTimeArray}
+        unset bellScheduleArray[0]
     fi
-    if [ "$i" = "$currentDate" ]; then
-        bellSchedule=${scheduleArray[$i]}
+    echo "Current bellScheduleArray is: ${bellScheduleArray[@]}" | logger -s >> /Users/Shared/BellSchedule/logs/bellschedule.log
+    if [ "$currentTimeArray[0]" = "$currentDate" ]; then
+        bellScheduleArray=${currentTimeArray}
+        unset bellScheduleArray[0]
     fi
+    echo "Current bellScheduleArray is: ${bellScheduleArray[@]}" | logger -s >> /Users/Shared/BellSchedule/logs/bellschedule.log    
 done
 
-echo "bellSchedule array is: ${bellSchedule[@]}" | logger -s >> /Users/Shared/BellSchedule/logs/bellschedule.log
-
-# remove date element (should be first) from schedule array
-unset bellSchedule[0]
+echo "Final bellSchedule array is: ${bellScheduleArray[@]}" | logger -s >> /Users/Shared/BellSchedule/logs/bellschedule.log
 
 # if bellSchedule has no times, exit
-if [ ${#bellSchedule[@]} -eq 0 ]; then
+if [ ${#bellScheduleArray[@]} -eq 0 ]; then
      echo "Schedule has no times.  Exiting." | logger -s >> /Users/Shared/BellSchedule/logs/bellschedule.log
      exit 0;
 fi
 
-for time in ${bellSchedule[@]}; do
+for time in ${bellScheduleArray[@]}; do
+    echo "Time comparison is on : time=$time  currentTime=$currentTime" | logger -s >> /Users/Shared/BellSchedule/logs/bellschedule.log
     if [ "$time" = "$currentTime" ]; then
         # set volume to 50%
         osascript -e "set volume 4"
