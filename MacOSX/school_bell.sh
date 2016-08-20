@@ -1,6 +1,6 @@
 ################################################################################
-# Placeholder for school bell ring script
-# Mac images have school_bell.mp3 located at /Users/Shared
+# School bell ring script
+# Mac images have School bell.mp3 located at /Users/Shared
 ################################################################################
 
 # Check if /Users/Shared/BellSchedule/bellschedule_settings.conf exists
@@ -10,7 +10,7 @@ if [ ! -f /Users/Shared/BellSchedule/bellschedule_settings.conf ]; then
     mkdir -p /Users/Shared/BellSchedule
     echo `date "+%Y/%m/%d"`>/Users/Shared/BellSchedule/bellschedule_settings.conf
 else
-    # (file exists) 
+    # (config file exists) 
     # TODO: compare today's date with date already in bellschedule_settings.conf and exit if they match
 fi
 
@@ -19,17 +19,30 @@ fi
 # Today's date and time
 day=`date "+%A"`
 hour=`date "+%H"`
-minute=`date "+%M+`
+minute=`date "+%M"`
 
 # get today's bell schedule
 curl -o /Users/Shared/BellSchedule/bellschedule_$day.conf 'http://files.sscps.org/<location>/bellschedule_$day'
-todaySchedule=/Users/Shared/BellSchedule/bellschedule_$day.conf
+scheduleFile=/Users/Shared/BellSchedule/bellschedule_$day.conf
 
 # populate array with file
-scheduleArray=(`cat $todaySchedule`)
-# first line in todaySchedule will be ${scheduleArray[0]}
-# second line in todaySchedule is ${scheduleArray[1]}
-# and so on
+scheduleArray=(`cat $scheduleFile`)
+
+# first line in scheduleFile will be default schedule
+IFS=',' read -ra defaultSchedule <<< "${scheduleArray[0]}"
+    for time in "${defaultSchedule[@]}"; do
+        # check if time matches current time and play bell
+        # if a time check is in future, exit immediately
+    done
+
+# second line in scheduleFile is first exceptions
+IFS=',' read -ra exceptionSchedule <<< "${scheduleArray[1]}"
+    for time in "${exceptionSchedule[@]}"; do
+        # process exceptions
+    done
+    
+
+
 
 # first line (standard schedule)
 # example: 00/00/0000,8:15,8:18,8:23,9:09,9:52,9:55,10:38,10:40,11:05,11:08,11:51,11:54,12:37
