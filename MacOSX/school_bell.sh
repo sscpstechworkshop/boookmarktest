@@ -25,16 +25,22 @@ minute=`date "+%M+`
 curl -o /Users/Shared/BellSchedule/bellschedule_$day.conf 'http://files.sscps.org/<location>/bellschedule_$day'
 todaySchedule=/Users/Shared/BellSchedule/bellschedule_$day.conf
 
-# loop through schedule file and populate arrays
+# populate array with file
+scheduleArray=(`cat $todaySchedule`)
+# first line in todaySchedule will be ${scheduleArray[0]}
+# second line in todaySchedule is ${scheduleArray[1]}
+# and so on
+
 # first line (standard schedule)
 # example: 00/00/0000,8:15,8:18,8:23,9:09,9:52,9:55,10:38,10:40,11:05,11:08,11:51,11:54,12:37
-
 
 # following lines in file are exception days
 # example: 05/06/2016,8:15,8:18,8:28,9:06,9:09,9:47,9:50,9:57,10:00,10:38,10:41,11:19,11:22,12:00
 
 # put system volume at about 50 percent
 osascript -e "set volume 4"
+
+# sound the bell and/or exit
 
 
 
