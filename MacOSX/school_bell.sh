@@ -26,8 +26,7 @@ if [ ! -f /Users/Shared/BellSchedule/bellschedule_settings.conf ]; then
 else
     storedDate=`head -1 /Users/Shared/BellSchedule/bellschedule_settings.conf`
     if [ "$currentDate" = "$storedDate" ]; then
-        echo "bellschedule_settings.conf file has today's date.   Exiting." | logger -s >> /Users/Shared/BellSchedule/logs/bellschedule.log
-        exit 0;
+        echo "bellschedule_settings.conf file has today's date.   Schedule refresh not needed." | logger -s >> /Users/Shared/BellSchedule/logs/bellschedule.log
     else
         curl -o /Users/Shared/BellSchedule/bellschedule_$day.conf $scheduleURL
     fi
