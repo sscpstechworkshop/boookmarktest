@@ -13,6 +13,7 @@ hour=`date "+%H"`       # 15 (24hr format)
 minute=`date "+%M"`     # 45 
 currentDate=$month/$dayOfMonth/$year
 currentTime=$hour:$minute
+scheduleURL=http://files.sscps.org/bellschedule/v1/bellschedule_$day.conf
 
 # create log folder
 if [ ! -d /Users/Shared/BellSchedule/logs ]; then
@@ -21,7 +22,6 @@ fi
 
 if [ ! -f /Users/Shared/BellSchedule/bellschedule_settings.conf ]; then
     echo $currentDate>/Users/Shared/BellSchedule/bellschedule_settings.conf
-    scheduleURL=http://files.sscps.org/bellschedule/v1/bellschedule_$day.conf
     curl -o /Users/Shared/BellSchedule/bellschedule_$day.conf $scheduleURL
 else
     storedDate=`head -1 /Users/Shared/BellSchedule/bellschedule_settings.conf`
