@@ -15,18 +15,21 @@ currentDate=$month/$dayOfMonth/$year
 currentTime=$hour:$minute
 
 # create log folder
-mkdir -p /Users/Shared/BellSchedule/logs
+if [ ! -d /Users/Shared/BellSchedule/logs ]; then
+    mkdir -p /Users/Shared/BellSchedule/logs
+fi
 
 if [ ! -f /Users/Shared/BellSchedule/bellschedule_settings.conf ]; then
     echo $currentDate>/Users/Shared/BellSchedule/bellschedule_settings.conf
-    curl -o /Users/Shared/BellSchedule/bellschedule_$day.conf 'http://files.sscps.org/bellschedule/v1/bellschedule_'$day'.conf'
+    scheduleURL=http://files.sscps.org/bellschedule/v1/bellschedule_$day.conf
+    curl -o /Users/Shared/BellSchedule/bellschedule_$day.conf $scheduleURL
 else
     storedDate=`head -1 /Users/Shared/BellSchedule/bellschedule_settings.conf`
     if [ "$currentDate" = "$storedDate" ]; then
         echo "bellschedule_settings.conf file has today's date.   Exiting." | logger -s >> /Users/Shared/BellSchedule/logs/bellschedule.log
         exit 0;
     else
-        curl -o /Users/Shared/BellSchedule/bellschedule_$day.conf 'http://files.sscps.org/bellschedule/v1/bellschedule_$day.conf'
+        curl -o /Users/Shared/BellSchedule/bellschedule_$day.conf $scheduleURL
     fi
 fi
 
