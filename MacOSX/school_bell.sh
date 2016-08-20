@@ -1,10 +1,7 @@
 ################################################################################
 # School bell script
-# This script will check for /Users/Shared/BellSchedule/bellschedule_settings.conf
-# containing a bell schedule.  This file MUST be present.  If not dated today
-# it will download the bell schedule.
+#
 # This script is being called every minute by the /Library/LaunchAgents/school_bell.plist file
-# Mac images should have school_bell.mp3 located at /Users/Shared/BellSchedule
 ################################################################################
 
 # Today's date and time
@@ -16,6 +13,9 @@ hour=`date "+%H"`       # 15 (24hr format)
 minute=`date "+%M"`     # 45 
 currentDate=$month/$dayOfMonth/$year
 currentTime=$hour:$minute
+
+# create log folder
+mkdir -p /Users/Shared/BellSchedule/logs
 
 if [ ! -f /Users/Shared/BellSchedule/bellschedule_settings.conf ]; then
     mkdir -p /Users/Shared/BellSchedule/
@@ -31,8 +31,11 @@ else
     fi
 fi
 
-# Give the possible download a moment to finish
-sleep 5
+if [ ! -f /Users/Shared/BellSchedule/school_bell.mp3 ]; then
+    curl -o /Users/Shared/BellSchedule/school_bell.mp3 'http://files.sscps.org/<location>/school_bell.mp3'
+
+# Give the possible download(s) a moment to finish
+sleep 5   # 5 seconds
 
 scheduleFile=/Users/Shared/BellSchedule/bellschedule_$day.conf
 
