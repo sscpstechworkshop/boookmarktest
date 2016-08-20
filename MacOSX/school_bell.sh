@@ -61,6 +61,7 @@ for i in ${scheduleArray[@]}; do
     echo "Line being tested is: $i" | logger -s >> /Users/Shared/BellSchedule/logs/bellschedule.log
     IFS=','
     currentTimeArray=(`cat $i`)
+    echo "currentTimeArray is: $currentTimeArray"
     if [ "${currentTimeArray[0]}" = "default" ]; then
         bellScheduleArray=("${currentTimeArray[@]}")  
         unset bellScheduleArray[0]
