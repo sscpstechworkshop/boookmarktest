@@ -58,6 +58,8 @@ for i in ${scheduleArray[@]}; do
     fi
 done
 
+echo "bellSchedule array is: ${bellSchedule[@]}" | logger -s >> /Users/Shared/BellSchedule/logs/bellschedule.log
+
 # remove date element (should be first) from schedule array
 unset bellSchedule[0]
 
