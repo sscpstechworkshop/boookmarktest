@@ -18,8 +18,7 @@ currentTime=$hour:$minute
 mkdir -p /Users/Shared/BellSchedule/logs
 
 if [ ! -f /Users/Shared/BellSchedule/bellschedule_settings.conf ]; then
-    mkdir -p /Users/Shared/BellSchedule/
-    echo $currentDate>bellschedule_settings.conf
+    echo $currentDate>/Users/Shared/BellSchedule/bellschedule_settings.conf
     curl -o /Users/Shared/BellSchedule/bellschedule_$day.conf 'http://files.sscps.org/bellschedule/v1/bellschedule_$day.conf'
 else
     storedDate=`head -1 /Users/Shared/BellSchedule/bellschedule_settings.conf`
