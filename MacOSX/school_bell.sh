@@ -1,5 +1,8 @@
 ################################################################################
-# School bell ring script
+# School bell script
+# This script will check for a local file containing a bell schedule and create
+# it if not found by downloading it from specified server location
+# This script is being called every minute by the /Library/LaunchAgents/school_bell.plist file
 # Mac images should have school_bell.mp3 located at /Users/Shared/BellSchedule
 ################################################################################
 
