@@ -1,6 +1,6 @@
 ################################################################################
 # School bell ring script
-# Mac images have School bell.mp3 located at /Users/Shared
+# Mac images should have school_bell.mp3 located at /Users/Shared/BellSchedule
 ################################################################################
 
 # Check if /Users/Shared/BellSchedule/bellschedule_settings.conf exists
@@ -17,44 +17,54 @@ fi
 # conf file exists and the date is not today, so we need to grab the schedule file
 
 # Today's date and time
-day=`date "+%A"`
-hour=`date "+%H"`
-minute=`date "+%M"`
+year=`date "+%Y"`       # 2016
+month=`date "+%m"`      # 08
+dayOfMonth=`date "+%d"` # 20
+day=`date "+%A"`        # Friday
+hour=`date "+%H"`       # 15 (24hr format)
+minute=`date "+%M"`     # 45 
 
 # get today's bell schedule
 curl -o /Users/Shared/BellSchedule/bellschedule_$day.conf 'http://files.sscps.org/<location>/bellschedule_$day'
 scheduleFile=/Users/Shared/BellSchedule/bellschedule_$day.conf
 
-# populate array with file
+# populate scheduleArray from scheduleFile
 scheduleArray=(`cat $scheduleFile`)
 
+# build individual schedule arrays (scheduleFile should have exactly 4 lines?)
 # first line in scheduleFile will be default schedule
 IFS=',' read -ra defaultSchedule <<< "${scheduleArray[0]}"
-    for time in "${defaultSchedule[@]}"; do
-        # check if time matches current time and play bell
-        # if a time check is in future, exit immediately
-    done
 
 # second line in scheduleFile is first exceptions
-IFS=',' read -ra exceptionSchedule <<< "${scheduleArray[1]}"
-    for time in "${exceptionSchedule[@]}"; do
-        # process exceptions
-    done
+IFS=',' read -ra exceptionSchedule1 <<< "${scheduleArray[1]}"
+
+# third line in scheduleFile is second exceptions
+IFS=',' read -ra exceptionSchedule2 <<< "${scheduleArray[2]}"
+
+# fourth line in scheduleFile is third exceptions
+IFS=',' read -ra exceptionSchedule3 <<< "${scheduleArray[3]}"
+
+# Match current date with exception dates to see if we are not on default schedule
+if [ "${exceptionsSchedule1[0]}" = "$month/$dayOfMonth/$year" ]; then
+    activeSchedule=("${exceptionSchedule1[@]}")
+else if [ "${exceptionsSchedule2[0]}" = "$month/$dayOfMonth/$year" ]; then
+    activeSchedule=("${exceptionSchedule2[@]}")
+else if [ "${exceptionsSchedule3[0]}" = "$month/$dayOfMonth/$year" ]; then
+    activeSchedule=("${exceptionSchedule3[@]}")
+else
+    activeSchedule=("${defaultSchedule[@]}")
     
+# We've decided what schedule to use.  Loop through it and look for matching times
 
-
-
-# first line (standard schedule)
-# example: 00/00/0000,8:15,8:18,8:23,9:09,9:52,9:55,10:38,10:40,11:05,11:08,11:51,11:54,12:37
-
-# following lines in file are exception days
-# example: 05/06/2016,8:15,8:18,8:28,9:06,9:09,9:47,9:50,9:57,10:00,10:38,10:41,11:19,11:22,12:00
-
-# put system volume at about 50 percent
+# first, we need to make sure system volume isn't muted
+# this puts volume at about 50 percent
 osascript -e "set volume 4"
 
-# sound the bell and/or exit
-
-
+for time in ${activeSchedule[@]}; do
+    if [ "$time" = "${activeSchedule[@]}" ]; then    # TODO check for future times and exit if found
+        afplay /Users/Shared/BellSchedule/school_bell.mp3
+        exit 0;
+done
+    
 
 
