@@ -74,37 +74,6 @@ done
 
 
 
-# build individual schedule arrays (scheduleFile should have exactly 4 lines?)
-# first line in scheduleFile will be default schedule
-# IFS=',' read -ra defaultSchedule <<< "${scheduleArray[0]}"
-
-# second line in scheduleFile is first exceptions
-# IFS=',' read -ra exceptionSchedule1 <<< "${scheduleArray[1]}"
-
-# third line in scheduleFile is second exceptions
-# IFS=',' read -ra exceptionSchedule2 <<< "${scheduleArray[2]}"
-
-# fourth line in scheduleFile is third exceptions
-# IFS=',' read -ra exceptionSchedule3 <<< "${scheduleArray[3]}"
-
-# Match current date with exception dates to see if we are not on default schedule
-# if [ "${exceptionsSchedule1[0]}" = "$currentDate" ]; then
-#    activeSchedule=("${exceptionSchedule1[@]}")
-# else if [ "${exceptionsSchedule2[0]}" = "$currentDate" ]; then
-#    activeSchedule=("${exceptionSchedule2[@]}")
-# else if [ "${exceptionsSchedule3[0]}" = "$currentDate" ]; then
-#     activeSchedule=("${exceptionSchedule3[@]}")
-# else
-#     activeSchedule=("${defaultSchedule[@]}")
-    
-# if activeSchedule array only has 1 element (e.g. it's Christmas) exit script
-# if [ ${#activeSchedule[@]} -eq 1 ]; then
-#     echo "activeSchedule has no times.  Exiting." | logger -s >> /Users/Shared/BellSchedule/logs/bellschedule.log
-#     exit 0;
-# fi
-
-
-
     
 
 
