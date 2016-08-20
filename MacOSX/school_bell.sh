@@ -41,7 +41,6 @@ else
     scheduleArray=(`cat $scheduleFile`)
 fi
 
-
 # build individual schedule arrays (scheduleFile should have exactly 4 lines?)
 # first line in scheduleFile will be default schedule
 IFS=',' read -ra defaultSchedule <<< "${scheduleArray[0]}"
@@ -56,19 +55,22 @@ IFS=',' read -ra exceptionSchedule2 <<< "${scheduleArray[2]}"
 IFS=',' read -ra exceptionSchedule3 <<< "${scheduleArray[3]}"
 
 # Match current date with exception dates to see if we are not on default schedule
-if [ "${exceptionsSchedule1[0]}" = "$month/$dayOfMonth/$year" ]; then
+if [ "${exceptionsSchedule1[0]}" = "$currentDate" ]; then
     activeSchedule=("${exceptionSchedule1[@]}")
-else if [ "${exceptionsSchedule2[0]}" = "$month/$dayOfMonth/$year" ]; then
+else if [ "${exceptionsSchedule2[0]}" = "$currentDate" ]; then
     activeSchedule=("${exceptionSchedule2[@]}")
-else if [ "${exceptionsSchedule3[0]}" = "$month/$dayOfMonth/$year" ]; then
+else if [ "${exceptionsSchedule3[0]}" = "$currentDate" ]; then
     activeSchedule=("${exceptionSchedule3[@]}")
 else
     activeSchedule=("${defaultSchedule[@]}")
     
-# We've decided what schedule to use.  Loop through it and look for matching times
+# if activeSchedule array only has 1 element (e.g. it's Christmas) exit script
+if [ ${#activeSchedule[@]} -eq 1 ]; then
+    echo "activeSchedule has no times.  Exiting." | logger -s >> /Users/Shared/BellSchedule/logs/bellschedule.log
+    exit 0;
+fi
 
-# first, we need to make sure system volume isn't muted
-# this puts volume at about 50 percent
+# make sure system volume isn't muted, this puts volume at about 50 percent
 osascript -e "set volume 4"
 
 for time in ${activeSchedule[@]}; do
