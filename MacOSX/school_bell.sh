@@ -34,7 +34,7 @@ else
 fi
 
 if [ ! -f /Users/Shared/BellSchedule/school_bell.mp3 ]; then
-    curl -o /Users/Shared/BellSchedule/school_bell.mp3 'http://files.sscps.org/bellschedule/v1/school_bell.mp3'
+    curl -o /Users/Shared/BellSchedule/school_bell.mp3 http://files.sscps.org/bellschedule/v1/school_bell.mp3
 
 # Give the possible download(s) a moment to finish
 sleep 5   # 5 seconds
