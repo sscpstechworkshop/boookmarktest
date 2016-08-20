@@ -1,23 +1,11 @@
 ################################################################################
 # School bell script
-# This script will check for a local file containing a bell schedule and create
-# it if not found by downloading it from specified server location
+# This script will check for /Users/Shared/BellSchedule/bellschedule_settings.conf
+# containing a bell schedule.  This file MUST be present.  If not dated today
+# it will download the bell schedule.
 # This script is being called every minute by the /Library/LaunchAgents/school_bell.plist file
 # Mac images should have school_bell.mp3 located at /Users/Shared/BellSchedule
 ################################################################################
-
-# Check if /Users/Shared/BellSchedule/bellschedule_settings.conf exists
-# if not, create it and populate today's date in it, otherwise read the date from it
-if [ ! -f /Users/Shared/BellSchedule/bellschedule_settings.conf ]; then
-    echo "bellschedule_settings.conf file not found!   Creating it and populating with current date." | logger -s >> /Users/Shared/BellSchedule/logs/bellschedule.log
-    mkdir -p /Users/Shared/BellSchedule
-    echo `date "+%Y/%m/%d"`>/Users/Shared/BellSchedule/bellschedule_settings.conf
-else
-    # (config file exists) 
-    # TODO: compare today's date with date already in bellschedule_settings.conf and exit if they match
-fi
-
-# conf file exists and the date is not today, so we need to grab the schedule file
 
 # Today's date and time
 year=`date "+%Y"`       # 2016
@@ -26,13 +14,33 @@ dayOfMonth=`date "+%d"` # 20
 day=`date "+%A"`        # Friday
 hour=`date "+%H"`       # 15 (24hr format)
 minute=`date "+%M"`     # 45 
+currentDate=$month/$dayOfMonth/$year
 
-# get today's bell schedule
+# Check if /Users/Shared/BellSchedule/bellschedule_settings.conf exists
+if [ ! -f /Users/Shared/BellSchedule/bellschedule_settings.conf ]; then
+    echo "bellschedule_settings.conf file not found!   Exiting." | logger -s >> /Users/Shared/BellSchedule/logs/bellschedule.log
+    exit 1;
+else
+    storedDate=`head -1 /Users/Shared/BellSchedule/bellschedule_settings.conf`
+    if [ "$currentDate" = "$storedDate" ]; then
+        echo "bellschedule_settings.conf file has today's date.   Exiting." | logger -s >> /Users/Shared/BellSchedule/logs/bellschedule.log
+        exit 0;
+    fi
+fi
+
+# conf file exists and the date is not today, so we need to grab the schedule file
 curl -o /Users/Shared/BellSchedule/bellschedule_$day.conf 'http://files.sscps.org/<location>/bellschedule_$day'
 scheduleFile=/Users/Shared/BellSchedule/bellschedule_$day.conf
 
 # populate scheduleArray from scheduleFile
-scheduleArray=(`cat $scheduleFile`)
+# NOTE: do we need a sleep 5 here to assure that the download has completed?
+if [ ! -f /Users/Shared/BellSchedule/bellschedule_$day.conf ]; then
+    echo "bellschedule_$day.conf doesn't exist!   Exiting." | logger -s >> /Users/Shared/BellSchedule/logs/bellschedule.log
+    exit 1;
+else
+    scheduleArray=(`cat $scheduleFile`)
+fi
+
 
 # build individual schedule arrays (scheduleFile should have exactly 4 lines?)
 # first line in scheduleFile will be default schedule
