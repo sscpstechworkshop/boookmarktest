@@ -20,19 +20,19 @@ mkdir -p /Users/Shared/BellSchedule/logs
 if [ ! -f /Users/Shared/BellSchedule/bellschedule_settings.conf ]; then
     mkdir -p /Users/Shared/BellSchedule/
     echo $currentDate>bellschedule_settings.conf
-    curl -o /Users/Shared/BellSchedule/bellschedule_$day.conf 'http://files.sscps.org/<location>/bellschedule_$day.conf'
+    curl -o /Users/Shared/BellSchedule/bellschedule_$day.conf 'http://files.sscps.org/bellschedule/v1/bellschedule_$day.conf'
 else
     storedDate=`head -1 /Users/Shared/BellSchedule/bellschedule_settings.conf`
     if [ "$currentDate" = "$storedDate" ]; then
         echo "bellschedule_settings.conf file has today's date.   Exiting." | logger -s >> /Users/Shared/BellSchedule/logs/bellschedule.log
         exit 0;
     else
-        curl -o /Users/Shared/BellSchedule/bellschedule_$day.conf 'http://files.sscps.org/<location>/bellschedule_$day.conf'
+        curl -o /Users/Shared/BellSchedule/bellschedule_$day.conf 'http://files.sscps.org/bellschedule/v1/bellschedule_$day.conf'
     fi
 fi
 
 if [ ! -f /Users/Shared/BellSchedule/school_bell.mp3 ]; then
-    curl -o /Users/Shared/BellSchedule/school_bell.mp3 'http://files.sscps.org/<location>/school_bell.mp3'
+    curl -o /Users/Shared/BellSchedule/school_bell.mp3 'http://files.sscps.org/bellschedule/v1/school_bell.mp3'
 
 # Give the possible download(s) a moment to finish
 sleep 5   # 5 seconds
