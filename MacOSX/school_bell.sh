@@ -60,15 +60,17 @@ if [ ! -f $scheduleFile ]; then
     exit 1;
 else
     echo "Found $scheduleFile" | logger -s >> $logFile
-    IFS=','
+    #IFS=','
+    IFS=$'\r\n' GLOBIGNORE='*'
     scheduleArray=(`cat $scheduleFile`)
 fi
 
 echo "Before loop that finds bell schedule" | logger -s >> $logFile
 for i in ${scheduleArray[@]}; do
     echo "Line being tested is: $i" | logger -s >> $logFile
-    IFS=','
-    currentTimeArray=(`cat $i`)
+    #IFS=','
+    #currentTimeArray=(`cat $i`)
+    IFS=', ' read -r -a currentTimeArray <<< $i
     echo "currentTimeArray is: ${currentTimeArray[@]}" | logger -s >> $logFile
     if [ "${currentTimeArray[0]}" = "default" ]; then
         bellScheduleArray=("${currentTimeArray[@]}")
