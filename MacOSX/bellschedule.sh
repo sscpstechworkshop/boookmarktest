@@ -40,6 +40,7 @@ else
     if [ "$currentDate" = "$storedDate" ]; then
         echo "bellschedule_settings.conf file has today's date.   Schedule refresh not needed." | logger -s >> $logFile
     else
+        echo $currentDate>$confFile
         curl -o $scheduleFile $scheduleURL
     fi
 fi
