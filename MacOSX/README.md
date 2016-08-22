@@ -16,3 +16,7 @@ The scripts are:
   - reset_chrome.sh     - this script erases the local student/teacher Chrome support files to remove any user data
   - cleanup_users.sh    - cleans up older user folders in /Users when drive is less than 10GB free.   Matching 
                           plist file (cleanup_users.plist) goes in /Library/LaunchDaemons/
+  - bellschedule.sh     - runs bells
+  - bellschedule.plist  - /Library/LaunchAgents
+  - bellschedule_perms.plist  - /Library/LaunchDaemons
+  - bellschedule_perms.sh     - sets up /Users/Shared/BellSchedule folder permissons
