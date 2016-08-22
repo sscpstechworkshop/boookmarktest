@@ -16,8 +16,8 @@ currentTime=$hour:$minute
 confFile=/Users/Shared/BellSchedule/bellschedule_settings.conf
 scheduleURL=http://files.sscps.org/bellschedule/v1/bellschedule_$day.conf
 scheduleFile=/Users/Shared/BellSchedule/bellschedule_$day.conf
-mp3URL=http://files.sscps.org/bellschedule/v1/school_bell.mp3
-mp3File=/Users/Shared/BellSchedule/school_bell.mp3
+mp3URL=http://files.sscps.org/bellschedule/v1/bellschedule.mp3
+mp3File=/Users/Shared/BellSchedule/bellschedule.mp3
 logPath=/Users/Shared/BellSchedule/logs/
 logFile=$logPath'bellschedule.log'
 
@@ -29,7 +29,6 @@ else
     # truncate log file so does not fill up computer
     echo "" | logger -s > $logFile
 fi
-
 
 if [ ! -f $confFile ]; then
     #echo "Settings file not found, creating it." | logger -s >> $logFile
