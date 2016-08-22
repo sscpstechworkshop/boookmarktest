@@ -3,10 +3,10 @@
   <plist version="1.0">
     <dict>
       <key>Label</key>
-      <string>school_bell</string>
+      <string>bellschedule</string>
       <key>ProgramArguments</key>
       <array>
-        <string>/usr/local/bin/school_bell.sh</string>
+        <string>/usr/local/bin/bellschedule.sh</string>
       </array>
       <key>RunAtLoad</key>
       <true/>
