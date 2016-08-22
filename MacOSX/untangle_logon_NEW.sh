@@ -17,8 +17,11 @@ URL_PREFIX="http"
 #fi
 
 # Determine the current gateway and assign appropriate IP to SERVERNAME
-SERVERNAME=`netstat -nr | grep 'default' | awk '{print $2}'`
-
+# With wired and wireless connections, there may be more than one default
+# so this puts them all in an array and just uses the first one
+# otherwise SERVERNAME will look like "10.8.0.1 10.8.0.1"
+gateway=(`netstat -rn | grep "default" | awk '{print $2}'`)
+SERVERNAME="${gateway[0]}"
 
 # log any previous user to system out of the Captive Portal (not Directory Connector)
 curl --location http://"${SERVERNAME}"/capture/logout
@@ -31,11 +34,10 @@ strHostname=$(hostname -s)
 # This should "overwrite" any active Directory Connector credentials
 # Execute script until logout
 while true; do
-     URLCOMMAND=${URL_PREFIX}"://"${SERVERNAME}"/userapi/registration?username="${strUser}"&domain="${strDomain}"&hostname="${strHostname}"$
+     URLCOMMAND=${URL_PREFIX}"://"${SERVERNAME}"/userapi/registration?username="${strUser}"&domain="${strDomain}"&hostname="${strHostname}"&action=login""&secretKey=jRMbLjkTZos"
 
      # Take out the comments below for testing the urlcommand
      # curl arguments: -f fails silently, -s silent mode with no progress status, -m maximum execution time allowed
      curl -f -s -m 10 $URLCOMMAND
      sleep $SLEEP_PERIOD
 done
-
