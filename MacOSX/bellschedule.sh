@@ -45,6 +45,14 @@ else
     fi
 fi
 
+if [ -f $confFile ]; then
+    scheduleFileSize=$(wc -c <$scheduleFile)
+    if [ $scheduleFileSize -eq 0 ]; then
+        echo "Zero sized $scheduleFile, removing $confFile for redownload." | logger -s >> $logFile
+        rm -f $confFile
+    fi
+fi
+
 if [ ! -f $mp3File ]; then
     echo "MP3 not found, downloading" | logger -s >> $logFile
     curl -o $mp3File $mp3URL
