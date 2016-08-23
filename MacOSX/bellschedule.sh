@@ -98,7 +98,7 @@ if [ ${#bellScheduleArray[@]} -eq 0 ]; then
 fi
 
 for time in ${bellScheduleArray[@]}; do
-    #echo "Time comparison is on : time=$time  currentTime=$currentTime" | logger -s >> $logFile
+    echo "Time comparison is on : time=$time  currentTime=$currentTime" | logger -s >> $logFile
     if [ "$time" = "$currentTime" ]; then
         # set volume to 50%
         osascript -e "set volume 4"
