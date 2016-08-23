@@ -57,7 +57,13 @@ if [ ! -f $mp3File ]; then
     echo "MP3 not found, downloading" | logger -s >> $logFile
     curl -o $mp3File $mp3URL
 else
-    echo "MP3 file found, no need to download" | logger -s >> $logFile
+    mp3FileSize=$(wc -c <$mp3File)
+    if [ $mp3FileSize -eq 0 ]; then
+        echo "Zero sized $mp3File, redownload." | logger -s >> $logFile
+        curl -o $mp3File $mp3URL
+    else
+        echo "MP3 file found & non-zero, no need to download" | logger -s >> $logFile
+    fi
 fi
 
 echo "Sleeping for 5 seconds" | logger -s >> $logFile
