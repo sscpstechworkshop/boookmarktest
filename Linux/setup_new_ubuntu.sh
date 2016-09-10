@@ -11,6 +11,8 @@
 #  1.  test to see if kubuntu-desktop is installed, if not install it
 #  2.  is there a way to see about changing network setup from server to workstation?
 #
+# in case needed
+# sudo usermod -aG sudo <username>
 # make some directories used in script
 mkdir -p /root/setup
 mkdir -p /home/System/scripts
