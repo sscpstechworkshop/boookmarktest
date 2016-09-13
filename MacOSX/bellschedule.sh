@@ -21,24 +21,31 @@ mp3File=/Users/Shared/BellSchedule/bellschedule.mp3
 logPath=/Users/Shared/BellSchedule/logs/
 logFile=$logPath'bellschedule.log'
 
+function sendToLog {
+    message="$currentDate $currentTime: $1"
+    logger -s $message
+    echo $message >> $logFile
+}
+
 # create log folder, this also makes folder for other stuff that gets created/downloaded
 if [ ! -d $logPath ]; then
     mkdir -p $logPath
-    echo "Log path not found, created it." | logger -s > $logFile
-else
+#else
     # truncate log file so does not fill up computer
-    echo "" | logger -s > $logFile
+    # sendToLog ""
 fi
 
+sendToLog "Start script"
+
 if [ ! -f $confFile ]; then
-    #echo "Settings file not found, creating it." | logger -s >> $logFile
+    sendToLog "Settings file not found, creating it."
     echo $currentDate>$confFile
-    echo "Downloading schedule file for $day." | logger -s >> $logFile
+    sendToLog "Downloading schedule file for $day."
     curl -o $scheduleFile $scheduleURL
 else
     storedDate=`head -1 $confFile`
     if [ "$currentDate" = "$storedDate" ]; then
-        echo "bellschedule_settings.conf file has today's date.   Schedule refresh not needed." | logger -s >> $logFile
+        sendToLog "bellschedule_settings.conf file has today's date.   Schedule refresh not needed."
     else
         echo $currentDate>$confFile
         curl -o $scheduleFile $scheduleURL
@@ -48,74 +55,74 @@ fi
 if [ -f $confFile ]; then
     scheduleFileSize=$(wc -c <$scheduleFile)
     if [ $scheduleFileSize -eq 0 ]; then
-        echo "Zero sized $scheduleFile, removing $confFile for redownload." | logger -s >> $logFile
+        sendToLog "Zero sized $scheduleFile, removing $confFile for redownload."
         rm -f $confFile
     fi
 fi
 
 if [ ! -f $mp3File ]; then
-    echo "MP3 not found, downloading" | logger -s >> $logFile
+    sendToLog "MP3 not found, downloading..."
     curl -o $mp3File $mp3URL
 else
     mp3FileSize=$(wc -c <$mp3File)
     if [ $mp3FileSize -eq 0 ]; then
-        echo "Zero sized $mp3File, redownload." | logger -s >> $logFile
+        sendToLog "Zero sized $mp3File, redownload."
         curl -o $mp3File $mp3URL
     else
-        echo "MP3 file found & non-zero, no need to download" | logger -s >> $logFile
+        sendToLog "MP3 file found & non-zero, no need to download."
     fi
 fi
 
-echo "Sleeping for 5 seconds" | logger -s >> $logFile
+sendToLog "Sleeping for 5 seconds"
 # Give the possible download(s) a moment to finish
 sleep 5   # 5 seconds
-#echo "Done sleeping for 5 seconds" | logger -s >> $logFile
+#sendToLog "Done sleeping for 5 seconds"
 
-#echo "Checking if scheduleFile exists" | logger -s >> $logFile
+#sendToLog "Checking if scheduleFile exists"
 # populate scheduleArray from scheduleFile
 if [ ! -f $scheduleFile ]; then
-    echo "$scheduleFile doesn't exist!   Exiting." | logger -s >> $logFile
+    sendToLog "$scheduleFile doesn't exist!   Exiting."
     exit 1;
 else
-    #echo "Found $scheduleFile" | logger -s >> $logFile
+    #sendToLog "Found $scheduleFile"
     #IFS=','
     IFS=$'\r\n' GLOBIGNORE='*'
     scheduleArray=(`cat $scheduleFile`)
 fi
 
-#echo "Before loop that finds bell schedule" | logger -s >> $logFile
+#sendToLog "Before loop that finds bell schedule"
 for i in ${scheduleArray[@]}; do
-    echo "Line being tested is: $i" | logger -s >> $logFile
+    sendToLog "Line being tested is: $i"
     #IFS=','
     #currentTimeArray=(`cat $i`)
     IFS=', ' read -r -a currentTimeArray <<< $i
-    #echo "currentTimeArray is: ${currentTimeArray[@]}" | logger -s >> $logFile
+    #sendToLog "currentTimeArray is: ${currentTimeArray[@]}"
     if [ "${currentTimeArray[0]}" = "default" ]; then
         bellScheduleArray=("${currentTimeArray[@]}")
-        echo "Using default bellScheduleArray: ${bellScheduleArray[@]}" | logger -s >> $logFile
+        sendToLog "Using default bellScheduleArray: ${bellScheduleArray[@]}"
         unset bellScheduleArray[0]
     fi
-    #echo "Current date is: $currentDate" | logger -s >> $logFile
+    #sendToLog "Current date is: $currentDate"
     if [ "${currentTimeArray[0]}" = "$currentDate" ]; then
         bellScheduleArray=("${currentTimeArray[@]}")
-        echo "Changing to custom bellScheduleArray: ${bellScheduleArray[@]}" | logger -s >> $logFile
+        sendToLog "Changing to custom bellScheduleArray: ${bellScheduleArray[@]}"
         unset bellScheduleArray[0]
     fi
 done
 
-echo "Final bellSchedule array is: ${bellScheduleArray[@]}" | logger -s >> $logFile
+sendToLog "Final bellSchedule array is: ${bellScheduleArray[@]}"
 
 # if bellSchedule has no times, exit
 if [ ${#bellScheduleArray[@]} -eq 0 ]; then
-     echo "Schedule has no times.  Exiting." | logger -s >> $logFile
+     sendToLog "Schedule has no times.  Exiting."
      exit 0;
 fi
 
 for time in ${bellScheduleArray[@]}; do
-    echo "Time comparison is on : time=$time  currentTime=$currentTime" | logger -s >> $logFile
+    sendToLog "Time comparison is on : time=$time currentTime=$currentTime"
     if [ "$time" = "$currentTime" ]; then
         # set volume to 50%
-        osascript -e "set volume 4"
+        osascript -e "set volume 5"
         afplay $mp3File
         exit 0;
     fi
