@@ -49,6 +49,7 @@ if [ ! -f $confFile ]; then
     echo $currentDate>$confFile
     sendToLog "Downloading schedule file for $day." 1
     curl -o $scheduleFile $scheduleURL
+    chmod g+rw $scheduleFile
 else
     storedDate=`head -1 $confFile`
     if [ "$currentDate" = "$storedDate" ]; then
