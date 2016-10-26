@@ -2,33 +2,60 @@
 # Bash skips errors and resumes by default
 # This script is based on the ad_login.vb script provided by untangle.com.
 
-# Time in seconds to sleep between requests
-SLEEP_PERIOD=300
+#for testing/debugging today's date and time
+#year=`date "+%Y"`       # 2016
+#month=`date "+%m"`      # 08
+#dayOfMonth=`date "+%d"` # 20
+#hour=`date "+%H"`       # 15 (24hr format)
+#minute=`date "+%M"`     # 45
+#date=$month/$dayOfMonth/$year
+#time=$hour:$minute
 
-# Lets define the protocol to be used.
-URL_PREFIX="http"
+#if [ ! -d /Users/$USER/logs ]; then
+#   mkdir -p /Users/$USER/logs    
+#fi
 
-gateway=(`netstat -rn | grep "default" | awk '{print $2}'`)
-SERVERNAME="${gateway[0]}"
+#logPath=/Users/$USER/logs/
+#logFile=$logPath'untangle_logon.log'
 
-# log any previous user to system out of the Captive Portal (not Directory Connector)
+function sendToLog {
+   message="$date $time: $1"
+   logger -s $message
+   echo $message >> $logFile
+}
+
+function getGateway {
+   gateway=(`netstat -rn | grep "default" | awk '{print $2}'`)
+   SERVERNAME="${gateway[0]}" 
+}
+
+getGateway
+
+# Check for valid gateway, wifi sometimes needs a moment
+# loop every 5 seconds for 30 seconds or until valid gateway found
+COUNTER=0
+   while [ $COUNTER -lt 5 ]; do
+#      sendToLog "In while loop, counter:$COUNTER server:$SERVERNAME"
+      if [ $SERVERNAME ]; then
+         break;
+      else
+         sleep 5
+         getGateway
+         let COUNTER=COUNTER+1
+#         sendToLog "After sleep, counter:$COUNTER server:$SERVERNAME"
+      fi
+done
+
+# log any previous user to system out of the Captive Portal
 curl --location http://"${SERVERNAME}"/capture/logout
 
-# set strUSER to current user
 strUser=$USER
 strDomain=AD
 strHostname=$(hostname -s)
 
 # This should "overwrite" any active Directory Connector credentials
-# Execute script until logout
-while true; do
-     gateway=(`netstat -rn | grep "default" | awk '{print $2}'`)
-     SERVERNAME="${gateway[0]}"
+URLCOMMAND="http://"${SERVERNAME}"/userapi/registration?username="${strUser}"&domain="${strDomain}"&hostname="${strHostname}"&action=login&secretKey=<CHANGEME>"
+curl -f -s -m 10 $URLCOMMAND
 
-     URLCOMMAND=${URL_PREFIX}"://"${SERVERNAME}"/userapi/registration?username="${strUser}"&domain="${strDomain}"&hostname="${strHostname}"&action=login""&secretKey=<changeme>"
-
-     # Take out the comments below for testing the urlcommand
-     # curl arguments: -f fails silently, -s silent mode with no progress status, -m maximum execution time allowed
-     curl -f -s -m 10 $URLCOMMAND
-     sleep $SLEEP_PERIOD
-done
+#sendToLog "Script executed. Gateway: $SERVERNAME"
+#sendToLog $URLCOMMAND
