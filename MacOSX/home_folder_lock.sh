@@ -37,22 +37,22 @@ if [[ $groups =~ "Domain Users" ]]; then
 #	echo $vDateTimeMMDDHHMMSS $USER "is in the domain" >>$vLogFileOutput
 	if [[ $groups =~ "SG_Policy_MacWriteLocal" ]]; then
 #		echo $vDateTimeMMDDHHMMSS $USER "is in SG_Policy_MacWriteLocal group, unlocking folders" >>$vLogFileOutput
-		chmod u+rwX /users/$USER/Documents
-		chmod u+rwX /users/$USER/Movies
-		chmod u+rwX /users/$USER/Music
-		chmod u+rwX /users/$USER/Pictures
-		chmod u+rwX /users/$USER/Downloads
-		chmod u+rwX /users/$USER/Desktop
-		chmod u+rwX /users/$USER/Public
+		chmod u+rwX /Users/$USER/Documents
+		chmod u+rwX /Users/$USER/Movies
+		chmod u+rwX /Users/$USER/Music
+		chmod u+rwX /Users/$USER/Pictures
+		chmod u+rwX /Users/$USER/Downloads
+		chmod u+rwX /Users/$USER/Desktop
+		chmod u+rwX /Users/$USER/Public
 	else
 #		echo $vDateTimeMMDDHHMMSS $USER "is NOT in the SG_Policy_MacWriteLocal group, locking folders" >>$vLogFileOutput
-		chmod a-rwX /users/$USER/Documents
-		chmod a-rwX /users/$USER/Movies
-		chmod a-rwX /users/$USER/Music
-		chmod a-rwX /users/$USER/Pictures
-		chmod a-rwX /users/$USER/Downloads
-		chmod a-rwX /users/$USER/Desktop
-		chmod a-rwX /users/$USER/Public
+		chmod a-rwX /Users/$USER/Documents
+		chmod a-rwX /Users/$USER/Movies
+		chmod a-rwX /Users/$USER/Music
+		chmod a-rwX /Users/$USER/Pictures
+		chmod a-rwX /Users/$USER/Downloads
+		chmod a-rwX /Users/$USER/Desktop
+		chmod a-rwX /Users/$USER/Public
 		
     # Mount network location on local folder only for network users who do not write locally.
     # The dscl command returns "dsAttrTypeNative:homeDirectory: <full AD home folder path>"
@@ -72,11 +72,11 @@ fi
 
 else
 #		echo $vDateTimeMMDDHHMMSS $USER "is NOT in the domain, unlocking folders." >>$vLogFileOutput
- 		chmod u+rwX /users/$USER/Documents
-                chmod u+rwX /users/$USER/Movies
-                chmod u+rwX /users/$USER/Music
-                chmod u+rwX /users/$USER/Pictures
-                chmod u+rwX /users/$USER/Downloads
-                chmod u+rwX /users/$USER/Desktop
-                chmod u+rwX /users/$USER/Public
+ 		chmod u+rwX /Users/$USER/Documents
+                chmod u+rwX /Users/$USER/Movies
+                chmod u+rwX /Users/$USER/Music
+                chmod u+rwX /Users/$USER/Pictures
+                chmod u+rwX /Users/$USER/Downloads
+                chmod u+rwX /Users/$USER/Desktop
+                chmod u+rwX /Users/$USER/Public
 fi
