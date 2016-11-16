@@ -36,17 +36,39 @@ if ( $user ) {
    Exit
 }
 
-
-# Loop through folders, calling fix-acl
+# user not supplied, fix all folders for given fileserver
+# check population and build array of folders to loop through
 if ( $population -eq "facstaff" ) {
-   $target_user_folder = $fac_user_folder$user
-   $target_other_folder = $fac_other_folder$user
-}
-if ( $population -eq "student" ) {
-   $target_user_folder = $stu_user_folder$user
-   $target_other_folder = $stu_other_folder$user
+   $user_folder_array = @(Get-ChildItem -Path $fac_user_folder | ?{ $_.PSIsContainer } | Select-Object FullName)
+   $other_folder_array = @(Get-ChildItem -Path $fac_other_folder | ?{ $_.PSIsContainer } | Select-Object FullName)
+
+   Foreach ($f in $user_folder_array) {
+      # each element in array will look like \\GREG\FacStaffUserFiles$\jmcsheffrey
+      # need to get user name from last part of each element in array
+      $u = $f | Split-Path -leaf
+      fix-acl($f $u)
+   }
+   Foreach ($f in $other_folder_array) {
+      $u = $f | Split-Path -leaf
+      fix-acl($f $u)
+   }
 }
 
+if ( $population -eq "student" ) {
+   $user_folder_array = @(Get-ChildItem -Path $stu_user_folder | ?{ $_.PSIsContainer } | Select-Object FullName)
+   $other_folder_array = @(Get-ChildItem -Path $stu_other_folder | ?{ $_.PSIsContainer } | Select-Object FullName)
+
+   Foreach ($f in $user_folder_array) {
+      # each element in array will look like \\GREG\FacStaffUserFiles$\jmcsheffrey
+      # need to get user name from last part of each element in array
+      $u = $f | Split-Path -leaf
+      fix-acl($f $u)
+   }
+   Foreach ($f in $other_folder_array) {
+      $u = $f | Split-Path -leaf
+      fix-acl($f $u)
+   }
+}
 
 # function that does the heavy lifting
 # folder and user are passed to it
