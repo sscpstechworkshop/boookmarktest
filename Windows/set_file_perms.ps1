@@ -18,10 +18,17 @@ if ( !($fileserver) -Or !($population) ) {
 }
 
 # Set up folder variables
-$fac_user_folder = "\\" + $fileserver + "\FacStaffUserFiles$\"
-$fac_other_folder = "\\" + $fileserver + "\FacStaffOtherFiles$\"
-$stu_user_folder = "\\" + $fileserver + "\StudentUserFiles$\"
-$stu_other_folder = "\\" + $fileserver + "\StudentOtherFiles$\"
+# $fac_user_folder = "\\" + $fileserver + "\FacStaffUserFiles$\"
+# $fac_other_folder = "\\" + $fileserver + "\FacStaffOtherFiles$\"
+# $stu_user_folder = "\\" + $fileserver + "\StudentUserFiles$\"
+# $stu_other_folder = "\\" + $fileserver + "\StudentOtherFiles$\"
+
+# TEST - Set up folder variables
+$fac_user_folder = "\\" + $fileserver + "\Test\FacStaffUserFiles$\"
+$fac_other_folder = "\\" + $fileserver + "\Test\\FacStaffOtherFiles$\"
+$stu_user_folder = "\\" + $fileserver + "\Test\StudentUserFiles$\"
+$stu_other_folder = "\\" + $fileserver + "\Test\StudentOtherFiles$\"
+
 
 # Was user argument supplied?
 if ( $user ) {
@@ -44,7 +51,7 @@ if ( $population -eq "facstaff" ) {
 
    Foreach ($f in $user_folder_array) {
       # each element in array will look like \\GREG\FacStaffUserFiles$\jmcsheffrey
-      # need to get user name from last part of each element in array
+      # get user name from last part of each element in array
       $u = $f | Split-Path -leaf
       fix-acl($f $u)
    }
@@ -60,7 +67,7 @@ if ( $population -eq "student" ) {
 
    Foreach ($f in $user_folder_array) {
       # each element in array will look like \\GREG\FacStaffUserFiles$\jmcsheffrey
-      # need to get user name from last part of each element in array
+      # get user name from last part of each element in array
       $u = $f | Split-Path -leaf
       fix-acl($f $u)
    }
