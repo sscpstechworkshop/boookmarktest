@@ -34,12 +34,12 @@ else {
 # Was user argument supplied?
 if ( $user ) {
    if ( $population -eq "facstaff" ) {
-      fix-acl($fac_user_folder$user $user)
-      fix-acl($fac_other_folder$user $user)
+      process_permissions($fac_user_folder$user)
+      process_permissions($fac_other_folder$user)
    }
    if ( $population -eq "student" ) {
-      fix-acl($stu_user_folder$user $user)
-      fix-acl($stu_other_folder$user $user)
+      process_permissions($stu_user_folder$user)
+      process_permissions($stu_other_folder$user)
    }
    Exit
 }
@@ -49,27 +49,35 @@ if ( $population -eq "facstaff" ) {
    $user_folder_array = @(Get-ChildItem -Path $fac_user_folder | ?{ $_.PSIsContainer } | Select-Object FullName)
    $other_folder_array = @(Get-ChildItem -Path $fac_other_folder | ?{ $_.PSIsContainer } | Select-Object FullName)
    
-   process_folder_array($user_folder_array)
-   process_folder_array($other_folder_array)
+   Foreach ($f in $user_folder_path) {
+      process_permissions($f)
+   }
+   Foreach ($f in $other_folder_path) {   
+      process_permissions($f)
+   }
 }
 
 if ( $population -eq "student" ) {
    $user_folder_array = @(Get-ChildItem -Path $stu_user_folder | ?{ $_.PSIsContainer } | Select-Object FullName)
    $other_folder_array = @(Get-ChildItem -Path $stu_other_folder | ?{ $_.PSIsContainer } | Select-Object FullName)
    
-   process_folder_array($user_folder_array)
-   process_folder_array($other_folder_array)
+   Foreach ($f in $user_folder_path) {
+      process_permissions($f)
+   }
+   Foreach ($f in $other_folder_path) {   
+      process_permissions($f)
+   }
 }
 
 # These are the permissions each folder will get
 # (OI) Object Inheritence (CI) Container Inheritence F Full control
 $perms = "(OI)(CI)F"
 
-function process_folder_array($f_arr) {
-   foreach ($f in $f_arr) {
-      $u = $f | Split-Path -leaf
-      takeown /f $f /r /d y
-      icacls $f /grant $u:$perms /t
-      icacls $f /setowner $u /t
-   }
+# Function to set up permissions
+# Accepts a UNC (e.g. \\GREG\c$\FacStaffUserFiles\jmcsheffrey)
+function process_permissions($f) {
+   $u = $f | Split-Path -leaf
+   takeown /f $f /r /d y
+   icacls $f /grant $u:$perms /t
+   icacls $f /setowner $u /t
 }
