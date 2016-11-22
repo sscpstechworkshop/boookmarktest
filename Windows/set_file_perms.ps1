@@ -33,10 +33,11 @@ function check_user_folders($f) {
    $folders = "Documents","Downloads","Desktop","Movies","Music","Public","Pictures"
    Foreach ($folder in $folders) {
       if( ! ( Test-Path $f\$folder) ) {
-         New-Item -path $f\$folder -name $folder -type directory
+         New-Item -path $f -name $folder -type directory
       }
    }
 }
+
 
 # Function to set up permissions
 function process_permissions($f) {
@@ -73,11 +74,11 @@ if ( $population -eq "facstaff" ) {
    $user_folder_array = @(Get-ChildItem -Path $fac_user_folder | ?{ $_.PSIsContainer } | Select-Object FullName)
    $other_folder_array = @(Get-ChildItem -Path $fac_other_folder | ?{ $_.PSIsContainer } | Select-Object FullName)
    
-   Foreach ($f in $user_folder_path) {
+   Foreach ($f in $user_folder_array) {
       check_user_folders($f)
       process_permissions($f)
    }
-   Foreach ($f in $other_folder_path) {   
+   Foreach ($f in $other_folder_array) {   
       process_permissions($f)
    }
 }
@@ -86,11 +87,12 @@ if ( $population -eq "student" ) {
    $user_folder_array = @(Get-ChildItem -Path $stu_user_folder | ?{ $_.PSIsContainer } | Select-Object FullName)
    $other_folder_array = @(Get-ChildItem -Path $stu_other_folder | ?{ $_.PSIsContainer } | Select-Object FullName)
    
-   Foreach ($f in $user_folder_path) {
+   Foreach ($f in $user_folder_array) {
       check_user_folders($f)
       process_permissions($f)
    }
-   Foreach ($f in $other_folder_path) {   
+   Foreach ($f in $other_folder_array) {   
       process_permissions($f)
    }
 }
+
