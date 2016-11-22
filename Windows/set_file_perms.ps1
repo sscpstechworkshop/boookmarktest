@@ -77,30 +77,22 @@ if ( $user ) {
    Exit
 }
 
+
 # user not supplied, fix all folders for given fileserver
 if ( $population -eq "facstaff" ) {
    $user_folder_array = @(Get-ChildItem -Path $fac_user_folder | ?{ $_.PSIsContainer } | Foreach-Object {$_.FullName})
    $other_folder_array = @(Get-ChildItem -Path $fac_other_folder | ?{ $_.PSIsContainer } | Foreach-Object {$_.FullName})
-   
-   Foreach ($f in $user_folder_array) {
-      check_user_folders($f)
-      process_permissions($f)
-   }
-   Foreach ($f in $other_folder_array) {   
-      process_permissions($f)
-   }
 }
 
 if ( $population -eq "student" ) {
    $user_folder_array = @(Get-ChildItem -Path $stu_user_folder | ?{ $_.PSIsContainer } | Foreach-Object {$_.FullName})
    $other_folder_array = @(Get-ChildItem -Path $stu_other_folder | ?{ $_.PSIsContainer } | Foreach-Object {$_.FullName})
-   
-   Foreach ($f in $user_folder_array) {
-      check_user_folders($f)
-      process_permissions($f)
-   }
-   Foreach ($f in $other_folder_array) {   
-      process_permissions($f)
-   }
 }
-
+  
+Foreach ($f in $user_folder_array) {
+   check_user_folders($f)
+   process_permissions($f)
+}
+Foreach ($f in $other_folder_array) {   
+   process_permissions($f)
+}
