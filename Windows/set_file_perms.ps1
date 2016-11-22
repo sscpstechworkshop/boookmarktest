@@ -6,16 +6,12 @@
 
 # arguments
 param( 
-   [Parameter(Mandatory=$true)][string]$fileserver,
-   [Parameter(Mandatory=$true)][string]$population,
+   [Parameter(Mandatory=$true)]
+   [string]$fileserver,
+   [Parameter(Mandatory=$true)]
+   [string]$population,
    [string]$user
 )
-
-# Check for mandatory arguments
-if ( !($fileserver) -Or !($population) ) {
-   Write-Host "Must supply -fileserver and -population arguments"
-   Exit
-}
 
 # TEST variables - Set up folder variables
 if ( $fileserver -eq "rowley" ) {
@@ -31,15 +27,44 @@ else {
    $stu_other_folder = "\\" + $fileserver + "\c$\Storage\Test\StudentOtherFiles\"
 }
 
+# Fuction to create user folders if needed
+# Accepts a UNC (e.g. \\GREG\c$\Storage\FacStaffUserFiles\jmcsheffrey)
+function check_user_folders($f) {
+   $folders = "Documents","Downloads","Desktop","Movies","Music","Public","Pictures"
+   Foreach ($folder in $folders) {
+      if( ! ( Test-Path $f\$folder) ) {
+         New-Item -path $f\$folder -name $folder -type directory
+      }
+   }
+}
+
+
+# Function to set up permissions
+function process_permissions($f) {
+   $u = $f | Split-Path -leaf
+   takeown /f $f /r /d y
+   $grant_perms = $u + ":(OI)(CI)F"
+   # /grant:r any previously granted explicit permissions are replaced
+   # Do not use /t with /grant - subfolders are handled by inheritence
+   icacls $f /grant:r $grant_perms
+   icacls $f /setowner $u /t
+}
+
 # Was user argument supplied?
 if ( $user ) {
    if ( $population -eq "facstaff" ) {
-      process_permissions($fac_user_folder$user)
-      process_permissions($fac_other_folder$user)
+      $user_path = $fac_user_folder + $user
+      $other_path = $fac_other_folder + $user
+      check_user_folders($user_path)
+      process_permissions($user_path)
+      process_permissions($other_path)
    }
    if ( $population -eq "student" ) {
-      process_permissions($stu_user_folder$user)
-      process_permissions($stu_other_folder$user)
+      $user_path = $stu_user_folder + $user
+      $other_path = $stu_other_folder + $user
+      check_user_folders($user_path)
+      process_permissions($user_path)
+      process_permissions($other_path)
    }
    Exit
 }
@@ -50,6 +75,7 @@ if ( $population -eq "facstaff" ) {
    $other_folder_array = @(Get-ChildItem -Path $fac_other_folder | ?{ $_.PSIsContainer } | Select-Object FullName)
    
    Foreach ($f in $user_folder_path) {
+      check_user_folders($f)
       process_permissions($f)
    }
    Foreach ($f in $other_folder_path) {   
@@ -62,22 +88,10 @@ if ( $population -eq "student" ) {
    $other_folder_array = @(Get-ChildItem -Path $stu_other_folder | ?{ $_.PSIsContainer } | Select-Object FullName)
    
    Foreach ($f in $user_folder_path) {
+      check_user_folders($f)
       process_permissions($f)
    }
    Foreach ($f in $other_folder_path) {   
       process_permissions($f)
    }
-}
-
-# These are the permissions each folder will get
-# (OI) Object Inheritence (CI) Container Inheritence F Full control
-$perms = "(OI)(CI)F"
-
-# Function to set up permissions
-# Accepts a UNC (e.g. \\GREG\c$\FacStaffUserFiles\jmcsheffrey)
-function process_permissions($f) {
-   $u = $f | Split-Path -leaf
-   takeown /f $f /r /d y
-   icacls $f /grant $u:$perms /t
-   icacls $f /setowner $u /t
 }
