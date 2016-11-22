@@ -38,7 +38,6 @@ function check_user_folders($f) {
    }
 }
 
-
 # Function to set up permissions
 function process_permissions($f) {
    $u = $f | Split-Path -leaf
