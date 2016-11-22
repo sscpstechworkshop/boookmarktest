@@ -66,17 +66,14 @@ if ( $user ) {
    if ( $population -eq "facstaff" ) {
       $user_path = $fac_user_folder + $user
       $other_path = $fac_other_folder + $user
-      check_user_folders($user_path)
-      process_permissions($user_path)
-      process_permissions($other_path)
    }
    if ( $population -eq "student" ) {
       $user_path = $stu_user_folder + $user
       $other_path = $stu_other_folder + $user
-      check_user_folders($user_path)
-      process_permissions($user_path)
-      process_permissions($other_path)
    }
+   check_user_folders($user_path)
+   process_permissions($user_path)
+   process_permissions($other_path)
    Exit
 }
 
