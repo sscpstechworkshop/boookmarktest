@@ -71,8 +71,8 @@ if ( $user ) {
 
 # user not supplied, fix all folders for given fileserver
 if ( $population -eq "facstaff" ) {
-   $user_folder_array = @(Get-ChildItem -Path $fac_user_folder | ?{ $_.PSIsContainer } | Select-Object FullName)
-   $other_folder_array = @(Get-ChildItem -Path $fac_other_folder | ?{ $_.PSIsContainer } | Select-Object FullName)
+   $user_folder_array = @(Get-ChildItem -Path $fac_user_folder | ?{ $_.PSIsContainer } | Foreach-Object {$_.FullName})
+   $other_folder_array = @(Get-ChildItem -Path $fac_other_folder | ?{ $_.PSIsContainer } | Foreach-Object {$_.FullName})
    
    Foreach ($f in $user_folder_array) {
       check_user_folders($f)
@@ -84,8 +84,8 @@ if ( $population -eq "facstaff" ) {
 }
 
 if ( $population -eq "student" ) {
-   $user_folder_array = @(Get-ChildItem -Path $stu_user_folder | ?{ $_.PSIsContainer } | Select-Object FullName)
-   $other_folder_array = @(Get-ChildItem -Path $stu_other_folder | ?{ $_.PSIsContainer } | Select-Object FullName)
+   $user_folder_array = @(Get-ChildItem -Path $stu_user_folder | ?{ $_.PSIsContainer } | Foreach-Object {$_.FullName})
+   $other_folder_array = @(Get-ChildItem -Path $stu_other_folder | ?{ $_.PSIsContainer } | Foreach-Object {$_.FullName})
    
    Foreach ($f in $user_folder_array) {
       check_user_folders($f)
