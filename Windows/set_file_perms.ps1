@@ -1,3 +1,6 @@
+########################################################################################################
+# Purpose:  Modify user/other folders with proper ACLs.   Will also create user folders where needed.
+#
 # This script accepts 3 arguments:
 #    NOTE:  If required arguments are left out, script will prompt you for them
 #    required argument: fileserver (GREG, ROWLEY, FREGLEY, RODRICK)
@@ -5,8 +8,8 @@
 #    optional argument: user  (e.g. jmcsheffrey, sstaff, joe_student)
 #    if no user, script will act on all folders (User & Other) of given fileserver and population
 #
-# Usage examples (log into server as administrator or script will add yourself to ACLs):
-#   The following will set permissions only for joe_student on GREG
+# Usage examples (run as administrator or script will add yourself to ACLs):
+#   The following will set permissions for joe_student on GREG
 #      .\set_file_perms.ps1 -fileserver greg -population student -user joe_student
 #   To achieve the same result you can also do (script will prompt for required arguments):
 #      .\set_file_perms.ps1 -user joe_student
@@ -14,6 +17,7 @@
 #      .\set_file_perms.ps1 -fileserver greg -population student
 #   Fix permissions for Sam Staff
 #      .\set_file_perms.ps1 -fileserver greg -population facstaff -user sstaff
+########################################################################################################
 
 # arguments
 param( 
@@ -39,7 +43,7 @@ else {
 }
 
 # Fuction to create user folders if needed
-# Accepts a UNC (e.g. \\GREG\c$\Storage\FacStaffUserFiles\jmcsheffrey)
+# Accepts UNC (e.g. \\GREG\c$\Storage\FacStaffUserFiles\jmcsheffrey)
 function check_user_folders($f) {
    $folders = "Documents","Downloads","Desktop","Movies","Music","Public","Pictures"
    Foreach ($folder in $folders) {
@@ -50,11 +54,12 @@ function check_user_folders($f) {
 }
 
 # Function to set up permissions
+# Accepts a UNC (e.g. \\GREG\c$\Storage\FacStaffUserFiles\jmcsheffrey)
 function process_permissions($f) {
    $u = $f | Split-Path -leaf
    takeown /f $f /r /d y
    $grant_perms = $u + ":(OI)(CI)F"
-   # /grant:r any previously granted explicit permissions are replaced
+   # /grant:r means any previously granted explicit permissions are replaced
    # Do not use /t with /grant - subfolders are handled by inheritence
    icacls $f /grant:r $grant_perms
    icacls $f /setowner $u /t
