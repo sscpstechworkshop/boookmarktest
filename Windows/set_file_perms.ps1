@@ -29,17 +29,31 @@ param(
 )
 
 # TEST variables - Set up folder variables
+#if ( $fileserver -eq "rowley" ) {
+#   $fac_user_folder = "\\ROWLEY\e$\Storage\Test\FacStaffUserFiles\"
+#   $fac_other_folder = "\\ROWLEY\e$\Storage\Test\FacStaffOtherFiles\"
+#   $stu_user_folder = "\\ROWLEY\e$\Storage\Test\StudentUserFiles\"
+#   $stu_other_folder = "\\ROWLEY\e$\Storage\Test\StudentOtherFiles\"
+#}
+#else {
+#   $fac_user_folder = "\\" + $fileserver + "\c$\Storage\Test\FacStaffUserFiles\"
+#   $fac_other_folder = "\\" + $fileserver + "\c$\Storage\Test\FacStaffOtherFiles\"
+#   $stu_user_folder = "\\" + $fileserver + "\c$\Storage\Test\StudentUserFiles\"
+#   $stu_other_folder = "\\" + $fileserver + "\c$\Storage\Test\StudentOtherFiles\"
+#}
+
+# PRODUCTION variables - Set up folder variables
 if ( $fileserver -eq "rowley" ) {
-   $fac_user_folder = "\\ROWLEY\e$\Storage\Test\FacStaffUserFiles\"
-   $fac_other_folder = "\\ROWLEY\e$\Storage\Test\FacStaffOtherFiles\"
-   $stu_user_folder = "\\ROWLEY\e$\Storage\Test\StudentUserFiles\"
-   $stu_other_folder = "\\ROWLEY\e$\Storage\Test\StudentOtherFiles\"
+   $fac_user_folder = "\\ROWLEY\e$\Storage\FacStaffUserFiles\"
+   $fac_other_folder = "\\ROWLEY\e$\Storage\FacStaffOtherFiles\"
+   $stu_user_folder = "\\ROWLEY\e$\Storage\StudentUserFiles\"
+   $stu_other_folder = "\\ROWLEY\e$\Storage\StudentOtherFiles\"
 }
 else {
-   $fac_user_folder = "\\" + $fileserver + "\c$\Storage\Test\FacStaffUserFiles\"
-   $fac_other_folder = "\\" + $fileserver + "\c$\Storage\Test\FacStaffOtherFiles\"
-   $stu_user_folder = "\\" + $fileserver + "\c$\Storage\Test\StudentUserFiles\"
-   $stu_other_folder = "\\" + $fileserver + "\c$\Storage\Test\StudentOtherFiles\"
+   $fac_user_folder = "\\" + $fileserver + "\c$\Storage\FacStaffUserFiles\"
+   $fac_other_folder = "\\" + $fileserver + "\c$\Storage\FacStaffOtherFiles\"
+   $stu_user_folder = "\\" + $fileserver + "\c$\Storage\StudentUserFiles\"
+   $stu_other_folder = "\\" + $fileserver + "\c$\Storage\StudentOtherFiles\"
 }
 
 # Fuction to create user folders if needed
@@ -80,7 +94,6 @@ if ( $user ) {
    process_permissions($other_path)
    Exit
 }
-
 
 # user not supplied, fix all folders for given fileserver
 if ( $population -eq "facstaff" ) {
