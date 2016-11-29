@@ -71,11 +71,11 @@ function check_user_folders($f) {
 # Accepts a UNC (e.g. \\GREG\c$\Storage\FacStaffUserFiles\jmcsheffrey)
 function process_permissions($f) {
    $u = $f | Split-Path -leaf
-   takeown /f $f /r /d y
    $grant_perms = $u + ":(OI)(CI)F"
-   # /grant:r means any previously granted explicit permissions are replaced
+   takeown /f $f /r /d y
+   icacls $f /reset /t
    # Do not use /t with /grant - subfolders are handled by inheritence
-   icacls $f /grant:r $grant_perms
+   icacls $f /grant "$grant_perms"
    icacls $f /setowner $u /t
 }
 
