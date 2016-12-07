@@ -25,7 +25,7 @@ Do While True
   strUser = wshShell.ExpandEnvironmentStrings("%USERNAME%")
   strDomain = wshShell.ExpandEnvironmentStrings("%USERDOMAIN%")
   strHostname = wshShell.ExpandEnvironmentStrings("%COMPUTERNAME%")
-  command = URL_PREFIX+"://"+ServerName+"/userapi/registration?username="+strUser+"&domain="+strDomain+"&hostname="+strHostname+"&action=login&secretKey=jRMbLjkTZos"
+  command = URL_PREFIX+"://"+ServerName+"/userapi/registration?username="+strUser+"&domain="+strDomain+"&hostname="+strHostname+"&action=login&secretKey=<<CHANGEME>>"
   'WScript.Echo command
   AJAX.Open "GET", command
   AJAX.Send ""
