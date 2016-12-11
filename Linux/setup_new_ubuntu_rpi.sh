@@ -13,7 +13,7 @@ apt-get -y install git git-doc
 # install preferred apps
 apt-get -y install ubuntu-restricted-extras
 apt-get -y install chromium-browser filezilla
-apt-get -y install vlc gimp marble inkscape audacity blender
+apt-get -y install vlc gimp inkscape
 #
 # download regular update script
 mkdir -p /home/System/scripts/
