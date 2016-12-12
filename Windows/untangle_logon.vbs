@@ -6,13 +6,17 @@ SLEEP_PERIOD = 300000
 
 URL_PREFIX = "http"
 
-If WScript.Arguments.Count = 1 Then
-	ServerName = WScript.Arguments.Item(0)
-Else
-	ServerName = "10.1.0.1"
-End If
+'Get gateway address of client machine
+strComputer = "."
+Set objWMIService = GetObject("winmgmts:\\" & strComputer & "\root\CIMV2")
+Set colItems = objWMIService.ExecQuery("SELECT * FROM Win32_NetworkAdapterConfiguration Where IPEnabled = True")
+For Each objItem In colItems
+   'strIPAddress = Join(objItem.IPAddress, ",")
+   strDefaultIPGateway = Join(objItem.DefaultIPGateway, ",")
+   'MsgBox "IP=" & strIPAddress & vbCrLf & "GW=" & strDefaultIPGateway
+Next
 
-'WScript.Echo "ServerName is:"
+ServerName = strDefaultIPGateway
 'WScript.Echo ServerName
 
 Do While True
