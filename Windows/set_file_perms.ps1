@@ -20,6 +20,8 @@
 #
 # REQUIRES:  subinacl tool must be installed on server you run this from
 #            https://www.microsoft.com/en-us/download/details.aspx?id=23510
+#            Then add the following to the server's PATH:
+#            C:\Program Files (x86)\Windows Resource Kits\Tools\
 ########################################################################################################
 
 # arguments
