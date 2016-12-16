@@ -17,6 +17,9 @@
 #      .\set_file_perms.ps1 -fileserver greg -population student
 #   Fix permissions for Sam Staff
 #      .\set_file_perms.ps1 -fileserver greg -population facstaff -user sstaff
+#
+# REQUIRES:  subinacl tool must be installed on server you run this from
+#            https://www.microsoft.com/en-us/download/details.aspx?id=23510
 ########################################################################################################
 
 # arguments
