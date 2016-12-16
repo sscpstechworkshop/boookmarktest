@@ -28,19 +28,21 @@ param(
    [string]$user
 )
 
+<#
 # TEST variables - Set up folder variables
-#if ( $fileserver -eq "rowley" ) {
-#   $fac_user_folder = "\\ROWLEY\e$\Storage\Test\FacStaffUserFiles\"
-#   $fac_other_folder = "\\ROWLEY\e$\Storage\Test\FacStaffOtherFiles\"
-#   $stu_user_folder = "\\ROWLEY\e$\Storage\Test\StudentUserFiles\"
-#   $stu_other_folder = "\\ROWLEY\e$\Storage\Test\StudentOtherFiles\"
-#}
-#else {
-#   $fac_user_folder = "\\" + $fileserver + "\c$\Storage\Test\FacStaffUserFiles\"
-#   $fac_other_folder = "\\" + $fileserver + "\c$\Storage\Test\FacStaffOtherFiles\"
-#   $stu_user_folder = "\\" + $fileserver + "\c$\Storage\Test\StudentUserFiles\"
-#   $stu_other_folder = "\\" + $fileserver + "\c$\Storage\Test\StudentOtherFiles\"
-#}
+if ( $fileserver -eq "rowley" ) {
+   $fac_user_folder = "\\ROWLEY\e$\Storage\Test\FacStaffUserFiles\"
+   $fac_other_folder = "\\ROWLEY\e$\Storage\Test\FacStaffOtherFiles\"
+   $stu_user_folder = "\\ROWLEY\e$\Storage\Test\StudentUserFiles\"
+   $stu_other_folder = "\\ROWLEY\e$\Storage\Test\StudentOtherFiles\"
+}
+else {
+   $fac_user_folder = "\\" + $fileserver + "\c$\Storage\Test\FacStaffUserFiles\"
+   $fac_other_folder = "\\" + $fileserver + "\c$\Storage\Test\FacStaffOtherFiles\"
+   $stu_user_folder = "\\" + $fileserver + "\c$\Storage\Test\StudentUserFiles\"
+   $stu_other_folder = "\\" + $fileserver + "\c$\Storage\Test\StudentOtherFiles\"
+}
+#>
 
 # PRODUCTION variables - Set up folder variables
 if ( $fileserver -eq "rowley" ) {
@@ -57,7 +59,7 @@ else {
 }
 
 # Fuction to create user folders if needed
-# Accepts UNC (e.g. \\GREG\c$\Storage\FacStaffUserFiles\jmcsheffrey)
+# Accepts UNC (e.g. \\GREG\c$\Storage\FacStaffUserFiles\jmcsheffrey\)
 function check_user_folders($f) {
    $folders = "Documents","Downloads","Desktop","Movies","Music","Public","Pictures"
    Foreach ($folder in $folders) {
@@ -68,26 +70,29 @@ function check_user_folders($f) {
 }
 
 # Function to set up permissions
-# Accepts a UNC (e.g. \\GREG\c$\Storage\FacStaffUserFiles\jmcsheffrey)
+# Accepts a UNC (e.g. \\GREG\c$\Storage\FacStaffUserFiles\jmcsheffrey\)
 function process_permissions($f) {
    $u = $f | Split-Path -leaf
    $grant_perms = $u + ":(OI)(CI)F"
-   takeown /f $f /r /d y
    icacls $f /reset /t
    # Do not use /t with /grant - subfolders are handled by inheritence
    icacls $f /grant "$grant_perms"
-   icacls $f /setowner $u /t
+   # Set the owner of the parent user folder (e.g. jmcsheffrey)
+   # subinacl /subdirectories does NOT modify the root folder of path given! So, we have to do it manually
+   subinacl /file $f /setowner=$u
+   # Now set the owner for all the users content
+   subinacl /subdirectories $f /setowner=$u
 }
 
 # Was user argument supplied?
 if ( $user ) {
    if ( $population -eq "facstaff" ) {
-      $user_path = $fac_user_folder + $user
-      $other_path = $fac_other_folder + $user
+      $user_path = $fac_user_folder + $user + "\" 
+      $other_path = $fac_other_folder + $user + "\"
    }
    if ( $population -eq "student" ) {
-      $user_path = $stu_user_folder + $user
-      $other_path = $stu_other_folder + $user
+      $user_path = $stu_user_folder + $user + "\"
+      $other_path = $stu_other_folder + $user + "\"
    }
    check_user_folders($user_path)
    process_permissions($user_path)
@@ -96,14 +101,16 @@ if ( $user ) {
 }
 
 # user not supplied, fix all folders for given fileserver
+# subinacl /subdirectories type fails if trailing backslash is missing
+# so it has been added in when array is built, or specified user above
 if ( $population -eq "facstaff" ) {
-   $user_folder_array = @(Get-ChildItem -Path $fac_user_folder | ?{ $_.PSIsContainer } | Foreach-Object {$_.FullName})
-   $other_folder_array = @(Get-ChildItem -Path $fac_other_folder | ?{ $_.PSIsContainer } | Foreach-Object {$_.FullName})
+   $user_folder_array = @(Get-ChildItem -Path $fac_user_folder | ?{ $_.PSIsContainer } | Foreach-Object {$_.FullName+"\"})
+   $other_folder_array = @(Get-ChildItem -Path $fac_other_folder | ?{ $_.PSIsContainer } | Foreach-Object {$_.FullName+"\"})
 }
 
 if ( $population -eq "student" ) {
-   $user_folder_array = @(Get-ChildItem -Path $stu_user_folder | ?{ $_.PSIsContainer } | Foreach-Object {$_.FullName})
-   $other_folder_array = @(Get-ChildItem -Path $stu_other_folder | ?{ $_.PSIsContainer } | Foreach-Object {$_.FullName})
+   $user_folder_array = @(Get-ChildItem -Path $stu_user_folder | ?{ $_.PSIsContainer } | Foreach-Object {$_.FullName+"\"})
+   $other_folder_array = @(Get-ChildItem -Path $stu_other_folder | ?{ $_.PSIsContainer } | Foreach-Object {$_.FullName+"\"})
 }
   
 Foreach ($f in $user_folder_array) {
