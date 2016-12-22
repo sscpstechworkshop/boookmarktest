@@ -78,14 +78,17 @@ function check_user_folders($f) {
 # Accepts a UNC (e.g. \\GREG\c$\Storage\FacStaffUserFiles\jmcsheffrey\)
 function process_permissions($f) {
    $u = $f | Split-Path -leaf
+   # subinacl /subdirectories does NOT modify the root folder of path given, so we have to do it manually
+   subinacl /file $f /setowner=AD\Administrator
+   # Set users content owner to AD\Administrator
+   subinacl /subdirectories $f /setowner=AD\Administrator
    $grant_perms = $u + ":(OI)(CI)F"
    icacls $f /reset /t
    # Do not use /t with /grant - subfolders are handled by inheritence
    icacls $f /grant "$grant_perms"
-   # Set the owner of the parent user folder (e.g. jmcsheffrey)
-   # subinacl /subdirectories does NOT modify the root folder of path given! So, we have to do it manually
+   # Set the owner of the parent user folder back to user (e.g. jmcsheffrey)
    subinacl /file $f /setowner=$u
-   # Now set the owner for all the users content
+   # Now set the owner for all the users content back to user
    subinacl /subdirectories $f /setowner=$u
 }
 
