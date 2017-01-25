@@ -2,21 +2,24 @@
 # Bash skips errors and resumes by default
 # This script is based on the ad_login.vb script provided by untangle.com.
 
-#for testing/debugging today's date and time
-#year=`date "+%Y"`       # 2016
-#month=`date "+%m"`      # 08
-#dayOfMonth=`date "+%d"` # 20
-#hour=`date "+%H"`       # 15 (24hr format)
-#minute=`date "+%M"`     # 45
-#date=$month/$dayOfMonth/$year
-#time=$hour:$minute
+# Turn logging off (0) or on (1)
+logging=0
 
-#if [ ! -d /Users/$USER/logs ]; then
-#   mkdir -p /Users/$USER/logs    
-#fi
+#today's date and time
+year=`date "+%Y"`       # 2016
+month=`date "+%m"`      # 08
+dayOfMonth=`date "+%d"` # 20
+hour=`date "+%H"`       # 15 (24hr format)
+minute=`date "+%M"`     # 45
+date=$month/$dayOfMonth/$year
+time=$hour:$minute
 
-#logPath=/Users/$USER/logs/
-#logFile=$logPath'untangle_logon.log'
+if [ ! -d /Users/$USER/logs ]; then
+   mkdir -p /Users/$USER/logs    
+fi
+
+logPath=/Users/$USER/logs/
+logFile=$logPath'untangle_logon.log'
 
 function sendToLog {
    message="$date $time: $1"
@@ -35,14 +38,14 @@ getGateway
 # loop every 5 seconds for 30 seconds or until valid gateway found
 COUNTER=0
    while [ $COUNTER -lt 5 ]; do
-#      sendToLog "In while loop, counter:$COUNTER server:$SERVERNAME"
+      if [ $logging -eq 1 ]; then sendToLog "In while loop, counter:$COUNTER server:$SERVERNAME"; fi
       if [ $SERVERNAME ]; then
          break;
       else
          sleep 5
          getGateway
          let COUNTER=COUNTER+1
-#         sendToLog "After sleep, counter:$COUNTER server:$SERVERNAME"
+         if [ $logging -eq 1 ]; then sendToLog "After sleep, counter:$COUNTER server:$SERVERNAME"; fi
       fi
 done
 
@@ -57,5 +60,5 @@ strHostname=$(hostname -s)
 URLCOMMAND="http://"${SERVERNAME}"/userapi/registration?username="${strUser}"&domain="${strDomain}"&hostname="${strHostname}"&action=login&secretKey=<CHANGEME>"
 curl -f -s -m 10 $URLCOMMAND
 
-#sendToLog "Script executed. Gateway: $SERVERNAME"
-#sendToLog $URLCOMMAND
+if [ $logging -eq 1 ]; then sendToLog "Script executed. Gateway: $SERVERNAME"; fi
+if [ $logging -eq 1 ]; then sendToLog $URLCOMMAND; fi
