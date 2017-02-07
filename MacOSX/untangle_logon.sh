@@ -60,5 +60,9 @@ strHostname=$(hostname -s)
 URLCOMMAND="http://"${SERVERNAME}"/userapi/registration?username="${strUser}"&domain="${strDomain}"&hostname="${strHostname}"&action=login&secretKey=<CHANGEME>"
 curl -f -s -m 10 $URLCOMMAND
 
+#TODO: Sometimes this curl command just doesn't stick.   Nothing wrong with script, it is an Untangle issue.
+#TODO: Implement a check after sending this that you can access sscps.org and if you can't run the script again
+#TODO: instead of waiting for the next five minute interval.
+
 if [ $logging -eq 1 ]; then sendToLog "Script executed. Gateway: $SERVERNAME"; fi
 if [ $logging -eq 1 ]; then sendToLog $URLCOMMAND; fi
