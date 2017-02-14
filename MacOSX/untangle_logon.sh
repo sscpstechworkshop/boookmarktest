@@ -50,6 +50,11 @@ COUNTER=0
 done
 
 # log any previous user to system out of the Captive Portal
+# Skip and exit if sscpslocal is user
+if [ "${USER}" == "sscpslocal" ]; then
+   exit 0;
+fi
+
 curl --location http://"${SERVERNAME}"/capture/logout
 
 strUser=$USER
@@ -60,9 +65,14 @@ strHostname=$(hostname -s)
 URLCOMMAND="http://"${SERVERNAME}"/userapi/registration?username="${strUser}"&domain="${strDomain}"&hostname="${strHostname}"&action=login&secretKey=<CHANGEME>"
 curl -f -s -m 10 $URLCOMMAND
 
-#TODO: Sometimes this curl command just doesn't stick.   Nothing wrong with script, it is an Untangle issue.
-#TODO: Implement a check after sending this that you can access sscps.org and if you can't run the script again
-#TODO: instead of waiting for the next five minute interval.
+# Sometimes this curl command just doesn't stick.   Nothing wrong with script, it is an Untangle issue.
+# Did the curl command work?
+title=`curl --location "http://sscps.org" | grep "<title>"`
+if [ "$title" == "<title>Untangle | Captive Portal</title>" ]; then
+   # We didn't get through Captive Portal, try URLCOMMAND again
+   if [ $logging -eq 1 ]; then sendToLog "<title> was from Captive Portal page, URLCOMMAND didn't take.   Running again."; fi
+   curl -f -s -m 10 $URLCOMMAND
+fi
 
 if [ $logging -eq 1 ]; then sendToLog "Script executed. Gateway: $SERVERNAME"; fi
 if [ $logging -eq 1 ]; then sendToLog $URLCOMMAND; fi
