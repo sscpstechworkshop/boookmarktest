@@ -14,7 +14,7 @@ cd /root
 wget http://www.webmin.com/jcameron-key.asc
 apt-key add /root/jcameron-key.asc
 #
-# install "standard" apps in regular repositories
+# install "standard" apps for server
 apt-get update
 apt-get -y install webmin
 apt-get -y install mc
@@ -22,6 +22,7 @@ apt-get -y install w3m w3m-img
 apt-get -y install mutt
 apt-get -y install git git-doc
 apt-get -y install openssh-server
+apt-get -y install screen # some versions don't have it installed by default
 #
 # download regular update script
 mkdir -p /home/System/scripts/
