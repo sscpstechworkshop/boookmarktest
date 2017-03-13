@@ -15,6 +15,10 @@ echo   Forcing held-back packages
 echo ===============================
 aptitude -y --full-resolver safe-upgrade
 echo ===============================
+echo   Uncomment as needed
+echo ===============================
+#sudo letsencrypt renew
+echo ===============================
 echo   Cleaning up packages
 echo ===============================
 apt-get -y autoremove
