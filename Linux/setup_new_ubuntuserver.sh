@@ -18,6 +18,7 @@ apt-key add /root/jcameron-key.asc
 apt-get update
 apt-get -y install webmin
 apt-get -y install mc
+apt-get -y install pv
 apt-get -y install w3m w3m-img
 apt-get -y install mutt
 apt-get -y install git git-doc
