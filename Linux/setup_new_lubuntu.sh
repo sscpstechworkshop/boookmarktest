@@ -28,7 +28,7 @@ apt-get clean
 # install some tools
 add-apt-repository -y ppa:webupd8team/java
 apt-get update
-apt-get -y install oracle-java7-installer mc mutt git git-doc
+apt-get -y install oracle-java7-installer mc mutt git git-doc pv
 apt-get -f -y install
 # download script for "unattended" updating
 cd /home/System/scripts/
