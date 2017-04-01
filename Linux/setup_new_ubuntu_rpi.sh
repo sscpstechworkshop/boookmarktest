@@ -6,7 +6,7 @@
 apt-get update
 rpi-update
 #
-apt-get -y install mc
+apt-get -y install mc pv
 apt-get -y install w3m w3m-img
 apt-get -y install git git-doc
 #
