@@ -34,49 +34,49 @@
 groups=$(id -Gn $USER)
 
 if [[ $groups =~ "Domain Users" ]]; then
-#	echo $vDateTimeMMDDHHMMSS $USER "is in the domain" >>$vLogFileOutput
-	if [[ $groups =~ "SG_Policy_MacWriteLocal" ]]; then
-#		echo $vDateTimeMMDDHHMMSS $USER "is in SG_Policy_MacWriteLocal group, unlocking folders" >>$vLogFileOutput
-		chmod u+rwX /Users/$USER/Documents
-		chmod u+rwX /Users/$USER/Movies
-		chmod u+rwX /Users/$USER/Music
-		chmod u+rwX /Users/$USER/Pictures
-		chmod u+rwX /Users/$USER/Downloads
-		chmod u+rwX /Users/$USER/Desktop
-		chmod u+rwX /Users/$USER/Public
-	else
-#		echo $vDateTimeMMDDHHMMSS $USER "is NOT in the SG_Policy_MacWriteLocal group, locking folders" >>$vLogFileOutput
-		chmod a-rwX /Users/$USER/Documents
-		chmod a-rwX /Users/$USER/Movies
-		chmod a-rwX /Users/$USER/Music
-		chmod a-rwX /Users/$USER/Pictures
-		chmod a-rwX /Users/$USER/Downloads
-		chmod a-rwX /Users/$USER/Desktop
-		chmod a-rwX /Users/$USER/Public
+#echo $vDateTimeMMDDHHMMSS $USER "is in the domain" >>$vLogFileOutput
+   if [[ $groups =~ "SG_Policy_MacWriteLocal" ]]; then
+#echo $vDateTimeMMDDHHMMSS $USER "is in SG_Policy_MacWriteLocal group, unlocking folders" >>$vLogFileOutput
+      chmod u+rwX /Users/$USER/Documents
+      chmod u+rwX /Users/$USER/Movies
+      chmod u+rwX /Users/$USER/Music
+      chmod u+rwX /Users/$USER/Pictures
+      chmod u+rwX /Users/$USER/Downloads
+      chmod u+rwX /Users/$USER/Desktop
+      chmod u+rwX /Users/$USER/Public
+   else
+#echo $vDateTimeMMDDHHMMSS $USER "is NOT in the SG_Policy_MacWriteLocal group, locking folders" >>$vLogFileOutput
+      chmod a-rwX /Users/$USER/Documents
+      chmod a-rwX /Users/$USER/Movies
+      chmod a-rwX /Users/$USER/Music
+      chmod a-rwX /Users/$USER/Pictures
+      chmod a-rwX /Users/$USER/Downloads
+      chmod a-rwX /Users/$USER/Desktop
+      chmod a-rwX /Users/$USER/Public
 		
-    # Mount network location on local folder only for network users who do not write locally.
-    # The dscl command returns "dsAttrTypeNative:homeDirectory: <full AD home folder path>"
-    # awk parses this and makes its own space seperated variables
-    # so "dsAttrTypeNative:homeDirectory:" is $1 and e.g. "\\ROWLEY\FacStaffUserFiles$\jmcsheffrey" is $2
-    # print $2 gives network location for $USER so that is what should be root of paths to mount
-    # 9/23/2015:  Added check for network folder before mount
-    vHomeFolder=$( dscl "/Active Directory/AD/All Domains" -read /Users/$USER dsAttrTypeNative:homeDirectory | awk '{print $2}' )
-    mount -t smbfs $vHomeFolder/Documents ~/Documents
-    mount -t smbfs $vHomeFolder/Movies ~/Movies
-    mount -t smbfs $vHomeFolder/Music ~/Music
-    mount -t smbfs $vHomeFolder/Pictures ~/Pictures
-    mount -t smbfs $vHomeFolder/Downloads ~/Downloads
-    mount -t smbfs $vHomeFolder/Desktop ~/Desktop
-    mount -t smbfs $vHomeFolder/Public ~/Public
+# Mount network location on local folder only for network users who do not write locally.
+# The dscl command returns "dsAttrTypeNative:homeDirectory: <full AD home folder path>"
+# awk parses this and makes its own space seperated variables
+# so "dsAttrTypeNative:homeDirectory:" is $1 and e.g. "\\ROWLEY\FacStaffUserFiles$\jmcsheffrey" is $2
+# print $2 gives network location for $USER so that is what should be root of paths to mount
+# 9/23/2015:  Added check for network folder before mount
+      vHomeFolder=$( dscl "/Active Directory/AD/All Domains" -read /Users/$USER dsAttrTypeNative:homeDirectory | awk '{print $2}' )
+      mount -t smbfs $vHomeFolder/Documents ~/Documents
+      mount -t smbfs $vHomeFolder/Movies ~/Movies
+      mount -t smbfs $vHomeFolder/Music ~/Music
+      mount -t smbfs $vHomeFolder/Pictures ~/Pictures
+      mount -t smbfs $vHomeFolder/Downloads ~/Downloads
+      mount -t smbfs $vHomeFolder/Desktop ~/Desktop
+      mount -t smbfs $vHomeFolder/Public ~/Public
 fi
 
 else
-#		echo $vDateTimeMMDDHHMMSS $USER "is NOT in the domain, unlocking folders." >>$vLogFileOutput
- 		chmod u+rwX /Users/$USER/Documents
-                chmod u+rwX /Users/$USER/Movies
-                chmod u+rwX /Users/$USER/Music
-                chmod u+rwX /Users/$USER/Pictures
-                chmod u+rwX /Users/$USER/Downloads
-                chmod u+rwX /Users/$USER/Desktop
-                chmod u+rwX /Users/$USER/Public
+#echo $vDateTimeMMDDHHMMSS $USER "is NOT in the domain, unlocking folders." >>$vLogFileOutput
+   chmod u+rwX /Users/$USER/Documents
+   chmod u+rwX /Users/$USER/Movies
+   chmod u+rwX /Users/$USER/Music
+   chmod u+rwX /Users/$USER/Pictures
+   chmod u+rwX /Users/$USER/Downloads
+   chmod u+rwX /Users/$USER/Desktop
+   chmod u+rwX /Users/$USER/Public
 fi
