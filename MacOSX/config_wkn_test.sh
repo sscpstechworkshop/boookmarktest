@@ -11,7 +11,7 @@
 #                 Download scripts: F = yes, S = yes, P = default Y
 #                 Enable bell: F = yes, S = no, P = default N
 #                 Enable captive helper: F = no, S = no, P = default N
-#                 Enbale cleanup users: F = yes, S = no, P = default N
+#                 Enbale cleanup users: F = no, S = yes, P = default N
 #                 Hardcoded to: home_folder_lock.sh, reset_chrome.sh, untangle_logon.sh
 #
 # Script Notes:   Workstation naming defaults to WKN<MAC> if prompt is empty.
