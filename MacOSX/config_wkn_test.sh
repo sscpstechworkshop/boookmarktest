@@ -11,7 +11,7 @@
 #                 Download scripts: F = yes, S = yes, P = default Y
 #                 Enable bell: F = yes, S = no, P = default N
 #                 Enable captive helper: F = no, S = no, P = default N
-#                 Enbale cleanup users: F = no, S = yes, P = default N
+#                 Enable cleanup users: F = no, S = yes, P = default N
 #                 Hardcoded to: home_folder_lock.sh, reset_chrome.sh, untangle_logon.sh
 #
 # Script Notes:   Workstation naming defaults to WKN<MAC> if prompt is empty.
@@ -25,14 +25,14 @@ if [ $# -eq 0 ]; then
    name=WKN$mac_address
    # ENABLE cleanup_users.plist
    sed -i "" 's/false/true/g' /Library/LaunchDaemons/cleanup_users.plist
-   # DISABLE school_bell.plist
-   sed -i "" 's/true/false/g' /Library/LaunchAgents/school_bell.plist
+   # DISABLE bellschedule.plist
+   sed -i "" 's/true/false/g' /Library/LaunchAgents/bellschedule.plist
 else
    name=$1
    # DISABLE cleanup_users.plist
    sed -i "" 's/true/false/g' /Library/LaunchDaemons/cleanup_users.plist
-   # ENABLE school_bell.plist
-   sed -i "" 's/false/true/g' /Library/LaunchAgents/school_bell.plist
+   # ENABLE bellschedule.plist
+   sed -i "" 's/false/true/g' /Library/LaunchAgents/bellschedule.plist
 fi
 
 scutil --set ComputerName $name
