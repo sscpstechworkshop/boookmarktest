@@ -7,14 +7,15 @@
 #                 faculty machine; S = defaults for student machine; P = prompt for each
 #                 option.  The options and defaults are listed below.
 #
-#                 Change WKN Name: F = prompt, S = WKN<MAC>, P = default/empty = WKN<MAC>
+#                 Change WKN Name: F = prompt, S = WKN<MAC>, P = promt
 #                 Download scripts: F = yes, S = yes, P = default Y
 #                 Enable bell: F = yes, S = no, P = default N
 #                 Ensable captive helper: F = no, S = no, P = default N
 #                 Enbale cleanup users: F = yes, S = no, P = default N
 #                 Hardcoded to: home_folder_lock.sh, reset_chrome.sh, untangle_logon.sh
 #
-# Script Notes:   Script should be installed at /usr/local/bin.
+# Script Notes:   Workstation naming defaults to WKN<MAC> if prompt is empty.
+#                 Script should be installed at /usr/local/bin.
 #                 Script should be run as root.
 # 
 ########################################################################################
