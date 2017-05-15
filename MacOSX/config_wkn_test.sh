@@ -10,7 +10,7 @@
 #                 Change WKN Name: F = prompt, S = WKN<MAC>, P = promt
 #                 Download scripts: F = yes, S = yes, P = default Y
 #                 Enable bell: F = yes, S = no, P = default N
-#                 Ensable captive helper: F = no, S = no, P = default N
+#                 Enable captive helper: F = no, S = no, P = default N
 #                 Enbale cleanup users: F = yes, S = no, P = default N
 #                 Hardcoded to: home_folder_lock.sh, reset_chrome.sh, untangle_logon.sh
 #
