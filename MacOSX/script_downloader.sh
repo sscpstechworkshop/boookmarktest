@@ -3,7 +3,7 @@
 #
 # This script will download all macOS scripts from Github and
 # place them in the proper folder and give execution rights
-# to the .sh files
+# to the .sh files.   Should be run as root.
 #################################################################
 
 curl -L -o '/Library/LaunchAgents/bellschedule.plist' https://raw.githubusercontent.com/SSCPS/TechTools/master/MacOSX/bellschedule.plist
