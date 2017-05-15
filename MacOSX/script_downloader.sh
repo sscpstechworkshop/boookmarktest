@@ -5,6 +5,7 @@
 # place them in the proper folder and give execution rights
 # to the .sh files.   Should be run as root.
 #################################################################
+mkdir -p /usr/local/bin
 
 curl -L -o '/Library/LaunchAgents/bellschedule.plist' https://raw.githubusercontent.com/SSCPS/TechTools/master/MacOSX/bellschedule.plist
 curl -L -o '/usr/local/bin/bellschedule.sh' https://raw.githubusercontent.com/SSCPS/TechTools/master/MacOSX/bellschedule.sh
