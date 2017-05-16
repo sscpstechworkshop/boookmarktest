@@ -92,11 +92,12 @@ function cfg_cleanup {
             sed -i "" 's/true/false/g' /Library/LaunchDaemons/cleanup_users.plist; ;;
       ( 1 ) echo "Enabling cleanup script...";
             sed -i "" 's/false/true/g' /Library/LaunchDaemons/cleanup_users.plist; ;;
-      ( * ) echo "Erroring configuring cleanup script... value not 0 or 1"; ;;
+      ( * ) echo "Error configuring cleanup script... value not 0 or 1"; ;;
     esac
 }
 
 function cfg_faculty {
+   echo "Faculty configuration"
    echo "Enter workstation name: "
    read workstation_name
    rename_workstation $workstation_name
@@ -107,6 +108,7 @@ function cfg_faculty {
 }
 
 function cfg_student {
+   echo "Student configuration"
    mac_address=(`ifconfig en0 | awk '/ether/{print $2}' | sed -e 's/://g'`)
    workstation_name=WKN$mac_address
    rename_workstation $workstation_name
@@ -116,17 +118,18 @@ function cfg_student {
    cfg_cleanup 1
 }
 
-function cfg_prompted {
-   echo "Rename workstation?"
-   read user_input
-   rename_prompt=$(echo "$user_input" | tr '[:upper:]' '[:lower:]')
-   case "$rename_prompt" in
-      ( y ) echo "Rename for 
-   
-}
-
-
-
+# TODO: Prompted configuration 
+#function cfg_prompted {
+#   echo "Rename workstation?"
+#   read user_input
+#   rename_prompt=$(echo "$user_input" | tr '[:upper:]' '[:lower:]')
+#   case "$rename_prompt" in
+#      ( y ) echo "Rename for (F)aculty or (S)tudent?";
+#            read user_input
+#            rename_model=$(echo "$user_input" | tr '[:upper:]' '[:lower:]')
+#            case "$rename_model" in
+#               ( f ) 
+#}
 
 
 ### End of Functions
