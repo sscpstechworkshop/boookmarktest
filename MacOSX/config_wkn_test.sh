@@ -138,10 +138,10 @@ function cfg_student {
 # What argument did user use?  (converted to lower case)
 arg=$(echo "$#" | tr '[:upper:]' '[:lower:]')
 case "$arg" in
-   ( f ) cfg_faculty; ;;
-   ( s ) cfg_student; ;;
-   ( p ) cfg_prompted; ;;
-   ( * ) echo "This script accepts the following options:  (F)aculty, (S)tudent, (P)rompted"; Exit; ;;
+   ( f ) echo "F - $arg"; cfg_faculty; ;;
+   ( s ) echo "S - $arg"; cfg_student; ;;
+   ( p ) echo "P - $arg"; cfg_prompted; ;;
+   ( * ) echo "This script accepts the following options:  (F)aculty, (S)tudent, (P)rompted"; ;;
 esac
 
 
