@@ -34,8 +34,7 @@ time=$hour:$minute
 
 # Make sure there is a folder for logs
 if [ ! -d /Users/$USER/logs ]; then
-   mkdir -p /Users/$USER/logs    
-fi
+   mkdir -p /Users/$USER/logs; fi    
 logPath=/Users/$USER/logs/
 logFile=$logPath'config_wkn.log'
 
