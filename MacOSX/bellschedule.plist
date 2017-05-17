@@ -3,11 +3,13 @@
   <plist version="1.0">
     <dict>
       <key>Label</key>
-      <string>bellschedule</string>
+         <string>bellschedule</string>
       <key>ProgramArguments</key>
       <array>
         <string>/usr/local/bin/bellschedule.sh</string>
       </array>
+      <key>RunAtLoad</key>
+         <true/>
       <key>StartCalendarInterval</key>
       <array>
         <dict>
