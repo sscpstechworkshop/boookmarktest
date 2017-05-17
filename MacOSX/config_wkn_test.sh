@@ -20,79 +20,100 @@
 # 
 ########################################################################################
 
-### Variables
+# Turn logging off (0) or on (1)
+logging=1
 
-# boolDisableBell
-# boolDisableCaptiveHelper
-# boolDownloadScripts
+#today's date and time
+year=`date "+%Y"`       # 2016
+month=`date "+%m"`      # 08
+dayOfMonth=`date "+%d"` # 20
+hour=`date "+%H"`       # 15 (24hr format)
+minute=`date "+%M"`     # 45
+date=$month/$dayOfMonth/$year
+time=$hour:$minute
 
-### End of Variables
+# Make sure there is a folder for logs
+if [ ! -d /Users/$USER/logs ]; then
+   mkdir -p /Users/$USER/logs    
+fi
+logPath=/Users/$USER/logs/
+logFile=$logPath'config_wkn.log'
 
 ### Functions
+
+function sendToLog {
+   message="$date $time: $1"
+   logger -s $message
+   echo $message >> $logFile
+}
+
 function rename_workstation {
-   echo "Setting workstation name to: $1"
+   if [ $logging -eq 1 ]; then sendToLog "Setting workstation name to: $1"; fi
    scutil --set ComputerName $1
    scutil --set HostName $1
    scutil --set LocalHostName $1
 }
 
 function download_scripts {
-   echo "Downloading scripts... don't forget to modify UT script." 
+   if [ $logging -eq 1 ]; then sendToLog "Downloading scripts... don't forget to modify UT script." ; fi
    curl -L -o '/Library/LaunchAgents/bellschedule.plist' https://raw.githubusercontent.com/SSCPS/TechTools/master/MacOSX/bellschedule.plist
    curl -L -o '/usr/local/bin/bellschedule.sh' https://raw.githubusercontent.com/SSCPS/TechTools/master/MacOSX/bellschedule.sh
-   chmod +X /usr/local/bin/bellschedule.sh
 
    curl -L -o '/Library/LaunchDaemons/bellschedule_perms.plist' https://raw.githubusercontent.com/SSCPS/TechTools/master/MacOSX/bellschedule_perms.plist
    curl -L -o '/usr/local/bin/bellschedule_perms.sh' https://raw.githubusercontent.com/SSCPS/TechTools/master/MacOSX/bellschedule_perms.sh
-   chmod +X /usr/local/bin/bellschedule_perms.sh
 
    curl -L -o '/Library/LaunchDaemons/cleanup_users.plist' https://raw.githubusercontent.com/SSCPS/TechTools/master/MacOSX/cleanup_users.plist
    curl -L -o '/usr/local/bin/cleanup_users.sh' https://raw.githubusercontent.com/SSCPS/TechTools/master/MacOSX/cleanup_users.sh
-   chmod +X /usr/local/bin/cleanup_users.sh
-
-   #curl -L -o '/usr/local/bin/config_wkn.sh' https://raw.githubusercontent.com/SSCPS/TechTools/master/MacOSX/config_wkn.sh
-   #chmod +X /usr/local/bin/config_wkn.sh
 
    curl -L -o '/Library/LaunchAgents/home_folder_lock.plist' https://raw.githubusercontent.com/SSCPS/TechTools/master/MacOSX/home_folder_lock.plist
    curl -L -o '/usr/local/bin/home_folder_lock.sh' https://raw.githubusercontent.com/SSCPS/TechTools/master/MacOSX/home_folder_lock.sh
-   chmod +X /usr/local/bin/home_folder_lock.sh
 
    curl -L -o '/Library/LaunchAgents/reset_chrome.plist' https://raw.githubusercontent.com/SSCPS/TechTools/master/MacOSX/reset_chrome.plist
    curl -L -o '/usr/local/bin/reset_chrome.sh' https://raw.githubusercontent.com/SSCPS/TechTools/master/MacOSX/reset_chrome.sh
-   chmod +X /usr/local/bin/reset_chrome.sh
 
    curl -L -o '/Library/LaunchAgents/untangle_logon.plist' https://raw.githubusercontent.com/SSCPS/TechTools/master/MacOSX/untangle_logon.plist
    curl -L -o '/usr/local/bin/untangle_logon.sh' https://raw.githubusercontent.com/SSCPS/TechTools/master/MacOSX/untangle_logon.sh
-   chmod +X /usr/local/bin/untangle_logon.sh
+   # Sleep for 5 seconds to make sure downloads are complete
+   sleep 5
+}
+
+function cfg_script_perms {
+   if [ $logging -eq 1 ]; then sendToLog "Making scripts executable..."; fi
+   chmod +x /usr/local/bin/bellschedule.sh
+   chmod +x /usr/local/bin/bellschedule_perms.sh
+   chmod +x /usr/local/bin/cleanup_users.sh
+   chmod +x /usr/local/bin/home_folder_lock.sh
+   chmod +x /usr/local/bin/reset_chrome.sh
+   chmod +x /usr/local/bin/untangle_logon.sh
 }
 
 function cfg_bells {
    case "$1" in
-      ( 0 ) echo "Disabling bells...";
+      ( 0 ) if [ $logging -eq 1 ]; then sendToLog "Disabling bells..."; fi; 
             sed -i "" 's/true/false/g' /Library/LaunchAgents/bellschedule.plist; ;;
-      ( 1 ) echo "Enabling bells...";
+      ( 1 ) if [ $logging -eq 1 ]; then sendToLog "Enabling bells..."; fi;
             sed -i "" 's/false/true/g' /Library/LaunchAgents/bellschedule.plist; ;;
-      ( * ) echo "Error configuring bells... value not 0 or 1"; ;;
+      ( * ) if [ $logging -eq 1 ]; then sendToLog "Error configuring bells... value not 0 or 1"; fi; ;;
    esac     
 }
 
 function cfg_captive_helper {
    case "$1" in
-      ( 0 ) echo "Disabling captive portal helper...";
+      ( 0 ) if [ $logging -eq 1 ]; then sendToLog "Disabling captive portal helper..."; fi;
             defaults write /Library/Preferences/SystemConfiguration/com.apple.captive.control Active -boolean false; ;;
-      ( 1 ) echo "Enabling captive portal helper...";
+      ( 1 ) if [ $logging -eq 1 ]; then sendToLog "Enabling captive portal helper..."; fi;
             defaults write /Library/Preferences/SystemConfiguration/com.apple.captive.control Active -boolean true; ;; 
-      ( * ) echo "Error configuring captive portal helper... value not 0 or 1"; ;;
+      ( * ) if [ $logging -eq 1 ]; then sendToLog "Error configuring captive portal helper... value not 0 or 1"; fi; ;;
     esac 
 }
 
 function cfg_cleanup {
    case "$1" in
-      ( 0 ) echo "Disabling cleanup script...";
+      ( 0 ) if [ $logging -eq 1 ]; then sendToLog "Disabling cleanup script..."; fi;
             sed -i "" 's/true/false/g' /Library/LaunchDaemons/cleanup_users.plist; ;;
-      ( 1 ) echo "Enabling cleanup script...";
+      ( 1 ) if [ $logging -eq 1 ]; then sendToLog "Enabling cleanup script..."; fi;
             sed -i "" 's/false/true/g' /Library/LaunchDaemons/cleanup_users.plist; ;;
-      ( * ) echo "Error configuring cleanup script... value not 0 or 1"; ;;
+      ( * ) if [ $logging -eq 1 ]; then sendToLog "Error configuring cleanup script... value not 0 or 1"; fi; ;;
     esac
 }
 
@@ -104,7 +125,8 @@ function cfg_faculty {
    download_scripts
    cfg_bells 1
    cfg_captive_helper 0
-   cfg_cleanup 0   
+   cfg_cleanup 0
+   cfg_script_perms
 }
 
 function cfg_student {
@@ -116,6 +138,7 @@ function cfg_student {
    cfg_bells 0
    cfg_captive_helper 0
    cfg_cleanup 1
+   cfg_script_perms
 }
 
 # TODO: Prompted configuration 
@@ -136,11 +159,12 @@ function cfg_student {
 
 
 # What argument did user use?  (converted to lower case)
-arg=$(echo "$#" | tr '[:upper:]' '[:lower:]')
+arg=$(echo "$1" | tr '[:upper:]' '[:lower:]')
+if [ $logging -eq 1 ]; then sendToLog "arg = $arg"; fi;
 case "$arg" in
-   ( f ) echo "F - $arg"; cfg_faculty; ;;
-   ( s ) echo "S - $arg"; cfg_student; ;;
-   ( p ) echo "P - $arg"; cfg_prompted; ;;
+   ( f ) cfg_faculty; ;;
+   ( s ) cfg_student; ;;
+#   ( p ) echo "P - $arg"; cfg_prompted; ;;
    ( * ) echo "This script accepts the following options:  (F)aculty, (S)tudent, (P)rompted"; ;;
 esac
 
