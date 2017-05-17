@@ -39,8 +39,7 @@ fi
 logPath=/Users/$USER/logs/
 logFile=$logPath'config_wkn.log'
 
-### Functions
-
+### Declare Functions
 function sendToLog {
    message="$date $time: $1"
    logger -s $message
@@ -154,10 +153,9 @@ function cfg_student {
 #               ( f ) 
 #}
 
+### End of Declare Functions
 
-### End of Functions
-
-
+# Script START
 # What argument did user use?  (converted to lower case)
 arg=$(echo "$1" | tr '[:upper:]' '[:lower:]')
 if [ $logging -eq 1 ]; then sendToLog "arg = $arg"; fi;
