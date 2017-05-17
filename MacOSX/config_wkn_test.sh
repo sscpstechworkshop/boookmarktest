@@ -73,9 +73,9 @@ function cfg_script_perms {
 function cfg_bells {
    case "$1" in
       ( 0 ) echo "Disabling bells...";
-            sed -i "" 's/true/false/g' /Library/LaunchAgents/bellschedule.plist; ;;
+            plutil -replace Disabled -bool true /Library/LaunchAgents/bellschedule.plist; ;;
       ( 1 ) echo "Enabling bells...";
-            sed -i "" 's/false/true/g' /Library/LaunchAgents/bellschedule.plist; ;;
+            plutil -replace Disabled -bool false /Library/LaunchAgents/bellschedule.plist; ;;
       ( * ) echo "Error configuring bells... value not 0 or 1"; ;;
    esac     
 }
@@ -93,9 +93,9 @@ function cfg_captive_helper {
 function cfg_cleanup {
    case "$1" in
       ( 0 ) echo "Disabling cleanup script...";
-            sed -i "" 's/true/false/g' /Library/LaunchDaemons/cleanup_users.plist; ;;
+            plutil -replace Disabled -bool true /Library/LaunchDaemons/cleanup_users.plist; ;;
       ( 1 ) echo "Enabling cleanup script...";
-            sed -i "" 's/false/true/g' /Library/LaunchDaemons/cleanup_users.plist; ;;
+            plutil -replace Disabled -bool false /Library/LaunchDaemons/cleanup_users.plist; ;;
       ( * ) echo "Error configuring cleanup script... value not 0 or 1"; ;;
     esac
 }
