@@ -21,30 +21,7 @@
 ########################################################################################
 # v 0.8
 
-# Turn logging off (0) or on (1)
-logging=1
-
-#today's date and time
-year=`date "+%Y"`       # 2016
-month=`date "+%m"`      # 08
-dayOfMonth=`date "+%d"` # 20
-hour=`date "+%H"`       # 15 (24hr format)
-minute=`date "+%M"`     # 45
-date=$month/$dayOfMonth/$year
-time=$hour:$minute
-
-# Make sure there is a folder for logs
-if [ ! -d /Users/$USER/logs ]; then
-   mkdir -p /Users/$USER/logs; fi    
-logPath=/Users/$USER/logs/
-logFile=$logPath'config_wkn.log'
-
 ### Declare Functions
-function sendToLog {
-   message="$date $time: $1"
-   logger -s $message
-   echo $message >> $logFile
-}
 
 function rename_workstation {
    case "$1" in
@@ -52,16 +29,16 @@ function rename_workstation {
             read workstation_name; ;;
       ( s ) mac_address=(`ifconfig en0 | awk '/ether/{print $2}' | sed -e 's/://g'`);
             workstation_name=wkn$mac_address; ;;
-      ( * ) if [ $logging -eq 1 ]; then sendToLog "Error in rename_workstation, value was not f or s"; fi; return; ;;
+      ( * ) echo "Error in rename_workstation, value was not f or s"; return; ;;
    esac
-   if [ $logging -eq 1 ]; then sendToLog "Setting workstation name to: $workstation_name"; fi
+   echo "Setting workstation name to: $workstation_name"
    scutil --set ComputerName $workstation_name
    scutil --set HostName $workstation_name
    scutil --set LocalHostName $workstation_name
 }
 
 function download_scripts {
-   if [ $logging -eq 1 ]; then sendToLog "Downloading scripts and pausing for 5 seconds... don't forget to modify UT script." ; fi
+   echo "Downloading scripts and pausing for 5 seconds... don't forget to modify UT script."
    curl -s -L -o '/Library/LaunchAgents/bellschedule.plist' https://raw.githubusercontent.com/SSCPS/TechTools/master/MacOSX/bellschedule.plist
    curl -s -L -o '/usr/local/bin/bellschedule.sh' https://raw.githubusercontent.com/SSCPS/TechTools/master/MacOSX/bellschedule.sh
 
@@ -84,7 +61,7 @@ function download_scripts {
 }
 
 function cfg_script_perms {
-   if [ $logging -eq 1 ]; then sendToLog "Making scripts executable..."; fi
+   echo "Making scripts executable..."
    chmod +x /usr/local/bin/bellschedule.sh
    chmod +x /usr/local/bin/bellschedule_perms.sh
    chmod +x /usr/local/bin/cleanup_users.sh
@@ -95,31 +72,31 @@ function cfg_script_perms {
 
 function cfg_bells {
    case "$1" in
-      ( 0 ) if [ $logging -eq 1 ]; then sendToLog "Disabling bells..."; fi; 
+      ( 0 ) echo "Disabling bells...";
             sed -i "" 's/true/false/g' /Library/LaunchAgents/bellschedule.plist; ;;
-      ( 1 ) if [ $logging -eq 1 ]; then sendToLog "Enabling bells..."; fi;
+      ( 1 ) echo "Enabling bells...";
             sed -i "" 's/false/true/g' /Library/LaunchAgents/bellschedule.plist; ;;
-      ( * ) if [ $logging -eq 1 ]; then sendToLog "Error configuring bells... value not 0 or 1"; fi; ;;
+      ( * ) echo "Error configuring bells... value not 0 or 1"; ;;
    esac     
 }
 
 function cfg_captive_helper {
    case "$1" in
-      ( 0 ) if [ $logging -eq 1 ]; then sendToLog "Disabling captive portal helper..."; fi;
+      ( 0 ) echo "Disabling captive portal helper...";
             defaults write /Library/Preferences/SystemConfiguration/com.apple.captive.control Active -boolean false; ;;
-      ( 1 ) if [ $logging -eq 1 ]; then sendToLog "Enabling captive portal helper..."; fi;
+      ( 1 ) echo "Enabling captive portal helper...";
             defaults write /Library/Preferences/SystemConfiguration/com.apple.captive.control Active -boolean true; ;; 
-      ( * ) if [ $logging -eq 1 ]; then sendToLog "Error configuring captive portal helper... value not 0 or 1"; fi; ;;
+      ( * ) echo "Error configuring captive portal helper... value not 0 or 1"; ;;
     esac 
 }
 
 function cfg_cleanup {
    case "$1" in
-      ( 0 ) if [ $logging -eq 1 ]; then sendToLog "Disabling cleanup script..."; fi;
+      ( 0 ) echo "Disabling cleanup script...";
             sed -i "" 's/true/false/g' /Library/LaunchDaemons/cleanup_users.plist; ;;
-      ( 1 ) if [ $logging -eq 1 ]; then sendToLog "Enabling cleanup script..."; fi;
+      ( 1 ) echo "Enabling cleanup script...";
             sed -i "" 's/false/true/g' /Library/LaunchDaemons/cleanup_users.plist; ;;
-      ( * ) if [ $logging -eq 1 ]; then sendToLog "Error configuring cleanup script... value not 0 or 1"; fi; ;;
+      ( * ) echo "Error configuring cleanup script... value not 0 or 1"; ;;
     esac
 }
 
