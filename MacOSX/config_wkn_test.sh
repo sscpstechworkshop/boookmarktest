@@ -55,9 +55,9 @@ function rename_workstation {
       ( * ) if [ $logging -eq 1 ]; then sendToLog "Error in rename_workstation, value was not f or s"; fi; return; ;;
    esac
    if [ $logging -eq 1 ]; then sendToLog "Setting workstation name to: $workstation_name"; fi
-   scutil --set ComputerName workstation_name
-   scutil --set HostName workstation_name
-   scutil --set LocalHostName workstation_name
+   scutil --set ComputerName $workstation_name
+   scutil --set HostName $workstation_name
+   scutil --set LocalHostName $workstation_name
 }
 
 function download_scripts {
@@ -161,7 +161,6 @@ function cfg_student {
 # Script START
 # What argument did user use?  (converted to lower case)
 arg=$(echo "$1" | tr '[:upper:]' '[:lower:]')
-if [ $logging -eq 1 ]; then sendToLog "arg = $arg"; fi;
 case "$arg" in
    ( f ) cfg_faculty; ;;
    ( s ) cfg_student; ;;
