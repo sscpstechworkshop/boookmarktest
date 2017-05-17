@@ -47,10 +47,17 @@ function sendToLog {
 }
 
 function rename_workstation {
-   if [ $logging -eq 1 ]; then sendToLog "Setting workstation name to: $1"; fi
-   scutil --set ComputerName $1
-   scutil --set HostName $1
-   scutil --set LocalHostName $1
+   case "$1" in
+      ( f ) echo "Enter workstation name: ";
+            read workstation_name; ;;
+      ( s ) mac_address=(`ifconfig en0 | awk '/ether/{print $2}' | sed -e 's/://g'`);
+            workstation_name=wkn$mac_address; ;;
+      ( * ) if [ $logging -eq 1 ]; then sendToLog "Error in rename_workstation, value was not f or s"; fi; return; ;;
+   esac
+   if [ $logging -eq 1 ]; then sendToLog "Setting workstation name to: $workstation_name"; fi
+   scutil --set ComputerName workstation_name
+   scutil --set HostName workstation_name
+   scutil --set LocalHostName workstation_name
 }
 
 function download_scripts {
@@ -118,9 +125,7 @@ function cfg_cleanup {
 
 function cfg_faculty {
    echo "Faculty configuration"
-   echo "Enter workstation name: "
-   read workstation_name
-   rename_workstation $workstation_name
+   rename_workstation f
    download_scripts
    cfg_bells 1
    cfg_captive_helper 0
@@ -130,9 +135,7 @@ function cfg_faculty {
 
 function cfg_student {
    echo "Student configuration"
-   mac_address=(`ifconfig en0 | awk '/ether/{print $2}' | sed -e 's/://g'`)
-   workstation_name=WKN$mac_address
-   rename_workstation $workstation_name
+   rename_workstation s
    download_scripts
    cfg_bells 0
    cfg_captive_helper 0
