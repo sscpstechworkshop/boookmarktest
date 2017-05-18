@@ -29,7 +29,7 @@ function rename_workstation {
             read workstation_name; ;;
       ( s ) mac_address=(`ifconfig en0 | awk '/ether/{print $2}' | sed -e 's/://g'`);
             workstation_name=wkn$mac_address; ;;
-      ( * ) echo "Error in rename_workstation, value was not f or s"; return; ;;
+      ( * ) echo "Error in rename_workstation function, argument was not f or s"; return; ;;
    esac
    echo "Setting workstation name to: $workstation_name"
    scutil --set ComputerName $workstation_name
@@ -38,7 +38,7 @@ function rename_workstation {
 }
 
 function download_scripts {
-   echo "Downloading scripts and pausing for 5 seconds... don't forget to modify UT script."
+   echo "Downloading scripts and pausing for 5 seconds... some scripts may need further modification."
    curl -s -L -o '/Library/LaunchAgents/bellschedule.plist' https://raw.githubusercontent.com/SSCPS/TechTools/master/MacOSX/bellschedule.plist
    curl -s -L -o '/usr/local/bin/bellschedule.sh' https://raw.githubusercontent.com/SSCPS/TechTools/master/MacOSX/bellschedule.sh
 
@@ -76,7 +76,7 @@ function cfg_bells {
             plutil -replace Disabled -bool true /Library/LaunchAgents/bellschedule.plist; ;;
       ( 1 ) echo "Enabling bells...";
             plutil -replace Disabled -bool false /Library/LaunchAgents/bellschedule.plist; ;;
-      ( * ) echo "Error configuring bells... value not 0 or 1"; ;;
+      ( * ) echo "Error in cfg_bells function... argument was not 0 or 1"; ;;
    esac     
 }
 
@@ -86,7 +86,7 @@ function cfg_captive_helper {
             defaults write /Library/Preferences/SystemConfiguration/com.apple.captive.control Active -boolean false; ;;
       ( 1 ) echo "Enabling captive portal helper...";
             defaults write /Library/Preferences/SystemConfiguration/com.apple.captive.control Active -boolean true; ;; 
-      ( * ) echo "Error configuring captive portal helper... value not 0 or 1"; ;;
+      ( * ) echo "Error in cfg_captive_helper function... argument was not 0 or 1"; ;;
     esac 
 }
 
@@ -96,7 +96,7 @@ function cfg_cleanup {
             plutil -replace Disabled -bool true /Library/LaunchDaemons/cleanup_users.plist; ;;
       ( 1 ) echo "Enabling cleanup script...";
             plutil -replace Disabled -bool false /Library/LaunchDaemons/cleanup_users.plist; ;;
-      ( * ) echo "Error configuring cleanup script... value not 0 or 1"; ;;
+      ( * ) echo "Error in cfg_cleanup function... argument was not 0 or 1"; ;;
     esac
 }
 
