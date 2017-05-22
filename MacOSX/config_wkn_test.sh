@@ -1,6 +1,6 @@
 #! /bin/bash
 ##########################################################################################
-#
+# 
 # Script Name:    config_wkn.sh
 # Script Purpose: Configure standard scripts/options for Mac workstations.
 # Script Usage:   One command line argument to determine how it runs.  F = defaults for
@@ -19,7 +19,6 @@
 #                 Script should be run as root.
 # 
 ########################################################################################
-# v 0.9
 
 ##### Declare Functions #####
 
@@ -35,17 +34,6 @@ function rename_workstation {
    scutil --set ComputerName $workstation_name
    scutil --set HostName $workstation_name
    scutil --set LocalHostName $workstation_name
-}
-
-function cfg_script_perms {
-   echo "Making scripts executable..."
-   chmod +x /usr/local/bin/bellschedule.sh;ls -l /usr/local/bin/bellschedule.sh
-   chmod +x /usr/local/bin/bellschedule_perms.sh;ls -l /usr/local/bin/bellschedule_perms.sh
-   chmod +x /usr/local/bin/cleanup_users.sh;ls -l /usr/local/bin/cleanup_users.sh
-   chmod +x /usr/local/bin/home_folder_lock.sh;ls -l /usr/local/bin/home_folder_lock.sh
-   chmod +x /usr/local/bin/reset_chrome.sh;ls -l /usr/local/bin/reset_chrome.sh
-   chmod +x /usr/local/bin/untangle_logon.sh;ls -l /usr/local/bin/untangle_logon.sh
-   read -p "Hit [enter] after confirming all scripts are executable"
 }
 
 function download_scripts {
@@ -64,7 +52,13 @@ function download_scripts {
    curl -s -L -o '/usr/local/bin/untangle_logon.sh' https://raw.githubusercontent.com/SSCPS/TechTools/master/MacOSX/untangle_logon.sh
    # Sleep for 5 seconds to make sure downloads are complete, then adjust permissions
    sleep 5
-   cfg_script_perms
+   chmod +x /usr/local/bin/bellschedule.sh;ls -l /usr/local/bin/bellschedule.sh
+   chmod +x /usr/local/bin/bellschedule_perms.sh;ls -l /usr/local/bin/bellschedule_perms.sh
+   chmod +x /usr/local/bin/cleanup_users.sh;ls -l /usr/local/bin/cleanup_users.sh
+   chmod +x /usr/local/bin/home_folder_lock.sh;ls -l /usr/local/bin/home_folder_lock.sh
+   chmod +x /usr/local/bin/reset_chrome.sh;ls -l /usr/local/bin/reset_chrome.sh
+   chmod +x /usr/local/bin/untangle_logon.sh;ls -l /usr/local/bin/untangle_logon.sh
+   read -p "Hit [enter] after confirming all scripts are executable"
 }
 
 function cfg_bells {
@@ -127,7 +121,7 @@ function cfg_prompted {
          ( * ) echo "Error in cfg_prompted function (rename workstation), user_input was not f, s, or n"; break; ;;
       esac
    
-   echo "Download scripts? (y/n)";
+   echo "Download scripts? (y)es or (n)o"
    read user_input
    user_input=$(echo "$user_input" | tr '[:upper:]' '[:lower:]')
       case "$user_input" in 
@@ -136,7 +130,7 @@ function cfg_prompted {
          ( * ) echo "Error in cfg_prompted function (download scripts), user_input was not y or n"; break; ;;
       esac
 
-   echo "Config bells?  (e)nable or (d)isable"
+   echo "Configure bells?  (e)nable or (d)isable"
    read user_input
    user_input=$(echo "$user_input" | tr '[:upper:]' '[:lower:]')
       case "$user_input" in 
@@ -145,7 +139,7 @@ function cfg_prompted {
          ( * ) echo "Error in cfg_prompted function (bells), user_input was not e or d"; break; ;;
       esac
 
-   echo "Config captive portal helper?  (e)nable or (d)isable"
+   echo "Configure captive portal helper?  (e)nable or (d)isable"
    read user_input
    user_input=$(echo "$user_input" | tr '[:upper:]' '[:lower:]')
       case "$user_input" in 
