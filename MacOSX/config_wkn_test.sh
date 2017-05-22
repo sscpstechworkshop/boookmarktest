@@ -20,6 +20,10 @@
 # 
 ########################################################################################
 
+# TODO: Add ability to answer prompts again if input is typo'ed
+#       maybe in a while loop?   Maybe need a new function that handles user input?
+
+
 ##### Declare Functions #####
 
 function rename_workstation {
