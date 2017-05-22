@@ -24,8 +24,7 @@
 
 function rename_workstation {
    case "$1" in
-      ( f ) echo "Enter workstation name: ";
-            read workstation_name; ;;
+      ( f ) read -p "Enter workstation name: " workstation_name; ;;
       ( s ) mac_address=(`ifconfig en0 | awk '/ether/{print $2}' | sed -e 's/://g'`);
             workstation_name=wkn$mac_address; ;;
       ( * ) echo "Error in rename_workstation function, argument was not f or s"; return; ;;
@@ -111,8 +110,7 @@ function cfg_student {
 
 function cfg_prompted {
    echo "Prompted configuration"
-   echo "Rename workstation? (f)aculty (s)tudent or (n)o"
-   read user_input
+   read -p "Rename workstation? (f)aculty (s)tudent or (n)o" user_input
    user_input=$(echo "$user_input" | tr '[:upper:]' '[:lower:]')
       case "$user_input" in 
          ( f ) rename_workstation f; ;;
@@ -121,8 +119,7 @@ function cfg_prompted {
          ( * ) echo "Error in cfg_prompted function (rename workstation), user_input was not f, s, or n"; ;;
       esac
    
-   echo "Download scripts? (y)es or (n)o"
-   read user_input
+   read -p "Download scripts? (y)es or (n)o" user_input
    user_input=$(echo "$user_input" | tr '[:upper:]' '[:lower:]')
       case "$user_input" in 
          ( n ) echo "Skipping scripts download..."; ;;
@@ -130,8 +127,7 @@ function cfg_prompted {
          ( * ) echo "Error in cfg_prompted function (download scripts), user_input was not y or n"; ;;
       esac
 
-   echo "Configure bells?  (e)nable or (d)isable"
-   read user_input
+   read -p "Configure bells?  (e)nable or (d)isable" user_input
    user_input=$(echo "$user_input" | tr '[:upper:]' '[:lower:]')
       case "$user_input" in 
          ( e ) cfg_bells 1; ;;
@@ -139,8 +135,7 @@ function cfg_prompted {
          ( * ) echo "Error in cfg_prompted function (bells), user_input was not e or d"; ;;
       esac
 
-   echo "Configure captive portal helper?  (e)nable or (d)isable"
-   read user_input
+   read -p "Configure captive portal helper?  (e)nable or (d)isable" user_input
    user_input=$(echo "$user_input" | tr '[:upper:]' '[:lower:]')
       case "$user_input" in 
          ( e ) cfg_captive_helper 1; ;;
@@ -148,8 +143,7 @@ function cfg_prompted {
          ( * ) echo "Error in cfg_prompted function (captive helper), user_input was not e or d"; ;;
       esac
 
-   echo "Configure cleanup script?  (e)nable or (d)isable"
-   read user_input
+   read -p "Configure cleanup script?  (e)nable or (d)isable" user_input
    user_input=$(echo "$user_input" | tr '[:upper:]' '[:lower:]')
       case "$user_input" in 
          ( e ) cfg_cleanup 1; ;;
@@ -171,8 +165,7 @@ case "$arg" in
    ( * ) echo "This script accepts the following options:  (f)aculty, (s)tudent, (p)rompted"; exit; ;;
 esac
 
-echo "Do you want to reboot now? (y)es or (n)o"
-read user_input
+read -p "Do you want to reboot now? (y)es or (n)o" user_input
    user_input=$(echo "$user_input" | tr '[:upper:]' '[:lower:]')
       case "$user_input" in 
          ( y ) echo "Rebooting..."; reboot; ;;
