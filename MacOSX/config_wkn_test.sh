@@ -176,6 +176,16 @@ case "$arg" in
    ( p ) cfg_prompted; ;;
    ( * ) echo "This script accepts the following options:  (f)aculty, (s)tudent, (p)rompted"; ;;
 esac
+
+echo "Do you want to reboot now? (y)es or (n)o"
+read user_input
+   user_input=$(echo "$user_input" | tr '[:upper:]' '[:lower:]')
+      case "$user_input" in 
+         ( y ) echo "Rebooting..."; reboot; ;;
+         ( n ) echo "Not rebooting..."; ;;
+         ( * ) echo "Error asking for reboot, user_input was not y or n"; break; ;;
+      esac    
+      
 # Script END
 
 
