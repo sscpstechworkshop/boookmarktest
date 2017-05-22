@@ -19,7 +19,7 @@
 #                 Script should be run as root.
 # 
 ########################################################################################
-# v 0.8
+# v 0.9
 
 ##### Declare Functions #####
 
@@ -39,12 +39,13 @@ function rename_workstation {
 
 function cfg_script_perms {
    echo "Making scripts executable..."
-   chmod +x /usr/local/bin/bellschedule.sh
-   chmod +x /usr/local/bin/bellschedule_perms.sh
-   chmod +x /usr/local/bin/cleanup_users.sh
-   chmod +x /usr/local/bin/home_folder_lock.sh
-   chmod +x /usr/local/bin/reset_chrome.sh
-   chmod +x /usr/local/bin/untangle_logon.sh
+   chmod +x /usr/local/bin/bellschedule.sh;ls -l /usr/local/bin/bellschedule.sh
+   chmod +x /usr/local/bin/bellschedule_perms.sh;ls -l /usr/local/bin/bellschedule_perms.sh
+   chmod +x /usr/local/bin/cleanup_users.sh;ls -l /usr/local/bin/cleanup_users.sh
+   chmod +x /usr/local/bin/home_folder_lock.sh;ls -l /usr/local/bin/home_folder_lock.sh
+   chmod +x /usr/local/bin/reset_chrome.sh;ls -l /usr/local/bin/reset_chrome.sh
+   chmod +x /usr/local/bin/untangle_logon.sh;ls -l /usr/local/bin/untangle_logon.sh
+   read -p "Hit [enter] after confirming all scripts are executable"
 }
 
 function download_scripts {
@@ -61,7 +62,7 @@ function download_scripts {
    curl -s -L -o '/usr/local/bin/reset_chrome.sh' https://raw.githubusercontent.com/SSCPS/TechTools/master/MacOSX/reset_chrome.sh
    curl -s -L -o '/Library/LaunchAgents/untangle_logon.plist' https://raw.githubusercontent.com/SSCPS/TechTools/master/MacOSX/untangle_logon.plist
    curl -s -L -o '/usr/local/bin/untangle_logon.sh' https://raw.githubusercontent.com/SSCPS/TechTools/master/MacOSX/untangle_logon.sh
-   # Sleep for 5 seconds to make sure downloads are complete
+   # Sleep for 5 seconds to make sure downloads are complete, then adjust permissions
    sleep 5
    cfg_script_perms
 }
@@ -123,16 +124,16 @@ function cfg_prompted {
          ( f ) rename_workstation f; ;;
          ( s ) rename_workstation s; ;;
          ( n ) echo "Not renaming workstation..."; ;;
-         ( * ) echo "Error in cfg_prompted function, user_input was not f, s, or n"; break; ;;
+         ( * ) echo "Error in cfg_prompted function (rename workstation), user_input was not f, s, or n"; break; ;;
       esac
    
    echo "Download scripts? (y/n)";
    read user_input
    user_input=$(echo "$user_input" | tr '[:upper:]' '[:lower:]')
       case "$user_input" in 
-         ( y ) echo "Skipping scripts download..."; break; ;;
-         ( n ) download_scripts; ;;
-         ( * ) echo "Error in cfg_prompted function, user_input was not y or n"; break; ;;
+         ( n ) echo "Skipping scripts download..."; break; ;;
+         ( y ) download_scripts; ;;
+         ( * ) echo "Error in cfg_prompted function (download scripts), user_input was not y or n"; break; ;;
       esac
 
    echo "Config bells?  (e)nable or (d)isable"
@@ -141,7 +142,7 @@ function cfg_prompted {
       case "$user_input" in 
          ( e ) cfg_bells 1; ;;
          ( d ) cfg_bells 0; ;;
-         ( * ) echo "Error in cfg_prompted function, user_input was not e or d"; break; ;;
+         ( * ) echo "Error in cfg_prompted function (bells), user_input was not e or d"; break; ;;
       esac
 
    echo "Config captive portal helper?  (e)nable or (d)isable"
@@ -150,7 +151,7 @@ function cfg_prompted {
       case "$user_input" in 
          ( e ) cfg_captive_helper 1; ;;
          ( d ) cfg_captive_helper 0; ;;
-         ( * ) echo "Error in cfg_prompted function, user_input was not e or d"; break; ;;
+         ( * ) echo "Error in cfg_prompted function (captive helper), user_input was not e or d"; break; ;;
       esac
 
    echo "Configure cleanup script?  (e)nable or (d)isable"
@@ -159,14 +160,15 @@ function cfg_prompted {
       case "$user_input" in 
          ( e ) cfg_cleanup 1; ;;
          ( d ) cfg_cleanup 0; ;;
-         ( * ) echo "Error in cfg_prompted function, user_input was not e or d"; break; ;;
+         ( * ) echo "Error in cfg_prompted function (cleanup), user_input was not e or d"; break; ;;
       esac      
 }
 
 ##### End of Declare Functions #####
 
 # Script START
-# What argument did user use?  (converted to lower case)
+
+# What argument was passed to script?  (converted to lower case)
 arg=$(echo "$1" | tr '[:upper:]' '[:lower:]')
 case "$arg" in
    ( f ) cfg_faculty; ;;
@@ -174,6 +176,7 @@ case "$arg" in
    ( p ) cfg_prompted; ;;
    ( * ) echo "This script accepts the following options:  (f)aculty, (s)tudent, (p)rompted"; ;;
 esac
+# Script END
 
 
 
