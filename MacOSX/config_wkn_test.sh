@@ -21,7 +21,7 @@
 ########################################################################################
 # v 0.8
 
-### Declare Functions
+##### Declare Functions #####
 
 function rename_workstation {
    case "$1" in
@@ -37,29 +37,6 @@ function rename_workstation {
    scutil --set LocalHostName $workstation_name
 }
 
-function download_scripts {
-   echo "Downloading scripts and pausing for 5 seconds... some scripts may need further modification."
-   curl -s -L -o '/Library/LaunchAgents/bellschedule.plist' https://raw.githubusercontent.com/SSCPS/TechTools/master/MacOSX/bellschedule.plist
-   curl -s -L -o '/usr/local/bin/bellschedule.sh' https://raw.githubusercontent.com/SSCPS/TechTools/master/MacOSX/bellschedule.sh
-
-   curl -s -L -o '/Library/LaunchDaemons/bellschedule_perms.plist' https://raw.githubusercontent.com/SSCPS/TechTools/master/MacOSX/bellschedule_perms.plist
-   curl -s -L -o '/usr/local/bin/bellschedule_perms.sh' https://raw.githubusercontent.com/SSCPS/TechTools/master/MacOSX/bellschedule_perms.sh
-
-   curl -s -L -o '/Library/LaunchDaemons/cleanup_users.plist' https://raw.githubusercontent.com/SSCPS/TechTools/master/MacOSX/cleanup_users.plist
-   curl -s -L -o '/usr/local/bin/cleanup_users.sh' https://raw.githubusercontent.com/SSCPS/TechTools/master/MacOSX/cleanup_users.sh
-
-   curl -s -L -o '/Library/LaunchAgents/home_folder_lock.plist' https://raw.githubusercontent.com/SSCPS/TechTools/master/MacOSX/home_folder_lock.plist
-   curl -s -L -o '/usr/local/bin/home_folder_lock.sh' https://raw.githubusercontent.com/SSCPS/TechTools/master/MacOSX/home_folder_lock.sh
-
-   curl -s -L -o '/Library/LaunchAgents/reset_chrome.plist' https://raw.githubusercontent.com/SSCPS/TechTools/master/MacOSX/reset_chrome.plist
-   curl -s -L -o '/usr/local/bin/reset_chrome.sh' https://raw.githubusercontent.com/SSCPS/TechTools/master/MacOSX/reset_chrome.sh
-
-   curl -s -L -o '/Library/LaunchAgents/untangle_logon.plist' https://raw.githubusercontent.com/SSCPS/TechTools/master/MacOSX/untangle_logon.plist
-   curl -s -L -o '/usr/local/bin/untangle_logon.sh' https://raw.githubusercontent.com/SSCPS/TechTools/master/MacOSX/untangle_logon.sh
-   # Sleep for 5 seconds to make sure downloads are complete
-   sleep 5
-}
-
 function cfg_script_perms {
    echo "Making scripts executable..."
    chmod +x /usr/local/bin/bellschedule.sh
@@ -68,6 +45,25 @@ function cfg_script_perms {
    chmod +x /usr/local/bin/home_folder_lock.sh
    chmod +x /usr/local/bin/reset_chrome.sh
    chmod +x /usr/local/bin/untangle_logon.sh
+}
+
+function download_scripts {
+   echo "Downloading scripts and pausing for 5 seconds... some scripts may need further modification."
+   curl -s -L -o '/Library/LaunchAgents/bellschedule.plist' https://raw.githubusercontent.com/SSCPS/TechTools/master/MacOSX/bellschedule.plist
+   curl -s -L -o '/usr/local/bin/bellschedule.sh' https://raw.githubusercontent.com/SSCPS/TechTools/master/MacOSX/bellschedule.sh
+   curl -s -L -o '/Library/LaunchDaemons/bellschedule_perms.plist' https://raw.githubusercontent.com/SSCPS/TechTools/master/MacOSX/bellschedule_perms.plist
+   curl -s -L -o '/usr/local/bin/bellschedule_perms.sh' https://raw.githubusercontent.com/SSCPS/TechTools/master/MacOSX/bellschedule_perms.sh
+   curl -s -L -o '/Library/LaunchDaemons/cleanup_users.plist' https://raw.githubusercontent.com/SSCPS/TechTools/master/MacOSX/cleanup_users.plist
+   curl -s -L -o '/usr/local/bin/cleanup_users.sh' https://raw.githubusercontent.com/SSCPS/TechTools/master/MacOSX/cleanup_users.sh
+   curl -s -L -o '/Library/LaunchAgents/home_folder_lock.plist' https://raw.githubusercontent.com/SSCPS/TechTools/master/MacOSX/home_folder_lock.plist
+   curl -s -L -o '/usr/local/bin/home_folder_lock.sh' https://raw.githubusercontent.com/SSCPS/TechTools/master/MacOSX/home_folder_lock.sh
+   curl -s -L -o '/Library/LaunchAgents/reset_chrome.plist' https://raw.githubusercontent.com/SSCPS/TechTools/master/MacOSX/reset_chrome.plist
+   curl -s -L -o '/usr/local/bin/reset_chrome.sh' https://raw.githubusercontent.com/SSCPS/TechTools/master/MacOSX/reset_chrome.sh
+   curl -s -L -o '/Library/LaunchAgents/untangle_logon.plist' https://raw.githubusercontent.com/SSCPS/TechTools/master/MacOSX/untangle_logon.plist
+   curl -s -L -o '/usr/local/bin/untangle_logon.sh' https://raw.githubusercontent.com/SSCPS/TechTools/master/MacOSX/untangle_logon.sh
+   # Sleep for 5 seconds to make sure downloads are complete
+   sleep 5
+   cfg_script_perms
 }
 
 function cfg_bells {
@@ -107,7 +103,6 @@ function cfg_faculty {
    cfg_bells 1
    cfg_captive_helper 0
    cfg_cleanup 0
-   cfg_script_perms
 }
 
 function cfg_student {
@@ -117,23 +112,58 @@ function cfg_student {
    cfg_bells 0
    cfg_captive_helper 0
    cfg_cleanup 1
-   cfg_script_perms
 }
 
-# TODO: Prompted configuration 
-#function cfg_prompted {
-#   echo "Rename workstation?"
-#   read user_input
-#   rename_prompt=$(echo "$user_input" | tr '[:upper:]' '[:lower:]')
-#   case "$rename_prompt" in
-#      ( y ) echo "Rename for (F)aculty or (S)tudent?";
-#            read user_input
-#            rename_model=$(echo "$user_input" | tr '[:upper:]' '[:lower:]')
-#            case "$rename_model" in
-#               ( f ) 
-#}
+function cfg_prompted {
+   echo "Prompted configuration"
+   echo "Rename workstation? (f)aculty (s)tudent or (n)o"
+   read user_input
+   user_input=$(echo "$user_input" | tr '[:upper:]' '[:lower:]')
+      case "$user_input" in 
+         ( f ) rename_workstation f; ;;
+         ( s ) rename_workstation s; ;;
+         ( n ) echo "Not renaming workstation..."; ;;
+         ( * ) echo "Error in cfg_prompted function, user_input was not f, s, or n"; break; ;;
+      esac
+   
+   echo "Download scripts? (y/n)";
+   read user_input
+   user_input=$(echo "$user_input" | tr '[:upper:]' '[:lower:]')
+      case "$user_input" in 
+         ( y ) echo "Skipping scripts download..."; break; ;;
+         ( n ) download_scripts; ;;
+         ( * ) echo "Error in cfg_prompted function, user_input was not y or n"; break; ;;
+      esac
 
-### End of Declare Functions
+   echo "Config bells?  (e)nable or (d)isable"
+   read user_input
+   user_input=$(echo "$user_input" | tr '[:upper:]' '[:lower:]')
+      case "$user_input" in 
+         ( e ) cfg_bells 1; ;;
+         ( d ) cfg_bells 0; ;;
+         ( * ) echo "Error in cfg_prompted function, user_input was not e or d"; break; ;;
+      esac
+
+   echo "Config captive portal helper?  (e)nable or (d)isable"
+   read user_input
+   user_input=$(echo "$user_input" | tr '[:upper:]' '[:lower:]')
+      case "$user_input" in 
+         ( e ) cfg_captive_helper 1; ;;
+         ( d ) cfg_captive_helper 0; ;;
+         ( * ) echo "Error in cfg_prompted function, user_input was not e or d"; break; ;;
+      esac
+
+   echo "Configure cleanup script?  (e)nable or (d)isable"
+   read user_input
+   user_input=$(echo "$user_input" | tr '[:upper:]' '[:lower:]')
+      case "$user_input" in 
+         ( e ) cfg_cleanup 1; ;;
+         ( d ) cfg_cleanup 0; ;;
+         ( * ) echo "Error in cfg_prompted function, user_input was not e or d"; break; ;;
+      esac      
+}
+
+##### End of Declare Functions #####
 
 # Script START
 # What argument did user use?  (converted to lower case)
@@ -141,8 +171,8 @@ arg=$(echo "$1" | tr '[:upper:]' '[:lower:]')
 case "$arg" in
    ( f ) cfg_faculty; ;;
    ( s ) cfg_student; ;;
-#   ( p ) echo "P - $arg"; cfg_prompted; ;;
-   ( * ) echo "This script accepts the following options:  (F)aculty, (S)tudent, (P)rompted"; ;;
+   ( p ) cfg_prompted; ;;
+   ( * ) echo "This script accepts the following options:  (f)aculty, (s)tudent, (p)rompted"; ;;
 esac
 
 
