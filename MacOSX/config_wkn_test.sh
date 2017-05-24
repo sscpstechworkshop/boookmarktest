@@ -117,9 +117,9 @@ function show_summary {
    if [ $user_input -eq "n" ]; then 
       echo "Values incorrect, aborting script"
       exit
-   else if [ $user_input -eq "y" ]; then 
+   elif [ $user_input -eq "y" ]; then 
       echo "Values are correct, applying changes"
-      do_changes; fi
+      do_changes
    else 
       echo "Error:  Y or N not entered.  Aborting script."
       exit; fi
@@ -169,9 +169,9 @@ function cfg_prompted {
 arg=$(echo "$1" | tr '[:upper:]' '[:lower:]')
 if [ $arg -eq "f" ]; then
    cfg_faculty
-else if [ $arg -eq "s" ]; then
+elif [ $arg -eq "s" ]; then
    cfg_student
-else if [ $arg -eq "p" ]; then
+elif [ $arg -eq "p" ]; then
    cfg_prompted
 else
    echo "Error:  argument was not f, s, or p.  Aborting script."
