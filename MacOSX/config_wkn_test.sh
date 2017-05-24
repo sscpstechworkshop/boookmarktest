@@ -20,7 +20,7 @@
 # 
 ########################################################################################
 
-##### Variables #####
+##### Global Variables #####
 macAddress=(`ifconfig en0 | awk '/ether/{print $2}' | sed -e 's/://g'`)
 wksName=wkn$macAddress
 downloadScripts=1
@@ -28,7 +28,7 @@ enableBells=0
 enableCaptiveHelper=0
 enableCleanup=0
 
-##### Declare Functions #####
+##### Functions #####
 function rename_workstation {
    scutil --set ComputerName $wksName
    scutil --set HostName $wksName
@@ -62,22 +62,31 @@ function download_scripts {
 function cfg_bells {
    if [ $enableBells -eq 1 ]; then
       plutil -replace Disabled -bool false /Library/LaunchAgents/bellschedule.plist
+   elif [ $enableBells -eq 0 ]; then
+      plutil -replace Disabled -bool true /Library/LaunchAgents/bellschedule.plist
    else
-      plutil -replace Disabled -bool true /Library/LaunchAgents/bellschedule.plist; fi
+      echo "Error: enableBells is not 0 or 1.  Aborting."
+      exit; fi
  }
 
 function cfg_captive_helper {
    if [ $enableCaptiveHelper -eq 1 ]; then
       defaults write /Library/Preferences/SystemConfiguration/com.apple.captive.control Active -boolean true
+   elif [ $enableCaptiveHelper -eq 0 ]; then
+      defaults write /Library/Preferences/SystemConfiguration/com.apple.captive.control Active -boolean false
    else
-      defaults write /Library/Preferences/SystemConfiguration/com.apple.captive.control Active -boolean false; fi
+      echo "Error: enableCaptiveHelper is not 0 or 1.  Aborting"
+      exit; fi
 }
 
 function cfg_cleanup {
    if [ $enableCleanup -eq 1 ] ; then
       plutil -replace Disabled -bool false /Library/LaunchDaemons/cleanup_users.plist
-   else
-      plutil -replace Disabled -bool true /Library/LaunchDaemons/cleanup_users.plist; fi
+   elif [ $enableCleanup -eq 0 ]; then
+      plutil -replace Disabled -bool true /Library/LaunchDaemons/cleanup_users.plist
+   else 
+      echo "Errpr: enableCleanup is not 0 or 1.  Aborting"
+      exit; fi
 }
 
 function do_changes {
@@ -122,7 +131,7 @@ function show_summary {
       echo "Values are correct, applying changes..."
       do_changes
    else 
-      echo "Error:  Y or N not entered.  Aborting script."
+      echo "Error:  Y or N not entered in function show_summary.  Aborting."
       exit; fi
 }
 
@@ -162,7 +171,7 @@ function cfg_prompted {
    if [ "$user_input" == "y" ]; then
       enableCleanup=1; fi
 }
-##### End of Declare Functions #####
+##### End of Functions #####
 
 # Script START
 
@@ -175,8 +184,10 @@ elif [ "$arg" == "s" ]; then
 elif [ "$arg" == "p" ]; then
    cfg_prompted
 else
-   echo "Error:  argument was not f, s, or p.  Aborting script."
+   echo "Error:  argument supplied to script was not f, s, or p.  Aborting."
    exit; fi
 
+# After setting up all variables, show summary to user which calls do_changes
 show_summary
+
 # Script END
