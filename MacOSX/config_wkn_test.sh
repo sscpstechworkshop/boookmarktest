@@ -111,6 +111,7 @@ function show_summary {
    echo "Workstation name will be changed to: $wksName"
    if [ $downloadScripts -eq 1 ]; then 
       echo "Scripts will be downloaded"
+      echo "REMINDER:  Some scripts may need further modification!"
    else echo "Scripts will NOT be downloaded"; fi
    if [ $enableBells -eq 1 ]; then 
       echo "Bell schedule will be enabled"
