@@ -29,7 +29,6 @@ enableCaptiveHelper=0
 enableCleanup=0
 
 ##### Declare Functions #####
-
 function rename_workstation {
    scutil --set ComputerName $wksName
    scutil --set HostName $wksName
@@ -87,12 +86,12 @@ function do_changes {
    cfg_bells
    cfg_captive_helper
    cfg_cleanup
-   read -p "Changes completed.  Do you want to reboot now?  (y)es or (n)o :"
+   read -p "Changes completed.  Do you want to reboot now?  (y/n) :"
    user_input=$(echo "$user_input" | tr '[:upper:]' '[:lower:]')
    if [ $user_input -eq "y" ]; then
       echo "Rebooting!"
-      reboot;
-   else if [ $unser_input -eq "n" ]; then
+      reboot
+   else 
       echo "Not rebooting"; fi
 }
 
@@ -162,7 +161,6 @@ function cfg_prompted {
    if [ $user_input -eq "y" ]; then
       enableCleanup=1; fi
 }
-
 ##### End of Declare Functions #####
 
 # Script START
