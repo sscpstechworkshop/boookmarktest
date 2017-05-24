@@ -22,7 +22,7 @@
 
 ##### Variables #####
 macAddress=(`ifconfig en0 | awk '/ether/{print $2}' | sed -e 's/://g'`)
-wksName=wkn$mac_address
+wksName=wkn$macAddress
 downloadScripts=1
 enableBells=0
 enableCaptiveHelper=0
