@@ -56,7 +56,7 @@ function download_scripts {
    chmod +x /usr/local/bin/home_folder_lock.sh;ls -l /usr/local/bin/home_folder_lock.sh
    chmod +x /usr/local/bin/reset_chrome.sh;ls -l /usr/local/bin/reset_chrome.sh
    chmod +x /usr/local/bin/untangle_logon.sh;ls -l /usr/local/bin/untangle_logon.sh
-   read -p "Hit [enter] after confirming all scripts are executable"
+   read -p "Hit [enter] after confirming all scripts are executable (should see 6 listed)"
 }
 
 function cfg_bells {
@@ -99,7 +99,7 @@ function show_summary {
    echo "====================================================="
    echo $configType
    echo "====================================================="
-   echo "Workstation name will be changed to : $wksName"
+   echo "Workstation name will be changed to: $wksName"
    if [ $downloadScripts -eq 1 ]; then 
       echo "Scripts will be downloaded"
    else echo "Scripts will NOT be downloaded"; fi
@@ -119,7 +119,7 @@ function show_summary {
       echo "Values incorrect, aborting script"
       exit
    elif [ "$user_input" == "y" ]; then 
-      echo "Values are correct, applying changes"
+      echo "Values are correct, applying changes..."
       do_changes
    else 
       echo "Error:  Y or N not entered.  Aborting script."
