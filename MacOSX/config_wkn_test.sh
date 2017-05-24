@@ -65,7 +65,7 @@ function cfg_bells {
    elif [ $enableBells -eq 0 ]; then
       plutil -replace Disabled -bool true /Library/LaunchAgents/bellschedule.plist
    else
-      echo "Error: enableBells is not 0 or 1.  Aborting."
+      echo "ERROR: enableBells is $enableBells not 0 or 1.  Aborting."
       exit; fi
  }
 
@@ -75,7 +75,7 @@ function cfg_captive_helper {
    elif [ $enableCaptiveHelper -eq 0 ]; then
       defaults write /Library/Preferences/SystemConfiguration/com.apple.captive.control Active -boolean false
    else
-      echo "Error: enableCaptiveHelper is not 0 or 1.  Aborting"
+      echo "ERROR: enableCaptiveHelper is $enableCaptiveHelper not 0 or 1.  Aborting"
       exit; fi
 }
 
@@ -85,7 +85,7 @@ function cfg_cleanup {
    elif [ $enableCleanup -eq 0 ]; then
       plutil -replace Disabled -bool true /Library/LaunchDaemons/cleanup_users.plist
    else 
-      echo "Errpr: enableCleanup is not 0 or 1.  Aborting"
+      echo "ERROR: enableCleanup is $enableCleanup not 0 or 1.  Aborting"
       exit; fi
 }
 
@@ -111,7 +111,7 @@ function show_summary {
    echo "Workstation name will be changed to: $wksName"
    if [ $downloadScripts -eq 1 ]; then 
       echo "Scripts will be downloaded"
-      echo "REMINDER:  Some scripts may need further modification!"
+      echo "--> REMINDER:  Some scripts may need further modification! <--"
    else echo "Scripts will NOT be downloaded"; fi
    if [ $enableBells -eq 1 ]; then 
       echo "Bell schedule will be enabled"
@@ -123,16 +123,16 @@ function show_summary {
       echo "Cleanup users will be enabled"
    else echo "Cleanup users will NOT be enabled"; fi
    echo "====================================================="
-   read -p "Are these values correct? (y/n) " user_input
+   read -p "Are these values correct? (y/N) " user_input
    user_input=$(echo "$user_input" | tr '[:upper:]' '[:lower:]')
-   if [ "$user_input" == "n" ]; then 
-      echo "Values incorrect, aborting script"
+   if [ "$user_input" == "n" || "$user_input == "" ]; then 
+      echo "Values incorrect.   Aborting."
       exit
    elif [ "$user_input" == "y" ]; then 
-      echo "Values are correct, applying changes..."
+      echo "Values correct, applying changes..."
       do_changes
    else 
-      echo "Error:  Y or N not entered in function show_summary.  Aborting."
+      echo "ERROR:  Y or N not entered in function show_summary.  Aborting."
       exit; fi
 }
 
@@ -151,7 +151,7 @@ function cfg_student {
 
 function cfg_prompted {
    configType="Prompted configuration"
-   read -p "Enter workstation name (or hit [enter] for wkn<MAC>): " user_input
+   read -p "Enter workstation name (or hit [enter] to use wkn<MAC> format): " user_input
    user_input=$(echo "$user_input" | tr '[:upper:]' '[:lower:]')
    if [ ! "$user_input" == "" ]; then
       wksName=$user_input; fi
@@ -185,10 +185,10 @@ elif [ "$arg" == "s" ]; then
 elif [ "$arg" == "p" ]; then
    cfg_prompted
 else
-   echo "Error:  argument supplied to script was not f, s, or p.  Aborting."
+   echo "ERROR:  argument supplied to script was not f, s, or p.  Aborting."
    exit; fi
 
-# After setting up all variables, show summary to user which calls do_changes
+# After setting up all variables, show summary to user which then calls do_changes
 show_summary
 
 # Script END
