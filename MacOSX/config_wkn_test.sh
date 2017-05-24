@@ -20,27 +20,23 @@
 # 
 ########################################################################################
 
-# TODO: Add ability to answer prompts again if input is typo'ed
-#       maybe in a while loop?   Maybe need a new function that handles user input?
-
+##### Variables #####
+macAddress=(`ifconfig en0 | awk '/ether/{print $2}' | sed -e 's/://g'`)
+wksName=wkn$mac_address
+downloadScripts=1
+enableBells=0
+enableCaptiveHelper=0
+enableCleanup=0
 
 ##### Declare Functions #####
 
 function rename_workstation {
-   case "$1" in
-      ( f ) read -p "Enter workstation name: " workstation_name; ;;
-      ( s ) mac_address=(`ifconfig en0 | awk '/ether/{print $2}' | sed -e 's/://g'`);
-            workstation_name=wkn$mac_address; ;;
-      ( * ) echo "Error in rename_workstation function, argument was not f or s"; return; ;;
-   esac
-   echo "Setting workstation name to: $workstation_name"
-   scutil --set ComputerName $workstation_name
-   scutil --set HostName $workstation_name
-   scutil --set LocalHostName $workstation_name
+   scutil --set ComputerName $wksName
+   scutil --set HostName $wksName
+   scutil --set LocalHostName $wksName
 }
 
 function download_scripts {
-   echo "Downloading scripts and pausing for 5 seconds... some scripts may need further modification."
    curl -s -L -o '/Library/LaunchAgents/bellschedule.plist' https://raw.githubusercontent.com/SSCPS/TechTools/master/MacOSX/bellschedule.plist
    curl -s -L -o '/usr/local/bin/bellschedule.sh' https://raw.githubusercontent.com/SSCPS/TechTools/master/MacOSX/bellschedule.sh
    curl -s -L -o '/Library/LaunchDaemons/bellschedule_perms.plist' https://raw.githubusercontent.com/SSCPS/TechTools/master/MacOSX/bellschedule_perms.plist
@@ -65,55 +61,84 @@ function download_scripts {
 }
 
 function cfg_bells {
-   case "$1" in
-      ( 0 ) echo "Disabling bells...";
-            plutil -replace Disabled -bool true /Library/LaunchAgents/bellschedule.plist; ;;
-      ( 1 ) echo "Enabling bells...";
-            plutil -replace Disabled -bool false /Library/LaunchAgents/bellschedule.plist; ;;
-      ( * ) echo "Error in cfg_bells function... argument was not 0 or 1"; ;;
-   esac     
-}
+   if [ enableBells -eq 1 ]; then
+      plutil -replace Disabled -bool false /Library/LaunchAgents/bellschedule.plist
+   else
+      plutil -replace Disabled -bool true /Library/LaunchAgents/bellschedule.plist
+   fi
+ }
 
 function cfg_captive_helper {
-   case "$1" in
-      ( 0 ) echo "Disabling captive portal helper...";
-            defaults write /Library/Preferences/SystemConfiguration/com.apple.captive.control Active -boolean false; ;;
-      ( 1 ) echo "Enabling captive portal helper...";
-            defaults write /Library/Preferences/SystemConfiguration/com.apple.captive.control Active -boolean true; ;; 
-      ( * ) echo "Error in cfg_captive_helper function... argument was not 0 or 1"; ;;
-    esac 
+   if [ enableCaptiveHelper -eq 1 ]; then
+      defaults write /Library/Preferences/SystemConfiguration/com.apple.captive.control Active -boolean true
+   else
+      defaults write /Library/Preferences/SystemConfiguration/com.apple.captive.control Active -boolean false
+   fi
 }
 
 function cfg_cleanup {
-   case "$1" in
-      ( 0 ) echo "Disabling cleanup script...";
-            plutil -replace Disabled -bool true /Library/LaunchDaemons/cleanup_users.plist; ;;
-      ( 1 ) echo "Enabling cleanup script...";
-            plutil -replace Disabled -bool false /Library/LaunchDaemons/cleanup_users.plist; ;;
-      ( * ) echo "Error in cfg_cleanup function... argument was not 0 or 1"; ;;
-    esac
+   if [ enableCleanup -eq 1 ] ; then
+      plutil -replace Disabled -bool false /Library/LaunchDaemons/cleanup_users.plist
+   else
+      plutil -replace Disabled -bool true /Library/LaunchDaemons/cleanup_users.plist
+   fi
+}
+
+function do_changes {
+   rename_workstation
+   download_scripts
+   cfg_bells
+   cfg_captive_helper
+   cfg_cleanup
+   read -p "Changes completed.  Do you want to reboot now?  (y)es or (n)o :"
+}
+
+function show_summary {
+   echo "====================================================="
+   echo $configType
+   echo "Workstation name will be changed to : $wksName"
+   if [ downloadScripts -eq 1 ]; then 
+      echo "Scripts will be downloaded"
+   else echo "Scripts will NOT be downloaded"; fi
+   if [ enableBells -eq 1 ]; then 
+      echo "Bell schedule will be enabled"
+   else echo "Bell schedule will NOT be enabled"; fi
+   if [ enableCaptiveHelper -eq 1 ]; then 
+      echo "Captive Portal helper will be enabled"
+   else echo "Captive Portal helper will NOT be enabled"; fi
+   if [ enableCleanup -eq 1 ]; then 
+      echo "Cleanup users will be enabled"
+   else echo "Cleanup users will NOT be enabled"; fi
+   echo "====================================================="
+   read -p "Are these values correct? (y/n) " user_input
+   user_input=$(echo "$user_input" | tr '[:upper:]' '[:lower:]')
+   if [ $user_input -eq "n" ]; then 
+      echo "Values incorrect, aborting script"
+      exit
+   else if [ $user_input -eq "y" ]; then 
+      echo "Values are correct, applying changes"
+      do_changes
+   else 
+      echo "Error:  Y or N not entered.  Aborting script."
+      exit
+   fi
 }
 
 function cfg_faculty {
-   echo "Faculty configuration"
-   rename_workstation f
-   download_scripts
-   cfg_bells 1
-   cfg_captive_helper 0
-   cfg_cleanup 0
+   configType="Faculty configuration"
+   read -p "Enter new workstation name: " wksName
+   enableBells=1
+   enable_Cleanup=0
 }
 
 function cfg_student {
-   echo "Student configuration"
-   rename_workstation s
-   download_scripts
-   cfg_bells 0
-   cfg_captive_helper 0
-   cfg_cleanup 1
+   configType="Student configuration"
+   enableBells=0
+   enable_Cleanup=1
 }
 
 function cfg_prompted {
-   echo "Prompted configuration"
+   configType="Prompted configuration"
    read -p "Rename workstation? (f)aculty (s)tudent or (n)o: " user_input
    user_input=$(echo "$user_input" | tr '[:upper:]' '[:lower:]')
       case "$user_input" in 
