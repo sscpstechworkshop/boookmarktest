@@ -60,21 +60,21 @@ function download_scripts {
 }
 
 function cfg_bells {
-   if [ enableBells -eq 1 ]; then
+   if [ $enableBells -eq 1 ]; then
       plutil -replace Disabled -bool false /Library/LaunchAgents/bellschedule.plist
    else
       plutil -replace Disabled -bool true /Library/LaunchAgents/bellschedule.plist; fi
  }
 
 function cfg_captive_helper {
-   if [ enableCaptiveHelper -eq 1 ]; then
+   if [ $enableCaptiveHelper -eq 1 ]; then
       defaults write /Library/Preferences/SystemConfiguration/com.apple.captive.control Active -boolean true
    else
       defaults write /Library/Preferences/SystemConfiguration/com.apple.captive.control Active -boolean false; fi
 }
 
 function cfg_cleanup {
-   if [ enableCleanup -eq 1 ] ; then
+   if [ $enableCleanup -eq 1 ] ; then
       plutil -replace Disabled -bool false /Library/LaunchDaemons/cleanup_users.plist
    else
       plutil -replace Disabled -bool true /Library/LaunchDaemons/cleanup_users.plist; fi
