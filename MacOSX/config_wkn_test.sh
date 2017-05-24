@@ -151,7 +151,7 @@ function cfg_student {
 
 function cfg_prompted {
    configType="Prompted configuration"
-   read -p "Enter workstation name (or hit [enter] to use wkn<MAC> format): " user_input
+   read -p "Enter workstation name (or hit [enter] to use standard format): " user_input
    user_input=$(echo "$user_input" | tr '[:upper:]' '[:lower:]')
    if [ ! "$user_input" == "" ]; then
       wksName=$user_input; fi
