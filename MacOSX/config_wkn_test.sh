@@ -88,7 +88,7 @@ function do_changes {
    cfg_cleanup
    read -p "Changes completed.  Do you want to reboot now?  (y/n) :"
    user_input=$(echo "$user_input" | tr '[:upper:]' '[:lower:]')
-   if [ $user_input -eq "y" ]; then
+   if [ "$user_input" == "y" ]; then
       echo "Rebooting!"
       reboot
    else 
@@ -114,10 +114,10 @@ function show_summary {
    echo "====================================================="
    read -p "Are these values correct? (y/n) " user_input
    user_input=$(echo "$user_input" | tr '[:upper:]' '[:lower:]')
-   if [ $user_input -eq "n" ]; then 
+   if [ "$user_input" == "n" ]; then 
       echo "Values incorrect, aborting script"
       exit
-   elif [ $user_input -eq "y" ]; then 
+   elif [ "$user_input" == "y" ]; then 
       echo "Values are correct, applying changes"
       do_changes
    else 
@@ -142,23 +142,23 @@ function cfg_prompted {
    configType="Prompted configuration"
    read -p "Enter workstation name (or hit [enter] for wkn<MAC>): " user_input
    user_input=$(echo "$user_input" | tr '[:upper:]' '[:lower:]')
-   if [ ! $user_input -eq "" ]; then
+   if [ ! "$user_input" == "" ]; then
       wksName=$user_input; fi
    read -p "Download scripts? (Y/n): " user_input
    user_input=$(echo "$user_input" | tr '[:upper:]' '[:lower:]')
-   if [ $user_input -eq "n" ]; then
+   if [ "$user_input" == "n" ]; then
       downloadScripts=0; fi
    read -p "Enable bell schedule? (y/N): " user_input
    user_input=$(echo "$user_input" | tr '[:upper:]' '[:lower:]')
-   if [ $user_input -eq "y" ]; then
+   if [ "$user_input" == "y" ]; then
       enableBells=1; fi
    read -p "Enable captive portal helper?  (y/N): "
    user_input=$(echo "$user_input" | tr '[:upper:]' '[:lower:]')
-   if [ $user_input -eq "y" ]; then
+   if [ "$user_input" == "y" ]; then
       enableCaptiveHelper=1; fi
    read -p "Enable user cleanup script?  (y/N): "
    user_input=$(echo "$user_input" | tr '[:upper:]' '[:lower:]')
-   if [ $user_input -eq "y" ]; then
+   if [ "$user_input" == "y" ]; then
       enableCleanup=1; fi
 }
 ##### End of Declare Functions #####
@@ -167,11 +167,11 @@ function cfg_prompted {
 
 # What argument was passed to script?  (converted to lower case)
 arg=$(echo "$1" | tr '[:upper:]' '[:lower:]')
-if [ $arg -eq "f" ]; then
+if [ "$arg" == "f" ]; then
    cfg_faculty
-elif [ $arg -eq "s" ]; then
+elif [ "$arg" == "s" ]; then
    cfg_student
-elif [ $arg -eq "p" ]; then
+elif [ "$arg" == "p" ]; then
    cfg_prompted
 else
    echo "Error:  argument was not f, s, or p.  Aborting script."
