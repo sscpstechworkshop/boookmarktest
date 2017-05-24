@@ -99,16 +99,16 @@ function show_summary {
    echo "====================================================="
    echo $configType
    echo "Workstation name will be changed to : $wksName"
-   if [ downloadScripts -eq 1 ]; then 
+   if [ $downloadScripts -eq 1 ]; then 
       echo "Scripts will be downloaded"
    else echo "Scripts will NOT be downloaded"; fi
-   if [ enableBells -eq 1 ]; then 
+   if [ $enableBells -eq 1 ]; then 
       echo "Bell schedule will be enabled"
    else echo "Bell schedule will NOT be enabled"; fi
-   if [ enableCaptiveHelper -eq 1 ]; then 
+   if [ $enableCaptiveHelper -eq 1 ]; then 
       echo "Captive Portal helper will be enabled"
    else echo "Captive Portal helper will NOT be enabled"; fi
-   if [ enableCleanup -eq 1 ]; then 
+   if [ $enableCleanup -eq 1 ]; then 
       echo "Cleanup users will be enabled"
    else echo "Cleanup users will NOT be enabled"; fi
    echo "====================================================="
