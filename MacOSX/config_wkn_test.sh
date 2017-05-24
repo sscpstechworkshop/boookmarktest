@@ -64,24 +64,21 @@ function cfg_bells {
    if [ enableBells -eq 1 ]; then
       plutil -replace Disabled -bool false /Library/LaunchAgents/bellschedule.plist
    else
-      plutil -replace Disabled -bool true /Library/LaunchAgents/bellschedule.plist
-   fi
+      plutil -replace Disabled -bool true /Library/LaunchAgents/bellschedule.plist; fi
  }
 
 function cfg_captive_helper {
    if [ enableCaptiveHelper -eq 1 ]; then
       defaults write /Library/Preferences/SystemConfiguration/com.apple.captive.control Active -boolean true
    else
-      defaults write /Library/Preferences/SystemConfiguration/com.apple.captive.control Active -boolean false
-   fi
+      defaults write /Library/Preferences/SystemConfiguration/com.apple.captive.control Active -boolean false; fi
 }
 
 function cfg_cleanup {
    if [ enableCleanup -eq 1 ] ; then
       plutil -replace Disabled -bool false /Library/LaunchDaemons/cleanup_users.plist
    else
-      plutil -replace Disabled -bool true /Library/LaunchDaemons/cleanup_users.plist
-   fi
+      plutil -replace Disabled -bool true /Library/LaunchDaemons/cleanup_users.plist; fi
 }
 
 function do_changes {
@@ -91,6 +88,12 @@ function do_changes {
    cfg_captive_helper
    cfg_cleanup
    read -p "Changes completed.  Do you want to reboot now?  (y)es or (n)o :"
+   user_input=$(echo "$user_input" | tr '[:upper:]' '[:lower:]')
+   if [ $user_input -eq "y" ]; then
+      echo "Rebooting!"
+      reboot;
+   else if [ $unser_input -eq "n" ]; then
+      echo "Not rebooting"; fi
 }
 
 function show_summary {
@@ -117,11 +120,10 @@ function show_summary {
       exit
    else if [ $user_input -eq "y" ]; then 
       echo "Values are correct, applying changes"
-      do_changes
+      do_changes; fi
    else 
       echo "Error:  Y or N not entered.  Aborting script."
-      exit
-   fi
+      exit; fi
 }
 
 function cfg_faculty {
@@ -139,46 +141,26 @@ function cfg_student {
 
 function cfg_prompted {
    configType="Prompted configuration"
-   read -p "Rename workstation? (f)aculty (s)tudent or (n)o: " user_input
+   read -p "Enter workstation name (or hit [enter] for wkn<MAC>): " user_input
    user_input=$(echo "$user_input" | tr '[:upper:]' '[:lower:]')
-      case "$user_input" in 
-         ( f ) rename_workstation f; ;;
-         ( s ) rename_workstation s; ;;
-         ( n ) echo "Not renaming workstation..."; ;;
-         ( * ) echo "Error in cfg_prompted function (rename workstation), user_input was not f, s, or n"; ;;
-      esac
-   
-   read -p "Download scripts? (y)es or (n)o: " user_input
+   if [ ! $user_input -eq "" ]; then
+      wksName=$user_input; fi
+   read -p "Download scripts? (Y/n): " user_input
    user_input=$(echo "$user_input" | tr '[:upper:]' '[:lower:]')
-      case "$user_input" in 
-         ( n ) echo "Skipping scripts download..."; ;;
-         ( y ) download_scripts; ;;
-         ( * ) echo "Error in cfg_prompted function (download scripts), user_input was not y or n"; ;;
-      esac
-
-   read -p "Configure bells?  (e)nable or (d)isable: " user_input
+   if [ $user_input -eq "n" ]; then
+      downloadScripts=0; fi
+   read -p "Enable bell schedule? (y/N): " user_input
    user_input=$(echo "$user_input" | tr '[:upper:]' '[:lower:]')
-      case "$user_input" in 
-         ( e ) cfg_bells 1; ;;
-         ( d ) cfg_bells 0; ;;
-         ( * ) echo "Error in cfg_prompted function (bells), user_input was not e or d"; ;;
-      esac
-
-   read -p "Configure captive portal helper?  (e)nable or (d)isable: " user_input
+   if [ $user_input -eq "y" ]; then
+      enableBells=1; fi
+   read -p "Enable captive portal helper?  (y/N): "
    user_input=$(echo "$user_input" | tr '[:upper:]' '[:lower:]')
-      case "$user_input" in 
-         ( e ) cfg_captive_helper 1; ;;
-         ( d ) cfg_captive_helper 0; ;;
-         ( * ) echo "Error in cfg_prompted function (captive helper), user_input was not e or d"; ;;
-      esac
-
-   read -p "Configure cleanup script?  (e)nable or (d)isable: " user_input
+   if [ $user_input -eq "y" ]; then
+      enableCaptiveHelper=1; fi
+   read -p "Enable user cleanup script?  (y/N): "
    user_input=$(echo "$user_input" | tr '[:upper:]' '[:lower:]')
-      case "$user_input" in 
-         ( e ) cfg_cleanup 1; ;;
-         ( d ) cfg_cleanup 0; ;;
-         ( * ) echo "Error in cfg_prompted function (cleanup), user_input was not e or d"; ;;
-      esac      
+   if [ $user_input -eq "y" ]; then
+      enableCleanup=1; fi
 }
 
 ##### End of Declare Functions #####
@@ -187,21 +169,17 @@ function cfg_prompted {
 
 # What argument was passed to script?  (converted to lower case)
 arg=$(echo "$1" | tr '[:upper:]' '[:lower:]')
-case "$arg" in
-   ( f ) cfg_faculty; ;;
-   ( s ) cfg_student; ;;
-   ( p ) cfg_prompted; ;;
-   ( * ) echo "This script accepts the following options:  (f)aculty, (s)tudent, (p)rompted"; exit; ;;
-esac
+if [ $arg -eq "f" ]; then
+   cfg_faculty
+else if [ $arg -eq "s" ]; then
+   cfg_student
+else if [ $arg -eq "p" ]; then
+   cfg_prompted
+else
+   echo "Error:  argument was not f, s, or p.  Aborting script."
+   exit; fi
 
-read -p "Do you want to reboot now? (y)es or (n)o: " user_input
-   user_input=$(echo "$user_input" | tr '[:upper:]' '[:lower:]')
-      case "$user_input" in 
-         ( y ) echo "Rebooting..."; reboot; ;;
-         ( n ) echo "Not rebooting..."; ;;
-         ( * ) echo "Error asking for reboot, user_input was not y or n"; ;;
-      esac    
-      
+show_summary
 # Script END
 
 
