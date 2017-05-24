@@ -98,6 +98,7 @@ function do_changes {
 function show_summary {
    echo "====================================================="
    echo $configType
+   echo "====================================================="
    echo "Workstation name will be changed to : $wksName"
    if [ $downloadScripts -eq 1 ]; then 
       echo "Scripts will be downloaded"
@@ -141,6 +142,7 @@ function cfg_student {
 function cfg_prompted {
    configType="Prompted configuration"
    read -p "Enter workstation name (or hit [enter] for wkn<MAC>): " user_input
+   echo "value of user_input after hitting [enter] for workstation name: $user_input"
    user_input=$(echo "$user_input" | tr '[:upper:]' '[:lower:]')
    if [ ! "$user_input" == "" ]; then
       wksName=$user_input; fi
