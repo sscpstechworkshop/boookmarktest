@@ -106,12 +106,11 @@ function do_changes {
 
 function show_summary {
    echo "====================================================="
-   echo $configType
+   echo "=                  $configType                      =
    echo "====================================================="
    echo "Workstation name will be changed to: $wksName"
    if [ $downloadScripts -eq 1 ]; then 
-      echo "Scripts will be downloaded"
-      echo "--> REMINDER:  Some scripts may need further modification! <--"
+      echo "Scripts will be downloaded --> REMINDER: Some scripts may need further modification!"
    else echo "Scripts will NOT be downloaded"; fi
    if [ $enableBells -eq 1 ]; then 
       echo "Bell schedule will be enabled"
@@ -137,7 +136,7 @@ function show_summary {
 }
 
 function cfg_faculty {
-   configType="Faculty configuration"
+   configType="Faculty Configuration"
    read -p "Enter workstation name (or hit [enter] to use standard format): " user_input
    user_input=$(echo "$user_input" | tr '[:upper:]' '[:lower:]')
    if [ ! "$user_input" == "" ]; then
@@ -147,13 +146,13 @@ function cfg_faculty {
 }
 
 function cfg_student {
-   configType="Student configuration"
+   configType="Student Configuration"
    enableBells=0
    enableCleanup=1
 }
 
 function cfg_prompted {
-   configType="Prompted configuration"
+   configType="Prompted Configuration"
    read -p "Enter workstation name (or hit [enter] to use standard format): " user_input
    user_input=$(echo "$user_input" | tr '[:upper:]' '[:lower:]')
    if [ ! "$user_input" == "" ]; then
