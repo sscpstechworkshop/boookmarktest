@@ -187,7 +187,7 @@ elif [ "$arg" == "s" ]; then
 elif [ "$arg" == "p" ]; then
    cfg_prompted
 else
-   echo "ERROR:  argument supplied to script was not f, s, or p.  Aborting."
+   echo "Script requires an argument of (f)aculty, (s)tudent, or (p)rompted"
    exit; fi
 
 # After setting up all variables, show summary to user which then calls do_changes
