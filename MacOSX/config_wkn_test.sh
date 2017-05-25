@@ -125,7 +125,7 @@ function show_summary {
    echo "====================================================="
    read -p "Are these values correct? (y/N) " user_input
    user_input=$(echo "$user_input" | tr '[:upper:]' '[:lower:]')
-   if [ "$user_input" == "n" ] || [ "$user_input == "" ]; then 
+   if [ [ "$user_input" == "n" ] || [ "$user_input == "" ] ]; then 
       echo "Values incorrect.   Aborting."
       exit
    elif [ "$user_input" == "y" ]; then 
