@@ -138,10 +138,9 @@ function show_summary {
 
 function cfg_faculty {
    configType="Faculty configuration"
-   read -p "Enter new workstation name: " user_input
-   if [ "$user_input" == "" ]; then
-      echo "Using default format for workstation name"
-   else
+   read -p "Enter workstation name (or hit [enter] to use standard format): " user_input
+   user_input=$(echo "$user_input" | tr '[:upper:]' '[:lower:]')
+   if [ ! "$user_input" == "" ]; then
       wksName=$user_input; fi
    enableBells=1
    enableCleanup=0
