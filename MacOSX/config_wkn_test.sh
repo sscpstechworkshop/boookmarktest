@@ -75,17 +75,17 @@ function cfg_captive_helper {
    elif [ $enableCaptiveHelper -eq 0 ]; then
       defaults write /Library/Preferences/SystemConfiguration/com.apple.captive.control Active -boolean false
    else
-      echo "ERROR: enableCaptiveHelper is $enableCaptiveHelper not 0 or 1.  Aborting"
+      echo "ERROR: enableCaptiveHelper is $enableCaptiveHelper not 0 or 1.  Aborting."
       exit; fi
 }
 
 function cfg_cleanup {
-   if [ $enableCleanup -eq 1 ] ; then
+   if [ $enableCleanup -eq 1 ]; then
       plutil -replace Disabled -bool false /Library/LaunchDaemons/cleanup_users.plist
    elif [ $enableCleanup -eq 0 ]; then
       plutil -replace Disabled -bool true /Library/LaunchDaemons/cleanup_users.plist
    else 
-      echo "ERROR: enableCleanup is $enableCleanup not 0 or 1.  Aborting"
+      echo "ERROR: enableCleanup is $enableCleanup not 0 or 1.  Aborting."
       exit; fi
 }
 
@@ -95,7 +95,7 @@ function do_changes {
    cfg_bells
    cfg_captive_helper
    cfg_cleanup
-   read -p "Changes completed.  Do you want to reboot now?  (y/n) :"
+   read -p "Changes completed.  Do you want to reboot now?  (y/n) "
    user_input=$(echo "$user_input" | tr '[:upper:]' '[:lower:]')
    if [ "$user_input" == "y" ]; then
       echo "Rebooting!"
@@ -137,7 +137,7 @@ function show_summary {
 
 function cfg_faculty {
    configType="Faculty Configuration"
-   read -p "Enter workstation name (or hit [enter] to use standard format): " user_input
+   read -p "Enter workstation name (or hit [enter] to use standard format) " user_input
    user_input=$(echo "$user_input" | tr '[:upper:]' '[:lower:]')
    if [ ! "$user_input" == "" ]; then
       wksName=$user_input; fi
@@ -153,23 +153,23 @@ function cfg_student {
 
 function cfg_prompted {
    configType="Prompted Configuration"
-   read -p "Enter workstation name (or hit [enter] to use standard format): " user_input
+   read -p "Enter workstation name (or hit [enter] to use standard format) " user_input
    user_input=$(echo "$user_input" | tr '[:upper:]' '[:lower:]')
    if [ ! "$user_input" == "" ]; then
       wksName=$user_input; fi
-   read -p "Download scripts? (Y/n): " user_input
+   read -p "Download scripts? (Y/n) " user_input
    user_input=$(echo "$user_input" | tr '[:upper:]' '[:lower:]')
    if [ "$user_input" == "n" ]; then
       downloadScripts=0; fi
-   read -p "Enable bell schedule? (y/N): " user_input
+   read -p "Enable bell schedule? (y/N) " user_input
    user_input=$(echo "$user_input" | tr '[:upper:]' '[:lower:]')
    if [ "$user_input" == "y" ]; then
       enableBells=1; fi
-   read -p "Enable captive portal helper?  (y/N): "
+   read -p "Enable captive portal helper?  (y/N) "
    user_input=$(echo "$user_input" | tr '[:upper:]' '[:lower:]')
    if [ "$user_input" == "y" ]; then
       enableCaptiveHelper=1; fi
-   read -p "Enable user cleanup script?  (y/N): "
+   read -p "Enable user cleanup script?  (y/N) "
    user_input=$(echo "$user_input" | tr '[:upper:]' '[:lower:]')
    if [ "$user_input" == "y" ]; then
       enableCleanup=1; fi
