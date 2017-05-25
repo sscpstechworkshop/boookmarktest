@@ -106,7 +106,7 @@ function do_changes {
 
 function show_summary {
    echo "====================================================="
-   echo "=                  $configType                      =
+   echo "=                  $configType                      ="
    echo "====================================================="
    echo "Workstation name will be changed to: $wksName"
    if [ $downloadScripts -eq 1 ]; then 
