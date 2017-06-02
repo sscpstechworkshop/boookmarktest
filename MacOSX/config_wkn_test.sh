@@ -167,11 +167,11 @@ function cfg_prompted {
    user_input=$(echo "$user_input" | tr '[:upper:]' '[:lower:]')
    if [ "$user_input" == "y" ]; then
       enableBells=1; fi
-   read -p "Enable captive portal helper?  (y/N) "
+   read -p "Enable captive portal helper?  (y/N) " user_input
    user_input=$(echo "$user_input" | tr '[:upper:]' '[:lower:]')
    if [ "$user_input" == "y" ]; then
       enableCaptiveHelper=1; fi
-   read -p "Enable user cleanup script?  (y/N) "
+   read -p "Enable user cleanup script?  (y/N) " user_input
    user_input=$(echo "$user_input" | tr '[:upper:]' '[:lower:]')
    if [ "$user_input" == "y" ]; then
       enableCleanup=1; fi
