@@ -97,7 +97,7 @@ function do_changes {
    cfg_bells
    cfg_captive_helper
    cfg_cleanup
-   read -p "Changes completed.  Do you want to reboot now?  (y/n) "
+   read -p "Changes completed.  Do you want to reboot now?  (y/n) " user_input
    user_input=$(echo "$user_input" | tr '[:upper:]' '[:lower:]')
    if [ "$user_input" == "y" ]; then
       echo "Rebooting!"
