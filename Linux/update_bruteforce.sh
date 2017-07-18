@@ -14,9 +14,12 @@ echo ===============================
 echo   Forcing held-back packages
 echo ===============================
 aptitude -y --full-resolver safe-upgrade
-echo ===============================
-echo   Uncomment as needed
-echo ===============================
+#
+# uncomment each item below as needed
+#
+#echo ===============================
+#echo   Renew LetsEncrypt SSL Certs
+#echo ===============================
 #sudo letsencrypt renew
 echo ===============================
 echo   Cleaning up packages
