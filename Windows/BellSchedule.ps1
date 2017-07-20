@@ -1,8 +1,8 @@
 ############################################################################
 # School bell script
 #
-# This powershell script has been modeled after the bash BellSchedule script
-# we have in place for the OSX devices
+# This powershell script has been modeled after the bash BellSchedule 
+# script we have in place for the OSX devices
 ############################################################################
 
 # Today's date and time
@@ -20,7 +20,7 @@ $user = $env:username
 
 #versionRemoteDir = "joetest"
 #versionRemoteDir = "riotest"
-$versionRemoteDir = "v2/lhs"
+$versionRemoteDir = "v2/mhs"
 $confFile = "\Users\" + $user + "\AppData\Local\BellSchedule\bellschedule_settings.conf"
 $scheduleURL = "http://files.sscps.org/bellschedule/" + $versionRemoteDir + "/bellschedule_" + $day + ".conf"
 $scheduleFile = "\Users\" + $user + "\AppData\Local\BellSchedule\bellschedule_" + $day + ".conf"
@@ -100,38 +100,40 @@ if ( ! (Test-Path $scheduleFile) ) {
 }
 else {
    sendToLog "Found " + $scheduleFile 5
-   $scheduleArray = Import-CSV $scheduleFile
+   # Build array.   First element will be the entire first line 
+   $scheduleArray = Get-Content $scheduleFile
 }
 
 sendToLog "Before loop that finds bell schedule" 5
 
 Foreach ($i in $scheduleArray) {
    sendToLog "Line being tested is: $i" 4
-   $currentTimeArray = $i
-   #sendToLog "currentTimeArray is: $currentTimeArray[*]}" 5
+   $currentTimeArray = $i -split ','
+   #sendToLog "currentTimeArray is: " + $currentTimeArray 5
    if ( $currentTimeArray[0] = "default" ) {
       # Using arrayList here so we can remove 0 element (yes, that comma is supposed to be there)
       $bellscheduleArrayList = New-Object System.Collections.ArrayList(,$currentTimeArray)
-      sendToLog "Using default bellScheduleArrayList: " + $bellScheduleArrayList[*] 1
+      sendToLog "Using default bellScheduleArrayList: " + $bellScheduleArrayList 1
       $bellScheduleArrayList.RemoveAt(0)
    }
    sendToLog "Current date is: $currentDate" 5
    if ( $currentTimeArray[0] = $currentDate ) {
       $bellscheduleArrayList = New-Object System.Collections.ArrayList(,$currentTimeArray)
-      sendToLog "Changing to custom bellScheduleArrayList: " + $bellScheduleArrayList[*] 1
+      sendToLog "Changing to custom bellScheduleArrayList: " + $bellScheduleArrayList 1
+      # Remove "default" or exception date from first element
       $bellScheduleArrayList.RemoveAt(0)
    }
 }
 
-sendToLog "Final bellSchedule array is: " + $bellScheduleArrayList[*] 0
+sendToLog "Final bellSchedule array is: " + $bellScheduleArrayList 0
 
 # if bellSchedule has no times, exit
-if ( $bellScheduleArrayList[@] -eq 0 ) {
+if ( $bellScheduleArrayList.Count -eq 0 ) {
     sendToLog "Schedule has no times.  Exiting." 0
     exit 0
 }
 
-Foreach ($time in $bellScheduleArrayList[@]) {
+Foreach ($time in $bellScheduleArrayList) {
    sendToLog "Time comparison is between : time= " + $time + "currentTime= " + $currentTime 4
    if ( $time -eq $currentTime ) {
       $bell = new-Object System.Media.SoundPlayer
