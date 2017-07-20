@@ -42,7 +42,7 @@ function sendToLog {
 # create log folder if needed
 if ( ! (Test-Path $logPath ) ) {
    New-Item $logPath -type Directory
-   New-Item $logPath + "bellschedule.log" -type File
+   New-Item $logPath\bellschedule.log -type File
    sendToLog $logPath + "bellschedule.log created." 0
 }
 
