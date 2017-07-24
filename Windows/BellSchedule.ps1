@@ -14,7 +14,7 @@ $day = $date.DayOfWeek                    # Friday
 $hour = Get-Date -format HH               # 15 (24hr format, with leading zeros)
 $minute = Get-Date -format mm             # 45 (with leading zeros)
 $currentDate = $date.ToShortDateString()  # 1/5/2017
-$currentTime = $hour + ":" + $min         # 15:45
+$currentTime = $hour + ":" + $minute      # 15:45
 
 $user = $env:username
 
@@ -52,7 +52,7 @@ sendToLog "Start script" 0
 if ( ! (Test-Path $confFile) ) {
    sendToLog "Settings file not found, creating it." 2
    $currentDate | Set-Content $confFile
-   sendToLog "Downloading schedule file for " + $day 1
+   sendToLog "Downloading schedule file for $day" 1
    (New-Object System.Net.WebClient).DownloadFile($scheduleURL, $scheduleFile)
 }
 else {
@@ -68,7 +68,7 @@ else {
 
 # Check if config file is valid.   Is its file size 0?
 if ( (Get-Item $confFile).Length -eq 0) {
-   sendToLog "Zero sized " + $scheduleFile + ", removing " + $confFile + " for redownload." 2
+   sendToLog "Zero sized $scheduleFile , removing $confFile for redownload." 2
    Remove-Item $confFile
 }
 
@@ -79,7 +79,7 @@ if ( ! (Test-Path $wavFile) ) {
 }
 else {
    if ( (Get-Item $wavFile).Length -eq 0 ) {
-      sendToLog "Zero sized " + $wavFile + ", redownload." 2
+      sendToLog "Zero sized $wavFile , redownload." 2
       (New-Object System.Net.WebClient).DownloadFile($wavURL, $wavFile)
    }
    else {
@@ -95,38 +95,36 @@ sendToLog "...done sleeping for 5 seconds" 4
 # populate scheduleArray from scheduleFile
 sendToLog "Checking if scheduleFile exists" 5
 if ( ! (Test-Path $scheduleFile) ) {
-   sendToLog $scheduleFile + " doesn't exist!   Exiting." 0
+   sendToLog "$scheduleFile doesn't exist!   Exiting." 0
    Exit
 }
 else {
-   sendToLog "Found " + $scheduleFile 5
+   sendToLog "Found scheduleFile $scheduleFile" 5
    # Build array.   First element will be the entire first line 
    $scheduleArray = Get-Content $scheduleFile
 }
 
-sendToLog "Before loop that finds bell schedule" 5
-
 Foreach ($i in $scheduleArray) {
-   sendToLog "Line being tested is: $i" 4
+   sendToLog "Line from scheduleFile is: $i" 4
    # currentTimeArray will be values from scheduleArray (default, 08:01, etc)
    $currentTimeArray = $i -split ','
-   #sendToLog "currentTimeArray is: " + $currentTimeArray 5
-   if ( $currentTimeArray[0] = "default" ) {
+   sendToLog "currentTimeArray is: $currentTimeArray" 5
+   if ( $currentTimeArray[0] -eq "default" ) {
       # Using arrayList here so we can remove 0 element (yes, that comma is supposed to be there)
       $bellscheduleArrayList = New-Object System.Collections.ArrayList(,$currentTimeArray)
-      sendToLog "Using default bellScheduleArrayList: " + $bellScheduleArrayList 1
+      sendToLog "Using default bellScheduleArrayList: $bellScheduleArrayList" 1
       $bellScheduleArrayList.RemoveAt(0)
    }
    sendToLog "Current date is: $currentDate" 5
-   if ( $currentTimeArray[0] = $currentDate ) {
+   if ( $currentTimeArray[0] -eq $currentDate ) {
       $bellscheduleArrayList = New-Object System.Collections.ArrayList(,$currentTimeArray)
-      sendToLog "Changing to custom bellScheduleArrayList: " + $bellScheduleArrayList 1
+      sendToLog "Changing to custom bellScheduleArrayList: $bellScheduleArrayList" 1
       # Remove "default" or exception date from first element
       $bellScheduleArrayList.RemoveAt(0)
    }
 }
 
-sendToLog "Final bellSchedule array is: " + $bellScheduleArrayList 0
+sendToLog "Final bellSchedule array is: $bellScheduleArrayList" 0
 
 # if bellSchedule has no times, exit
 if ( $bellScheduleArrayList.Count -eq 0 ) {
@@ -135,7 +133,7 @@ if ( $bellScheduleArrayList.Count -eq 0 ) {
 }
 
 Foreach ($time in $bellScheduleArrayList) {
-   sendToLog "Time comparison is between : time= " + $time + "currentTime= " + $currentTime 4
+   sendToLog "Time comparison is between : time= $time currentTime= $currentTime" 4
    if ( $time -eq $currentTime ) {
       $bell = new-Object System.Media.SoundPlayer
       $bell.SoundLocation = $wavFile
