@@ -20,7 +20,7 @@ $user = $env:username
 
 #versionRemoteDir = "joetest"
 #versionRemoteDir = "riotest"
-$versionRemoteDir = "v2/mhs"
+$versionRemoteDir = "v2/middle-school"
 $confFile = "\Users\" + $user + "\AppData\Local\BellSchedule\bellschedule_settings.conf"
 $scheduleURL = "http://files.sscps.org/bellschedule/" + $versionRemoteDir + "/bellschedule_" + $day + ".conf"
 $scheduleFile = "\Users\" + $user + "\AppData\Local\BellSchedule\bellschedule_" + $day + ".conf"
@@ -32,9 +32,9 @@ $logFile = $logPath + "bellschedule.log"
 $logLevel = 5
 
 function sendToLog {
+   param( $a, $b )
    if ( $b -le $logLevel ) {
-      Param ($a,$b)
-      message = $currentDate + $currentTime + ":" + $a
+      $message = $currentDate + $currentTime + ":" + $a
       echo $message >> $logFile
    }
 }
@@ -51,7 +51,7 @@ sendToLog "Start script" 0
 # Check if config file exists and if so compare to today's date
 if ( ! (Test-Path $confFile) ) {
    sendToLog "Settings file not found, creating it." 2
-   echo $currentDate>$confFile
+   $currentDate | Set-Content $confFile
    sendToLog "Downloading schedule file for " + $day 1
    (New-Object System.Net.WebClient).DownloadFile($scheduleURL, $scheduleFile)
 }
@@ -61,7 +61,7 @@ else {
       sendToLog "bellschedule_settings.conf file has today's date." 1
    }
    else {
-      echo $currentDate>$confFile
+      $currentDate | Set-Content $confFile
       (New-Object System.Net.WebClient).DownloadFile($scheduleURL, $scheduleFile)
    }
 }
@@ -108,6 +108,7 @@ sendToLog "Before loop that finds bell schedule" 5
 
 Foreach ($i in $scheduleArray) {
    sendToLog "Line being tested is: $i" 4
+   # currentTimeArray will be values from scheduleArray (default, 08:01, etc)
    $currentTimeArray = $i -split ','
    #sendToLog "currentTimeArray is: " + $currentTimeArray 5
    if ( $currentTimeArray[0] = "default" ) {
