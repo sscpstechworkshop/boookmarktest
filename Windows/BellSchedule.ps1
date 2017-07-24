@@ -56,7 +56,7 @@ if ( ! (Test-Path $confFile) ) {
    (New-Object System.Net.WebClient).DownloadFile($scheduleURL, $scheduleFile)
 }
 else {
-   storedDate = Get-Content $confFile -First 1
+   $storedDate = Get-Content $confFile -First 1
    if ( $currentDate -eq $storedDate ) {
       sendToLog "bellschedule_settings.conf file has today's date." 1
    }
