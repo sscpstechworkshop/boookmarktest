@@ -21,19 +21,20 @@ $user = $env:username
 #versionRemoteDir = "joetest"
 #versionRemoteDir = "riotest"
 $versionRemoteDir = "v2/middle-school"
-$confFile = "\Users\" + $user + "\AppData\Local\BellSchedule\bellschedule_settings.conf"
-$scheduleURL = "http://files.sscps.org/bellschedule/" + $versionRemoteDir + "/bellschedule_" + $day + ".conf"
-$scheduleFile = "\Users\" + $user + "\AppData\Local\BellSchedule\bellschedule_" + $day + ".conf"
-$wavURL = "http://files.sscps.org/bellschedule/" + $versionRemoteDir + "/bellschedule.mp3"
-$wavFile = "\Users\" + $user + "\AppData\Local\BellSchedule\bellschedule.wav"
-$logPath = "\Users\" + $user + "\AppData\Local\BellSchedule\logs\"
+$confFile = "\TechTools\Scripts\BellSchedule\bellschedule_settings.conf"
+$scheduleURL = "http://files.sscps.org/bellschedule/$versionRemoteDir/bellschedule_$day.conf"
+$scheduleFile = "\TechTools\Scripts\BellSchedule\bellschedule_$day.conf"
+$wavURL = "http://files.sscps.org/bellschedule/$versionRemoteDir/bellschedule.wav"
+$wavFile = "\TechTools\Scripts\BellSchedule\bellschedule.wav"
+$logPath = "\TechTools\Scripts\BellSchedule\logs\"
 $logFile = $logPath + "bellschedule.log"
-# the higher the number, the more the information, read below for details
-$logLevel = 5
+
+# Turn logging off or on
+$logging = 1
 
 function sendToLog {
-   param( $a, $b )
-   if ( $b -le $logLevel ) {
+   param( $a )
+   if ( $logging ) {
       $message = $currentDate + $currentTime + ":" + $a
       echo $message >> $logFile
    }
@@ -43,22 +44,22 @@ function sendToLog {
 if ( ! (Test-Path $logPath ) ) {
    New-Item $logPath -type Directory
    New-Item $logPath\bellschedule.log -type File
-   sendToLog $logPath + "bellschedule.log created." 0
+   sendToLog $logPath + "bellschedule.log created."
 }
 
-sendToLog "Start script" 0
+sendToLog "Start script"
 
 # Check if config file exists and if so compare to today's date
 if ( ! (Test-Path $confFile) ) {
-   sendToLog "Settings file not found, creating it." 2
+   sendToLog "Settings file not found, creating it."
    $currentDate | Set-Content $confFile
-   sendToLog "Downloading schedule file for $day" 1
+   sendToLog "Downloading schedule file for $day"
    (New-Object System.Net.WebClient).DownloadFile($scheduleURL, $scheduleFile)
 }
 else {
    $storedDate = Get-Content $confFile -First 1
    if ( $currentDate -eq $storedDate ) {
-      sendToLog "bellschedule_settings.conf file has today's date." 1
+      sendToLog "bellschedule_settings.conf file has today's date."
    }
    else {
       $currentDate | Set-Content $confFile
@@ -68,74 +69,74 @@ else {
 
 # Check if config file is valid.   Is its file size 0?
 if ( (Get-Item $confFile).Length -eq 0) {
-   sendToLog "Zero sized $scheduleFile , removing $confFile for redownload." 2
+   sendToLog "Zero sized $scheduleFile , removing $confFile for redownload."
    Remove-Item $confFile
 }
 
 # Check if .wav file exists and isn't 0 sized
 if ( ! (Test-Path $wavFile) ) {
-   sendToLog "WAV not found, downloading..." 2
+   sendToLog "WAV not found, downloading..."
    (New-Object System.Net.WebClient).DownloadFile($wavURL, $wavFile)
 }
 else {
    if ( (Get-Item $wavFile).Length -eq 0 ) {
-      sendToLog "Zero sized $wavFile , redownload." 2
+      sendToLog "Zero sized $wavFile , redownload."
       (New-Object System.Net.WebClient).DownloadFile($wavURL, $wavFile)
    }
    else {
-      sendToLog "WAV file found & non-zero, no need to download." 3
+      sendToLog "WAV file found & non-zero, no need to download."
    }
 }
 
 # Give the possible download(s) a moment to finish
-sendToLog "Sleeping for 5 seconds..." 4
+sendToLog "Sleeping for 5 seconds..."
 Start-Sleep -s 5
-sendToLog "...done sleeping for 5 seconds" 4
+sendToLog "...done sleeping for 5 seconds"
 
 # populate scheduleArray from scheduleFile
-sendToLog "Checking if scheduleFile exists" 5
+sendToLog "Checking if scheduleFile exists"
 if ( ! (Test-Path $scheduleFile) ) {
-   sendToLog "$scheduleFile doesn't exist!   Exiting." 0
+   sendToLog "$scheduleFile doesn't exist!   Exiting."
    Exit
 }
 else {
-   sendToLog "Found scheduleFile $scheduleFile" 5
+   sendToLog "Found scheduleFile $scheduleFile"
    # Build array.   First element will be the entire first line 
    $scheduleArray = Get-Content $scheduleFile
 }
 
 Foreach ($i in $scheduleArray) {
-   sendToLog "Line from scheduleFile is: $i" 4
+   sendToLog "Line from scheduleFile is: $i"
    # currentTimeArray will be values from scheduleArray (default, 08:01, etc)
    $currentTimeArray = $i -split ','
-   sendToLog "currentTimeArray is: $currentTimeArray" 5
+   sendToLog "currentTimeArray is: $currentTimeArray"
    if ( $currentTimeArray[0] -eq "default" ) {
       # Using arrayList here so we can remove 0 element (yes, that comma is supposed to be there)
       $bellscheduleArrayList = New-Object System.Collections.ArrayList(,$currentTimeArray)
-      sendToLog "Using default bellScheduleArrayList: $bellScheduleArrayList" 1
+      sendToLog "Using default bellScheduleArrayList: $bellScheduleArrayList"
       $bellScheduleArrayList.RemoveAt(0)
    }
-   sendToLog "Current date is: $currentDate" 5
+   sendToLog "Current date is: $currentDate"
    if ( $currentTimeArray[0] -eq $currentDate ) {
       $bellscheduleArrayList = New-Object System.Collections.ArrayList(,$currentTimeArray)
-      sendToLog "Changing to custom bellScheduleArrayList: $bellScheduleArrayList" 1
+      sendToLog "Changing to custom bellScheduleArrayList: $bellScheduleArrayList"
       # Remove "default" or exception date from first element
       $bellScheduleArrayList.RemoveAt(0)
    }
 }
 
-sendToLog "Final bellSchedule array is: $bellScheduleArrayList" 0
+sendToLog "Final bellSchedule array is: $bellScheduleArrayList"
 
 # if bellSchedule has no times, exit
 if ( $bellScheduleArrayList.Count -eq 0 ) {
-    sendToLog "Schedule has no times.  Exiting." 0
+    sendToLog "Schedule has no times.  Exiting."
     exit 0
 }
 
 Foreach ($time in $bellScheduleArrayList) {
-   sendToLog "Time comparison is between : time= $time currentTime= $currentTime" 4
+   sendToLog "Time comparison is between : time= $time currentTime= $currentTime"
    if ( $time -eq $currentTime ) {
-      $bell = new-Object System.Media.SoundPlayer
+      $bell = New-Object System.Media.SoundPlayer
       $bell.SoundLocation = $wavFile
       $bell.Play()
       exit 0
