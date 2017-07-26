@@ -16,8 +16,6 @@ $minute = Get-Date -format mm             # 45 (with leading zeros)
 $currentDate = $date.ToShortDateString()  # 1/5/2017
 $currentTime = $hour + ":" + $minute      # 15:45
 
-$user = $env:username
-
 #versionRemoteDir = "joetest"
 #versionRemoteDir = "riotest"
 $versionRemoteDir = "v2/middle-school"
@@ -89,6 +87,7 @@ else {
 }
 
 # Give the possible download(s) a moment to finish
+# TODO: Only pause if downloads are NEEDED
 sendToLog "Sleeping for 5 seconds..."
 Start-Sleep -s 5
 sendToLog "...done sleeping for 5 seconds"
