@@ -23,10 +23,9 @@ $confFile = "\TechTools\Scripts\BellSchedule\bellschedule_settings.conf"
 $scheduleURL = "http://files.sscps.org/bellschedule/$versionRemoteDir/bellschedule_$day.conf"
 $scheduleFile = "\TechTools\Scripts\BellSchedule\bellschedule_$day.conf"
 $wavURL = "http://files.sscps.org/bellschedule/$versionRemoteDir/bellschedule.wav"
-$wavFile = "\TechTools\Scripts\BellSchedule\bellschedule.wav"
-$logPath = "\TechTools\Scripts\BellSchedule\logs\"
+$wavFile = "\Techtools\Scripts\BellSchedule\bellschedule.wav"
+$logPath = "\Techtools\Scripts\BellSchedule\logs\"
 $logFile = $logPath + "bellschedule.log"
-
 # Turn logging off or on
 $logging = 1
 
@@ -87,7 +86,6 @@ else {
 }
 
 # Give the possible download(s) a moment to finish
-# TODO: Only pause if downloads are NEEDED
 sendToLog "Sleeping for 5 seconds..."
 Start-Sleep -s 5
 sendToLog "...done sleeping for 5 seconds"
