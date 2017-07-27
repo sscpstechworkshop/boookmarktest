@@ -135,9 +135,8 @@ if ( $bellScheduleArrayList.Count -eq 0 ) {
 Foreach ($time in $bellScheduleArrayList) {
    sendToLog "Time comparison is between : time= $time currentTime= $currentTime"
    if ( $time -eq $currentTime ) {
-      $bell = New-Object System.Media.SoundPlayer
-      $bell.SoundLocation = $wavFile
-      $bell.Play()
+      $bell = New-Object System.Media.SoundPlayer $wavFile
+      $bell.PlaySync()
       exit 0
    }
 }
