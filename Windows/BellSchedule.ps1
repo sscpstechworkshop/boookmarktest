@@ -32,7 +32,7 @@ $logging = 1
 function sendToLog {
    param( $a )
    if ( $logging ) {
-      $message = $currentDate + $currentTime + ":" + $a
+      $message = $currentDate + " " + $currentTime + ":" + $a
       echo $message >> $logFile
    }
 }
