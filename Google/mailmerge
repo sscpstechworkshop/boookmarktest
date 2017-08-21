@@ -1,0 +1,41 @@
+function MailMerge() {
+  var templateFormFile = "1_PKfQtuvotNY11UUlj1Q9wxD8os-SlRD_GSBBWdMh9w"
+  var destinationFolder = '1YVL8sD5dNA-EWYB5f-rbsps3CMlYG9h8'
+  var ui = SpreadsheetApp.getUi();
+  var result = ui.alert('Start new employee forms?', ui.ButtonSet.YES_NO);
+  if (result == ui.Button.YES) {
+    SpreadsheetApp.getUi().alert('Started creating new employee forms.');
+    var currentSpreadsheet = SpreadsheetApp.getActiveSpreadsheet();
+    var currentSheet = currentSpreadsheet.setActiveSheet(currentSpreadsheet.getSheetByName('Employee List'));
+    var currentRange = currentSheet.getDataRange();
+    var data = currentRange.getValues();
+    for (i in data) {
+      // skip first row
+      if ( i != 0 ) {
+        var currentPerson = data[i];
+        var currentPersonEmail = currentPerson[0];
+        var currentPersonFirstName = currentPerson[1];
+        var currentPersonLastName = currentPerson[2];
+        var currentPersonExt = currentPerson[3];
+        var currentPersonUniqueID = currentPerson[4];
+        var currentPersonLogin = currentPersonEmail.substring(0, currentPersonEmail.lastIndexOf("@"));
+        var currentPersonFullName = currentPersonFirstName + " " + currentPersonLastName
+        var newFileName = currentPersonFullName + ' - New Employee Form';
+        var newFileObject = DriveApp.getFileById(templateFormFile).makeCopy(newFileName,DriveApp.getFolderById(destinationFolder));
+        var currentFileId = newFileObject.getId();
+        var currentDocumentObject = DocumentApp.openById(currentFileId);
+        var currentDocumentHeader = currentDocumentObject.getHeader();
+        var currentDocumentBody = currentDocumentObject.getBody();
+        var currentDocumentFooter = currentDocumentObject.getFooter();
+        currentDocumentHeader.replaceText('{{USER NAME}}', currentPersonFullName);
+        currentDocumentHeader.replaceText('{{USER ID}}', currentPersonUniqueID);
+        currentDocumentBody.replaceText('{{USER LOGIN}}', currentPersonLogin);
+        currentDocumentBody.replaceText('{{USER EMAIL}}', currentPersonEmail);
+        currentDocumentBody.replaceText('{{PHONE EXT}}', currentPersonExt);
+        currentDocumentFooter.replaceText('{{USER NAME}}', currentPersonFullName);
+        currentDocumentFooter.replaceText('{{USER ID}}', currentPersonUniqueID);
+      }
+    }
+    SpreadsheetApp.getUi().alert('Finished creating new employee forms.');
+  }
+}
