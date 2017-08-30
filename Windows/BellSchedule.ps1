@@ -19,12 +19,13 @@ $currentTime = $hour + ":" + $minute      # 15:45
 #versionRemoteDir = "joetest"
 #versionRemoteDir = "riotest"
 $versionRemoteDir = "v2/middle-school"
-$confFile = "\TechTools\Scripts\BellSchedule\bellschedule_settings.conf"
+$confFile = "c:\TechTools\Scripts\BellSchedule\bellschedule_settings.conf"
 $scheduleURL = "http://files.sscps.org/bellschedule/$versionRemoteDir/bellschedule_$day.conf"
-$scheduleFile = "\TechTools\Scripts\BellSchedule\bellschedule_$day.conf"
+$scheduleFileRaw = "c:\TechTools\Scripts\BellSchedule\bellschedule_" + $day + "_Raw.conf"
+$scheduleFile = "c:\TechTools\Scripts\BellSchedule\bellschedule_$day.conf"
 $wavURL = "http://files.sscps.org/bellschedule/$versionRemoteDir/bellschedule.wav"
-$wavFile = "\Techtools\Scripts\BellSchedule\bellschedule.wav"
-$logPath = "\Techtools\Scripts\BellSchedule\logs\"
+$wavFile = "c:\Techtools\Scripts\BellSchedule\bellschedule.wav"
+$logPath = "c:\Techtools\Scripts\BellSchedule\logs\"
 $logFile = $logPath + "bellschedule.log"
 # Turn logging off or on
 $logging = 1
@@ -51,7 +52,8 @@ if ( ! (Test-Path $confFile) ) {
    sendToLog "Settings file not found, creating it."
    $currentDate | Set-Content $confFile
    sendToLog "Downloading schedule file for $day"
-   (New-Object System.Net.WebClient).DownloadFile($scheduleURL, $scheduleFile)
+   (New-Object System.Net.WebClient).DownloadFile($scheduleURL, $scheduleFileRaw)
+   (gc $scheduleFileRaw) | %{$_.split("`n")} | Out-File $scheduleFile
 }
 else {
    $storedDate = Get-Content $confFile -First 1
