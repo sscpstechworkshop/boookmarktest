@@ -62,7 +62,8 @@ else {
    }
    else {
       $currentDate | Set-Content $confFile
-      (New-Object System.Net.WebClient).DownloadFile($scheduleURL, $scheduleFile)
+      (New-Object System.Net.WebClient).DownloadFile($scheduleURL, $scheduleFileRaw)
+      (gc $scheduleFileRaw) | %{$_.split("`n")} | Out-File $scheduleFile
    }
 }
 
