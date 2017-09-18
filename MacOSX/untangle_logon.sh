@@ -51,7 +51,7 @@ done
 
 # log any previous user to system out of the Captive Portal
 # Skip and exit if sscpslocal is user
-if [ "${USER}" == "sscpslocal" ]; then
+if [ "${USER}" == "sscpslocal" ] || [ "${USER}" == "teacher" ] || [ "${USER}" == "student" ]; then
    exit 0;
 fi
 
