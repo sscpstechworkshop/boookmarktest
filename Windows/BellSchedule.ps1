@@ -8,8 +8,8 @@
 # Today's date and time
 $date = Get-Date
 $year = $date.Year                        # 2016
-$month = $date.Month                      # 8
-$dayOfMonth = $date.Day                   # 20
+$month = Get-Date -format MM              # 08 (month with leading zeros)
+$dayOfMonth = Get-Date -format dd         # 20 (day of month with leading zeros)
 $day = $date.DayOfWeek                    # Friday
 $hour = Get-Date -format HH               # 15 (24hr format, with leading zeros)
 $minute = Get-Date -format mm             # 45 (with leading zeros)
