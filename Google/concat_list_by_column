@@ -2,13 +2,13 @@
 // other similar fields, but a max of 10 values from column 3.  similar values are column 2 and substring of column 3
 // NOT DONE YET!!!
 function concatByFirstOfSecondLastMacOctBy10() {
-  var rulePrefix = "WKS - Chromebook Logins - Group ";
+  // setup variables
   var groupCount = 1;
   var currentCountMAC = 0;
   var currentCountRules = 1;
   var listRuleMac = [];
   var listRule = [];
-
+  // get data from sheet
   var currentSpreadsheet = SpreadsheetApp.getActiveSpreadsheet();
   var currentSheet = currentSpreadsheet.getSheetByName("InputData");
   var currentRange = currentSheet.getRange(2,1,currentSheet.getLastRow(),currentSheet.getLastColumn());
@@ -34,6 +34,7 @@ function concatByFirstOfSecondLastMacOctBy10() {
     // check if first MAC for rule, add new rule, then exit loop
     // check if adding this MAC is #10, add it & set for new rule, then exit loop
     // add MAC to end of current rule, then exit loop
+    // below is from first initial function
     var noRuleFound = true
     var k = 0;
     for (k in listRule) {
