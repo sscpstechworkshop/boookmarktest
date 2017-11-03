@@ -1,9 +1,80 @@
 // using sheets as source & destination arrays, steps through one to add field (column 3) from multiple rows with
+// other similar fields, but a max of 10 values from column 3.  similar value is column 6
+// NOT DONE YET!!!
+function concatByRackBy10() {
+  var currentSpreadsheet = SpreadsheetApp.getActiveSpreadsheet();
+  var currentSheet = currentSpreadsheet.getSheetByName("Non-SSCPS");
+  var currentRange = currentSheet.getRange(2,1,currentSheet.getLastRow(),currentSheet.getLastColumn());
+  var data = currentRange.getValues();
+  var listRuleMac = [];
+  var listRule = [];
+  // this is the "rough rule" determination
+  // go through all MAC entries & determine "rough rule"
+  for (i in data) {
+    if (data[i][0] != '' ) {
+      var currentEntry = [];
+      var currentMACAddress = data[i][3];
+      var currentRuleName = "WKS - " + data[i][6] + " - ";
+      currentEntry[0] = currentRuleName;
+      currentEntry[1] = currentMACAddress;
+      listRuleMac.push(currentEntry);
+    }
+  }
+  listRuleMac.sort();
+  // this is assigning each MAC to appropriate rule in groups of 10
+  var currentRule = [];
+  var previousRulePrefix = "no previous rule";
+  var currentRulePrefix = "none yet";
+  var currentRuleSuffix = 1;
+  var currentMACCount = 1;
+  for (j in listRuleMac) {
+    var currentMAC = listRuleMac[j][1]
+    currentRulePrefix = listRuleMac[j][0];
+    if (currentRuleCount > 10) {
+    // if rule count > 10, then pop with error & exit loop
+      SpreadsheetApp.getUi().alert("ERROR:  Rule count greater then 10 (major bug).");
+    } else if (typeof listRule !== 'undefined' && listRule.length > 0) {
+    // else if array is empty, then start rule with MAC & exit loop
+      currentRule[0] = currentRulePrefix + currentRuleSuffix;
+      currentRule[1] = currentMAC;
+      currentMACCount = 1;
+    } else if (currentRulePrefix !== previousRulePrefix) {
+    // else if currentRulePrefix !== previousRulePrefix, add rule, start new rule, reset MAC count = 1 & exit loop
+      listRule.push(currentRule);
+      currentRuleSuffix = 1;
+      currentRule[0] = currentRulePrefix + currentRuleSuffix;
+      currentRule[1] = currentMAC;
+      currentMACCount = 1;
+    } else if (currentMACCount == 10) {
+    // else if MAC count = 10, then add rule, increment rule suffix, start new rule, reset MAC count = 1 & exit loop
+      listRule.push(currentRule);
+      currentRuleSuffix = currentRuleSuffix + 1;
+      currentRule[0] = currentRulePrefix + currentRuleSuffix;
+      currentRule[1] = currentMAC;
+      currentMACCount = 1;
+    } else {
+    // else concat MAC, increment rule count & exit loop
+      currentRule[1] = currentRule[1] + "," + currentMAC;
+      currentMACCount = currentMACCount + 1;
+    }
+    previousRulePrefix = currentRulePrefix
+  }
+  listRule.sort();
+  var listRuleLength = listRule.length;
+  var ruleSheet = currentSpreadsheet.getSheetByName("Rules for Cut & Paste");
+  var ruleRange = ruleSheet.getRange(2,1,listRuleLength,ruleSheet.getLastColumn());
+  ruleRange.setValues(listRule);
+  SpreadsheetApp.getUi().alert("DONE!");
+}
+
+
+// using sheets as source & destination arrays, steps through one to add field (column 3) from multiple rows with
 // other similar fields, but a max of 10 values from column 3.  similar values are column 2 and substring of column 3
 // NOT DONE YET!!!
-function concatByFirstOfSecondLastMacOctBy10() {
+function concatByTypeByFirstOfSecondLastMacOctBy10() {
   // setup variables
   var groupCount = 1;
+  var groupRuleSuffix = 1;
   var currentCountMAC = 0;
   var currentCountRules = 1;
   var listRuleMac = [];
@@ -17,25 +88,36 @@ function concatByFirstOfSecondLastMacOctBy10() {
   for (i in data) {
     if (data[i][0] != '' ) {
       var currentEntry = [];
-      //var currentRuleName = "PDE - " + data[i][6] + " - " + data[i][1][0];
       var currentMACAddress = data[i][3];
       var currentRuleName = "WKS - " + data[i][2] + " - " + currentMACAddress.substring(12,13);
       currentEntry[0] = currentRuleName;
       currentEntry[1] = currentMACAddress;
       listRuleMac.push(currentEntry);
-      //SpreadsheetApp.getUi().alert(currentEntry);
     }
   }
   listRuleMac.sort();
   // go through all MAC's and determine final rule to apply
   // assumption here is that every MAC & rule is sorted so can count & change rule if necessary
   for (j in listRuleMac) {
-    // check if very first rule & add it, then exit loop
+    var noRuleFound = true;
+    var currentEntry = [];
+    currentEntry[0] = listRuleMac[j][0] + "-";
+    currentEntry[1] = listRuleMac[j][1]
+    // check if very first rule, then add new rule exit loop
+    if (typeof listRule !== 'undefined' && listRule.length > 0) {
+      currentEntry[0] = currentEntry[0] + groupRuleSuffix;
+      listRule.push(currentEntry)
+    } else {
+    }
+    // else if previous rule is same as current rule, then add new rule & exit loop
+    // else if currentRuleCount = 11, then add new rule, reset counter & exit loop
+    // else if currentRuleCount > 11, then do pop-up with error & exit loop
+    // else add MAC to end of current rule & exit loop
+
     // check if first MAC for rule, add new rule, then exit loop
     // check if adding this MAC is #10, add it & set for new rule, then exit loop
     // add MAC to end of current rule, then exit loop
     // below is from first initial function
-    var noRuleFound = true
     var k = 0;
     for (k in listRule) {
       if (listRuleMac[j][0] == listRule[k][0]) {
