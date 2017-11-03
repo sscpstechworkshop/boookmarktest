@@ -1,0 +1,112 @@
+// using sheets as source & destination arrays, steps through one to add field (column 3) from multiple rows with
+// other similar fields, but a max of 10 values from column 3.  similar values are column 2 and substring of column 3
+// NOT DONE YET!!!
+function concatByFirstOfSecondLastMacOctBy10() {
+  var rulePrefix = "WKS - Chromebook Logins - Group ";
+  var groupCount = 1;
+  var currentCountMAC = 0;
+  var currentCountRules = 1;
+  var listRuleMac = [];
+  var listRule = [];
+
+  var currentSpreadsheet = SpreadsheetApp.getActiveSpreadsheet();
+  var currentSheet = currentSpreadsheet.getSheetByName("InputData");
+  var currentRange = currentSheet.getRange(2,1,currentSheet.getLastRow(),currentSheet.getLastColumn());
+  var data = currentRange.getValues();
+  // go through all MAC entries & determine "rough rule"
+  for (i in data) {
+    if (data[i][0] != '' ) {
+      var currentEntry = [];
+      //var currentRuleName = "PDE - " + data[i][6] + " - " + data[i][1][0];
+      var currentMACAddress = data[i][3];
+      var currentRuleName = "WKS - " + data[i][2] + " - " + currentMACAddress.substring(12,13);
+      currentEntry[0] = currentRuleName;
+      currentEntry[1] = currentMACAddress;
+      listRuleMac.push(currentEntry);
+      //SpreadsheetApp.getUi().alert(currentEntry);
+    }
+  }
+  listRuleMac.sort();
+  // go through all MAC's and determine final rule to apply
+  // assumption here is that every MAC & rule is sorted so can count & change rule if necessary
+  for (j in listRuleMac) {
+    // check if very first rule & add it, then exit loop
+    // check if first MAC for rule, add new rule, then exit loop
+    // check if adding this MAC is #10, add it & set for new rule, then exit loop
+    // add MAC to end of current rule, then exit loop
+    var noRuleFound = true
+    var k = 0;
+    for (k in listRule) {
+      if (listRuleMac[j][0] == listRule[k][0]) {
+        listRule[k][1] = listRule[k][1] + "," + listRuleMac[j][1];
+        noRuleFound = false;
+      } else {
+        //SpreadsheetApp.getUi().alert("match not found: " + listRuleMac[j][0] + " != " + listRule[k][0]);
+      }
+    }
+    if (noRuleFound) {
+      listRule.push(listRuleMac[j])
+    }
+  }
+  listRule.sort();
+  var listRuleLength = listRule.length;
+  var ruleSheet = currentSpreadsheet.getSheetByName("Rules for Cut & Paste");
+  var ruleRange = ruleSheet.getRange(2,1,listRuleLength,ruleSheet.getLastColumn());
+  ruleRange.setValues(listRule);
+  SpreadsheetApp.getUi().alert("DONE!");
+}
+
+// using sheets as source & destination arrays, steps through one to add field (column 3) from multiple rows with
+// other similar fields.  specifically column 6 and first letter of column 1
+function concatByRackByNameFirstInitial() {
+  var currentSpreadsheet = SpreadsheetApp.getActiveSpreadsheet();
+  var currentSheet = currentSpreadsheet.getSheetByName("Non-SSCPS");
+  var currentRange = currentSheet.getRange(2,1,currentSheet.getLastRow(),currentSheet.getLastColumn());
+  var data = currentRange.getValues();
+  var listRuleMac = [];
+  var listRule = [];
+  // this is the "rough rule" determination
+  for (i in data) {
+    if (data[i][0] != '' ) {
+      var currentEntry = [];
+      var currentRuleName = "PDE - " + data[i][6] + " - " + data[i][1][0];
+      currentEntry[0] = currentRuleName;
+      var currentMACAddress = data[i][3];
+      currentEntry[1] = currentMACAddress;
+      listRuleMac.push(currentEntry);
+      //SpreadsheetApp.getUi().alert(currentEntry);
+    }
+  }
+  listRuleMac.sort();
+  // this is assigning each MAC to appropriate rule
+  for (j in listRuleMac) {
+    //SpreadsheetApp.getUi().alert("seeing if rule exists for this entry: " + listRuleMac[j][0]);
+    var noRuleFound = true
+    var k = 0;
+    for (k in listRule) {
+      //SpreadsheetApp.getUi().alert("comparing entry: " + listRuleMac[j][0] + " to this rule " + listRule[k][0]);
+      if (listRuleMac[j][0] == listRule[k][0]) {
+        //SpreadsheetApp.getUi().alert("match found: " + listRuleMac[j][0] + " = " + listRule[k][0]);
+        listRule[k][1] = listRule[k][1] + "," + listRuleMac[j][1];
+        noRuleFound = false;
+        //SpreadsheetApp.getUi().alert("added mac to: " + listRule[k]);
+      } else {
+        //SpreadsheetApp.getUi().alert("match not found: " + listRuleMac[j][0] + " != " + listRule[k][0]);
+      }
+    }
+    if (noRuleFound) {
+      //SpreadsheetApp.getUi().alert("adding rule: " + listRuleMac[j]);
+      listRule.push(listRuleMac[j])
+    }
+    //SpreadsheetApp.getUi().alert("all concatted rules: " + listRule);
+  }
+  listRule.sort();
+  var listRuleLength = listRule.length;
+  //for (l in listRule) {
+  //  SpreadsheetApp.getUi().alert("RULE:  " + listRule[l][0] + "\n" + "MACs:  " + listRule[l][1]);
+  //}
+  var ruleSheet = currentSpreadsheet.getSheetByName("Rules for Cut & Paste");
+  var ruleRange = ruleSheet.getRange(2,1,listRuleLength,ruleSheet.getLastColumn());
+  ruleRange.setValues(listRule);
+  SpreadsheetApp.getUi().alert("DONE!");
+}
