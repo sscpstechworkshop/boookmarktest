@@ -28,7 +28,7 @@ $wavFile = "c:\Techtools\Scripts\BellSchedule\bellschedule.wav"
 $logPath = "c:\Techtools\Scripts\BellSchedule\logs\"
 $logFile = $logPath + "bellschedule.log"
 # Turn logging off or on
-$logging = 1
+$logging = 0
 
 function sendToLog {
    param( $a )
