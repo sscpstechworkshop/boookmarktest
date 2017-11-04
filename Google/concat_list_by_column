@@ -58,6 +58,9 @@ function concatByRackByNameFirstInitial() {
 // other similar fields, but a max of 10 values from column 3.  similar values are column 2 and substring of column 3
 // NOT DONE YET!!!
 function concatByTypeByFirstOfSecondLastMacOctBy10() {
+// check if proceed on unfinished funtion
+  var response = SpreadsheetApp.getUi().prompt('WARNING', 'Unfinished function, do you want to continue?', ui.ButtonSet.YES_NO)
+  if (response.getSelectedButton() == ui.Button.YES) {
   // setup variables
   var groupCount = 1;
   var groupRuleSuffix = 1;
@@ -123,6 +126,7 @@ function concatByTypeByFirstOfSecondLastMacOctBy10() {
   var ruleRange = ruleSheet.getRange(2,1,listRuleLength,ruleSheet.getLastColumn());
   ruleRange.setValues(listRule);
   SpreadsheetApp.getUi().alert("DONE!");
+  } // end of prompt to contiue
 }
 
 
