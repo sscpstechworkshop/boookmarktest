@@ -23,7 +23,7 @@
 ##### Global Variables #####
 macAddress=(`ifconfig en0 | awk '/ether/{print $2}' | sed -e 's/://g'`)
 wksName=wkn$macAddress
-downloadScripts=1
+downloadScripts=0
 enableBells=0
 enableCaptiveHelper=0
 enableCleanup=0
@@ -36,29 +36,31 @@ function rename_workstation {
 }
 
 function download_scripts {
-   if [ ! -d /usr/local/bin ]; then
-      mkdir -p /usr/local/bin; fi    
-   curl -s -L -o '/Library/LaunchAgents/bellschedule.plist' https://raw.githubusercontent.com/SSCPS/TechTools/master/MacOSX/bellschedule.plist
-   curl -s -L -o '/usr/local/bin/bellschedule.sh' https://raw.githubusercontent.com/SSCPS/TechTools/master/MacOSX/bellschedule.sh
-   curl -s -L -o '/Library/LaunchDaemons/bellschedule_perms.plist' https://raw.githubusercontent.com/SSCPS/TechTools/master/MacOSX/bellschedule_perms.plist
-   curl -s -L -o '/usr/local/bin/bellschedule_perms.sh' https://raw.githubusercontent.com/SSCPS/TechTools/master/MacOSX/bellschedule_perms.sh
-   curl -s -L -o '/Library/LaunchDaemons/cleanup_users.plist' https://raw.githubusercontent.com/SSCPS/TechTools/master/MacOSX/cleanup_users.plist
-   curl -s -L -o '/usr/local/bin/cleanup_users.sh' https://raw.githubusercontent.com/SSCPS/TechTools/master/MacOSX/cleanup_users.sh
-   curl -s -L -o '/Library/LaunchAgents/home_folder_lock.plist' https://raw.githubusercontent.com/SSCPS/TechTools/master/MacOSX/home_folder_lock.plist
-   curl -s -L -o '/usr/local/bin/home_folder_lock.sh' https://raw.githubusercontent.com/SSCPS/TechTools/master/MacOSX/home_folder_lock.sh
-   curl -s -L -o '/Library/LaunchAgents/reset_chrome.plist' https://raw.githubusercontent.com/SSCPS/TechTools/master/MacOSX/reset_chrome.plist
-   curl -s -L -o '/usr/local/bin/reset_chrome.sh' https://raw.githubusercontent.com/SSCPS/TechTools/master/MacOSX/reset_chrome.sh
-   curl -s -L -o '/Library/LaunchAgents/untangle_logon.plist' https://raw.githubusercontent.com/SSCPS/TechTools/master/MacOSX/untangle_logon.plist
-   curl -s -L -o '/usr/local/bin/untangle_logon.sh' https://raw.githubusercontent.com/SSCPS/TechTools/master/MacOSX/untangle_logon.sh
-   # Sleep for 5 seconds to make sure downloads are complete, then adjust permissions
-   sleep 5
-   chmod +x /usr/local/bin/bellschedule.sh;ls -l /usr/local/bin/bellschedule.sh
-   chmod +x /usr/local/bin/bellschedule_perms.sh;ls -l /usr/local/bin/bellschedule_perms.sh
-   chmod +x /usr/local/bin/cleanup_users.sh;ls -l /usr/local/bin/cleanup_users.sh
-   chmod +x /usr/local/bin/home_folder_lock.sh;ls -l /usr/local/bin/home_folder_lock.sh
-   chmod +x /usr/local/bin/reset_chrome.sh;ls -l /usr/local/bin/reset_chrome.sh
-   chmod +x /usr/local/bin/untangle_logon.sh;ls -l /usr/local/bin/untangle_logon.sh
-   read -p "Hit [enter] after confirming all scripts are executable (should see 6 listed)"
+   if [ $downloadScripts -eq 1 ]; then
+      if [ ! -d /usr/local/bin ]; then
+         mkdir -p /usr/local/bin; fi    
+      curl -s -L -o '/Library/LaunchAgents/bellschedule.plist' https://raw.githubusercontent.com/SSCPS/TechTools/master/MacOSX/bellschedule.plist
+      curl -s -L -o '/usr/local/bin/bellschedule.sh' https://raw.githubusercontent.com/SSCPS/TechTools/master/MacOSX/bellschedule.sh
+      curl -s -L -o '/Library/LaunchDaemons/bellschedule_perms.plist' https://raw.githubusercontent.com/SSCPS/TechTools/master/MacOSX/bellschedule_perms.plist
+      curl -s -L -o '/usr/local/bin/bellschedule_perms.sh' https://raw.githubusercontent.com/SSCPS/TechTools/master/MacOSX/bellschedule_perms.sh
+      curl -s -L -o '/Library/LaunchDaemons/cleanup_users.plist' https://raw.githubusercontent.com/SSCPS/TechTools/master/MacOSX/cleanup_users.plist
+      curl -s -L -o '/usr/local/bin/cleanup_users.sh' https://raw.githubusercontent.com/SSCPS/TechTools/master/MacOSX/cleanup_users.sh
+      curl -s -L -o '/Library/LaunchAgents/home_folder_lock.plist' https://raw.githubusercontent.com/SSCPS/TechTools/master/MacOSX/home_folder_lock.plist
+      curl -s -L -o '/usr/local/bin/home_folder_lock.sh' https://raw.githubusercontent.com/SSCPS/TechTools/master/MacOSX/home_folder_lock.sh
+      curl -s -L -o '/Library/LaunchAgents/reset_chrome.plist' https://raw.githubusercontent.com/SSCPS/TechTools/master/MacOSX/reset_chrome.plist
+      curl -s -L -o '/usr/local/bin/reset_chrome.sh' https://raw.githubusercontent.com/SSCPS/TechTools/master/MacOSX/reset_chrome.sh
+      curl -s -L -o '/Library/LaunchAgents/untangle_logon.plist' https://raw.githubusercontent.com/SSCPS/TechTools/master/MacOSX/untangle_logon.plist
+      curl -s -L -o '/usr/local/bin/untangle_logon.sh' https://raw.githubusercontent.com/SSCPS/TechTools/master/MacOSX/untangle_logon.sh
+      # Sleep for 5 seconds to make sure downloads are complete, then adjust permissions
+      sleep 5
+      chmod +x /usr/local/bin/bellschedule.sh;ls -l /usr/local/bin/bellschedule.sh
+      chmod +x /usr/local/bin/bellschedule_perms.sh;ls -l /usr/local/bin/bellschedule_perms.sh
+      chmod +x /usr/local/bin/cleanup_users.sh;ls -l /usr/local/bin/cleanup_users.sh
+      chmod +x /usr/local/bin/home_folder_lock.sh;ls -l /usr/local/bin/home_folder_lock.sh
+      chmod +x /usr/local/bin/reset_chrome.sh;ls -l /usr/local/bin/reset_chrome.sh
+      chmod +x /usr/local/bin/untangle_logon.sh;ls -l /usr/local/bin/untangle_logon.sh
+      read -p "Hit [enter] after confirming all scripts are executable (should see 6 listed)"
+    fi
 }
 
 function cfg_bells {
@@ -143,12 +145,20 @@ function cfg_faculty {
    user_input=$(echo "$user_input" | tr '[:upper:]' '[:lower:]')
    if [ ! "$user_input" == "" ]; then
       wksName=$user_input; fi
+   read -p "Download scripts? (Y/n) " user_input
+   user_input=$(echo "$user_input" | tr '[:upper:]' '[:lower:]')
+   if [ "$user_input" == "y" ]; then
+      downloadScripts=1; fi
    enableBells=1
    enableCleanup=0
 }
 
 function cfg_student {
    configType="Student Configuration"
+   read -p "Download scripts? (Y/n) " user_input
+   user_input=$(echo "$user_input" | tr '[:upper:]' '[:lower:]')
+   if [ "$user_input" == "y" ]; then
+      downloadScripts=1; fi
    enableBells=0
    enableCleanup=1
 }
@@ -161,8 +171,8 @@ function cfg_prompted {
       wksName=$user_input; fi
    read -p "Download scripts? (Y/n) " user_input
    user_input=$(echo "$user_input" | tr '[:upper:]' '[:lower:]')
-   if [ "$user_input" == "n" ]; then
-      downloadScripts=0; fi
+   if [ "$user_input" == "y" ]; then
+      downloadScripts=1; fi
    read -p "Enable bell schedule? (y/N) " user_input
    user_input=$(echo "$user_input" | tr '[:upper:]' '[:lower:]')
    if [ "$user_input" == "y" ]; then
