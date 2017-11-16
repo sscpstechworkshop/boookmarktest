@@ -126,8 +126,9 @@ fi
 for time in ${bellScheduleArray[@]}; do
     sendToLog "Time comparison is between : time=$time currentTime=$currentTime" 4
     if [ "$time" = "$currentTime" ]; then
+        # Forcing volume is too problematic for teachers at conferences or at home 
         # set volume to 50%
-        osascript -e "set volume 5"
+        # osascript -e "set volume 5"
         afplay $mp3File
         exit 0;
     fi
