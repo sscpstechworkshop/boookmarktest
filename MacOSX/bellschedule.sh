@@ -13,8 +13,9 @@ hour=`date "+%H"`       # 15 (24hr format)
 minute=`date "+%M"`     # 45
 currentDate=$month/$dayOfMonth/$year
 currentTime=$hour:$minute
-#versionRemoteDir=joetest
-#versionRemoteDir=riotest
+# remote folder for middle school bell schedule is v2/middle-school
+# versionRemoteDir=v2/middle-school
+# High school bell schedule folder is v1
 versionRemoteDir=v1
 confFile=/Users/Shared/BellSchedule/bellschedule_settings.conf
 scheduleURL=http://files.sscps.org/bellschedule/$versionRemoteDir/bellschedule_$day.conf
