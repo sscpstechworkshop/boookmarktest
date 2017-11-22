@@ -22,7 +22,7 @@ aptitude -y --full-resolver safe-upgrade
 #echo ===============================
 #sudo letsencrypt renew
 #
-#echo As sscpslocal, please run: bash <(curl -s -S -L https://git.io/install-gam)
+#echo As sscpslocal, please run: "bash <(curl -s -S -L https://git.io/install-gam)"
 #echo Do not setup new project!
 #
 echo ===============================
