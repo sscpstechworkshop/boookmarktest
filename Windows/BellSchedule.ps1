@@ -103,9 +103,9 @@ else {
 }
 
 # Give the possible download(s) a moment to finish
-sendToLog "Sleeping for 5 seconds..."
-Start-Sleep -s 5
-sendToLog "...done sleeping for 5 seconds"
+# sendToLog "Sleeping for 5 seconds..."
+# Start-Sleep -s 5
+# sendToLog "...done sleeping for 5 seconds"
 
 # populate scheduleArray from scheduleFile
 sendToLog "Checking if scheduleFile exists"
