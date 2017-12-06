@@ -47,6 +47,19 @@ if ( ! (Test-Path $logPath ) ) {
 
 sendToLog "Start script"
 
+# Get uptime and download schedule file if less than or equal to 2 minutes
+$os = Get-WmiObject win32_operatingsystem
+$uptime = (Get-Date) - ($os.ConvertToDateTime($os.LastBootUpTime))
+$upMins = $uptime.TotalMinutes
+sendToLog "Uptime minutes = $upMins"
+
+if ( $uptime.TotalMinutes -le 2 ) {
+   sendToLog "Uptime is less than or equal to 2 minutes, downloading schedule file." 
+   (New-Object System.Net.WebClient).DownloadFile($scheduleURL, $scheduleFileRaw)
+   (gc $scheduleFileRaw) | %{$_.split("`n")} | Out-File $scheduleFile
+}
+
+<#  Config file is obsolete with the uptime changes above
 # Check if config file exists and if so compare to today's date
 if ( ! (Test-Path $confFile) ) {
    sendToLog "Settings file not found, creating it."
@@ -72,6 +85,7 @@ if ( (Get-Item $confFile).Length -eq 0) {
    sendToLog "Zero sized $scheduleFile , removing $confFile for redownload."
    Remove-Item $confFile
 }
+#>
 
 # Check if .wav file exists and isn't 0 sized
 if ( ! (Test-Path $wavFile) ) {
