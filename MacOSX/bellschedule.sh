@@ -1,7 +1,7 @@
 ################################################################################
 # School bell script
 #
-# This script is being called every minute by the /Library/LaunchAgents/school_bell.plist file
+# This script is being called every minute by the /Library/LaunchAgents/bellschedule.plist file
 ################################################################################
 
 # Today's date and time
@@ -25,7 +25,7 @@ mp3File=/Users/Shared/BellSchedule/bellschedule.mp3
 logPath=/Users/Shared/BellSchedule/logs/
 logFile=$logPath'bellschedule.log'
 # the higher the number, the more the information, read below for details
-logLevel=5
+logLevel=0
 
 function sendToLog {
     if [ $2 -le $logLevel ]; then
