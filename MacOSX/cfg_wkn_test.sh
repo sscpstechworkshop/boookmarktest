@@ -155,7 +155,7 @@ function cfg_prompted {
       echo "ERROR:  var downloadScripts does not equal 0 or 1.  Aborting"
       exit; fi
 
-   read -p "Select (D)isable bells, use (H)igh school or (M)iddle school bell schedule:  (D/h/m)" user_input
+   read -p "Select (D)isable bells, use (H)igh school or (M)iddle school bell schedule:  (D/h/m) " user_input
    user_input=$(echo "$user_input" | tr '[:upper:]' '[:lower:]')
    if [ "$user_input" == "" ] || [ "$user_input" == "d" ]; then
       configBells="d"
