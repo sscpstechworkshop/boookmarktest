@@ -156,15 +156,14 @@ function cfg_prompted {
    
    read -p "Select (D)isable bells, use (H)igh school or (M)iddle school bell schedule:  (D/h/m)" user_input
    user_input=$(echo "$user_input" | tr '[:upper:]' '[:lower:]')
-   if [ "$user_input" == "" ]; then
-      echo "You must select D, h or m.   Aborting."
-      exit
+   if [ "$user_input" == "" ] || [ "$user_input" == "d" ]; then
+      configBells="d"
    elif [ "$user_input" == "h" ]; then
       configBells="h"
    elif [ "$user_input" == "m" ]; then
       configBells="m"
    else
-      echo "ERROR:  User input in cfg_faculty() did not equal n, h or m"
+      echo "ERROR:  User input in cfg_faculty() did not equal d, h or m"
       exit; fi 
    
    read -p "Enable captive portal helper?  (y/N) " user_input
