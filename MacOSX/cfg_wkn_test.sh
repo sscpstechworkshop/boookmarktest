@@ -15,10 +15,6 @@
 ##### Global Variables #####
 macAddress=(`ifconfig en0 | awk '/ether/{print $2}' | sed -e 's/://g'`)
 wksName=wkn$macAddress
-downloadScripts=0
-configBells="n"
-enableCaptiveHelper=0
-enableCleanup=0
 bellScheduleFile=/Users/Shared/BellSchedule/bellschedule.conf
 
 ##### Functions #####
@@ -151,9 +147,14 @@ function cfg_prompted {
    
    read -p "Download scripts? (Y/n) " user_input
    user_input=$(echo "$user_input" | tr '[:upper:]' '[:lower:]')
-   if [ "$user_input" == "y" ]; then
-      downloadScripts=1; fi
-   
+   if [ "$user_input" == "" ] || [ "$user_input" == "y" ]; then
+      downloadScripts=1
+   elif [ "$user_input" == "n" ]; then
+      downloadScripts=0
+   else
+      echo "ERROR:  var downloadScripts does not equal 0 or 1.  Aborting"
+      exit; fi
+
    read -p "Select (D)isable bells, use (H)igh school or (M)iddle school bell schedule:  (D/h/m)" user_input
    user_input=$(echo "$user_input" | tr '[:upper:]' '[:lower:]')
    if [ "$user_input" == "" ] || [ "$user_input" == "d" ]; then
@@ -169,12 +170,22 @@ function cfg_prompted {
    read -p "Enable captive portal helper?  (y/N) " user_input
    user_input=$(echo "$user_input" | tr '[:upper:]' '[:lower:]')
    if [ "$user_input" == "y" ]; then
-      enableCaptiveHelper=1; fi
+      enableCaptiveHelper=1
+   elif [ "$user_input" == "" ] || [ "$user_input" == "n" ]; then
+      enableCaptiveHelper=0
+   else
+      echo "ERROR:   enableCaptiveHelper is not 0 or 1.  Aborting"
+      exit; fi
    
    read -p "Enable user cleanup script?  (y/N) " user_input
    user_input=$(echo "$user_input" | tr '[:upper:]' '[:lower:]')
    if [ "$user_input" == "y" ]; then
-      enableCleanup=1; fi
+      enableCleanup=1
+   elif [ "$user_input" == "" ] || [ "$user_input" == "n" ]; then
+      enableCleanup=0
+   else
+      echo "ERROR:   enableCleanup is not 0 or 1.  Aborting"
+      exit; fi
 }
 ##### End of Functions #####
 
