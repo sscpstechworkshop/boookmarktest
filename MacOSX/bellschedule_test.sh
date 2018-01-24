@@ -19,7 +19,7 @@ mp3File=/Users/Shared/BellSchedule/bellschedule.mp3
 
 logPath=/Users/Shared/BellSchedule/logs/
 logFile=$logPath'bellschedule.log'
-# the higher the number, the more the information, read below for details
+# Change logging to 1 if you want to enable logging
 logging=0
 
 # create log folder
@@ -51,17 +51,11 @@ sendToLog "-----> Start script"
 # If uptime is 2 minutes or less, download schedules
 up=`uptime | sed 's/^.*up *//;s/, *[0-9]* user.*$/m/;s/ day[^0-9]*/d, /;s/ \([hms]\).*m$/\1/;s/:/h, /'`
 
-
+# Need to parse $up variable which will look something like 1d, 6h, 05m
 
 sendToLog "Downloading schedule file for $day."
-   curl -o $scheduleFile $scheduleURL
-   chmod g+rw $scheduleFile
-
-
-uptime | awk '{ sub(/.* up /,""); sub(/, *[^ ]* users./,""); DAYS = $0; HOURS = $0; MIN = $0; sub(/ .*/, "", DAYS); sub(/.*, */,"", HOURS); sub(/:.*/, "", HOURS); sub(/.*:/, "", MIN); SEC = ( DAYS24*6060 + HOURS6060 + MIN*60 ); 
-
-
-
+curl -o $scheduleFile $scheduleURL
+chmod g+rw $scheduleFile
 
 
 else
