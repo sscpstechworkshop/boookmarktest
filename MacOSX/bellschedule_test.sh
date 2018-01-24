@@ -53,12 +53,11 @@ mp3URL=http://files.sscps.org/bellschedule/$remoteDir/bellschedule.mp3
 
 sendToLog "-----> Start script"
 # If uptime is 2 minutes or less, download schedules
+# $uptime variable will look something like "1d, 6h, 5m"
 uptime=`uptime | sed 's/^.*up *//;s/, *[0-9]* user.*$/m/;s/ day[^0-9]*/d, /;s/ \([hms]\).*m$/\1/;s/:/h, /'`
 
-# Need to parse $up variable which will look something like 1d, 6h, 5m
-
-# IDEA:   We only care if 0m, 1m or 2m are in the up string variable so we could do:
-if [[ $uptime = "0m" ]] || [[ $uptime = "1m" ]] || [[ $uptime = "2m" ]]; then
+# NOTE:   if uptime is "1d, 5h, 1m" download wont trigger, it has to be an exact match
+if [[ $uptime = "1m" ]] || [[ $uptime = "2m" ]]; then
    sendToLog "Uptime is 2 minutes or less so downloading schedule file for $day."
    curl -o $scheduleFile $scheduleURL
    chmod g+rw $scheduleFile
