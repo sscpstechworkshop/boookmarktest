@@ -37,10 +37,14 @@ function sendToLog {
 
 # Read bellschedule.conf file to determine what schedule to use
 if [ ! -f $confFile ]; then
-   sendToLog "$confFile doesn't exist!  Run config_wkn.sh to define it.   Aborting."
+   sendToLog "$confFile doesn't exist!  Run config_wkn.sh to populate it.   Aborting."
    exit
 else
-  remoteDir=`head -1 $confFile`
+   remoteDir=`head -1 $confFile`
+   if [ "${remoteDir}" != "middleschool" ] || [ "${remoteDir}" != "highschool" ]; then
+      sendToLog "remoteDir has an invalid value of $remoteDir.  Aborting!"
+      exit
+   fi
 fi
 
 scheduleURL=http://files.sscps.org/bellschedule/$remoteDir/bellschedule_$day.conf
@@ -49,95 +53,71 @@ mp3URL=http://files.sscps.org/bellschedule/$remoteDir/bellschedule.mp3
 
 sendToLog "-----> Start script"
 # If uptime is 2 minutes or less, download schedules
-up=`uptime | sed 's/^.*up *//;s/, *[0-9]* user.*$/m/;s/ day[^0-9]*/d, /;s/ \([hms]\).*m$/\1/;s/:/h, /'`
+uptime=`uptime | sed 's/^.*up *//;s/, *[0-9]* user.*$/m/;s/ day[^0-9]*/d, /;s/ \([hms]\).*m$/\1/;s/:/h, /'`
 
-# Need to parse $up variable which will look something like 1d, 6h, 05m
+# Need to parse $up variable which will look something like 1d, 6h, 5m
 
-sendToLog "Downloading schedule file for $day."
-curl -o $scheduleFile $scheduleURL
-chmod g+rw $scheduleFile
-
-
-else
-    storedDate=`head -1 $confFile`
-    if [ "$currentDate" = "$storedDate" ]; then
-        sendToLog "bellschedule_settings.conf file has today's date.   Schedule refresh not needed."
-    else
-        echo $currentDate>$confFile
-        curl -o $scheduleFile $scheduleURL
-    fi
-fi
-
-if [ -f $confFile ]; then
-    scheduleFileSize=$(wc -c <$scheduleFile)
-    if [ $scheduleFileSize -eq 0 ]; then
-        sendToLog "Zero sized $scheduleFile, removing $confFile for redownload."
-        rm -f $confFile
-    fi
+# IDEA:   We only care if 0m, 1m or 2m are in the up string variable so we could do:
+if [[ $uptime = "0m" ]] || [[ $uptime = "1m" ]] || [[ $uptime = "2m" ]]; then
+   sendToLog "Uptime is 2 minutes or less so downloading schedule file for $day."
+   curl -o $scheduleFile $scheduleURL
+   chmod g+rw $scheduleFile
 fi
 
 if [ ! -f $mp3File ]; then
-    sendToLog "MP3 not found, downloading..." 2
+    sendToLog "MP3 not found, downloading..."
     curl -o $mp3File $mp3URL
 else
     mp3FileSize=$(wc -c <$mp3File)
     if [ $mp3FileSize -eq 0 ]; then
-        sendToLog "Zero sized $mp3File, redownload." 2
+        sendToLog "Zero sized $mp3File, redownload."
         curl -o $mp3File $mp3URL
     else
-        sendToLog "MP3 file found & non-zero, no need to download." 3
+        sendToLog "MP3 file found & non-zero, no need to download."
     fi
 fi
 
-sendToLog "Sleeping for 5 seconds" 4
-# Give the possible download(s) a moment to finish
-sleep 5   # 5 seconds
-sendToLog "Done sleeping for 5 seconds" 4
-
 # populate scheduleArray from scheduleFile
-sendToLog "Checking if scheduleFile exists" 5
+sendToLog "Checking if scheduleFile exists"
 if [ ! -f $scheduleFile ]; then
-    sendToLog "$scheduleFile doesn't exist!   Exiting." 0
+    sendToLog "$scheduleFile doesn't exist!   Exiting."
     exit 1;
 else
-    sendToLog "Found $scheduleFile" 5
+    sendToLog "Found $scheduleFile"
     IFS=$'\r\n' GLOBIGNORE='*'
     scheduleArray=(`cat $scheduleFile`)
 fi
 
-sendToLog "Before loop that finds bell schedule" 5
+sendToLog "Before loop that finds bell schedule"
 for i in ${scheduleArray[@]}; do
-    sendToLog "Line being tested is: $i" 4
+    sendToLog "Line being tested is: $i"
     IFS=',' read -r -a currentTimeArray <<< "$i"
-    sendToLog "currentTimeArray is: ${currentTimeArray[*]}" 5
+    sendToLog "currentTimeArray is: ${currentTimeArray[*]}"
     if [ "${currentTimeArray[0]}" = "default" ]; then
         bellScheduleArray=("${currentTimeArray[@]}")
-        sendToLog "Using default bellScheduleArray: ${bellScheduleArray[*]}" 1
+        sendToLog "Using default bellScheduleArray: ${bellScheduleArray[*]}"
         unset bellScheduleArray[0]
     fi
-    sendToLog "Current date is: $currentDate" 5
+    sendToLog "Current date is: $currentDate"
     if [ "${currentTimeArray[0]}" = "$currentDate" ]; then
         bellScheduleArray=("${currentTimeArray[@]}")
-        sendToLog "Changing to custom bellScheduleArray: ${bellScheduleArray[*]}" 1
+        sendToLog "Changing to custom bellScheduleArray: ${bellScheduleArray[*]}"
         unset bellScheduleArray[0]
     fi
 done
 
-sendToLog "Final bellSchedule array is: ${bellScheduleArray[*]}" 0
+sendToLog "Final bellSchedule array is: ${bellScheduleArray[*]}"
 
 # if bellSchedule has no times, exit
 if [ ${#bellScheduleArray[@]} -eq 0 ]; then
-     sendToLog "Schedule has no times.  Exiting." 0
-     exit 0;
+     sendToLog "Schedule has no times.  Exiting."
+     exit
 fi
 
 for time in ${bellScheduleArray[@]}; do
-    sendToLog "Time comparison is between : time=$time currentTime=$currentTime" 4
+    sendToLog "Time comparison is between : time=$time currentTime=$currentTime"
     if [ "$time" = "$currentTime" ]; then
-        # Forcing volume is too problematic for teachers at conferences or at home 
-        # set volume to 50%
-        # osascript -e "set volume 5"
         afplay $mp3File
-        exit 0;
+        exit
     fi
 done
