@@ -73,7 +73,7 @@ elif [ $configBells == "m" ]; then
    plutil -replace Disabled -bool false /Library/LaunchAgents/bellschedule.plist
 else
    echo "ERROR: var configBells is not d, h, or m in cfg_bells()"
-   exit; fi
+   exit
 fi
 }
 
