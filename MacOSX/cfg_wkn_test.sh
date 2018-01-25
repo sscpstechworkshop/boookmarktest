@@ -59,21 +59,21 @@ function cfg_bells {
 # we need to recreate it here since the bellschedule.conf file is stored here
 # the other files will be refreshed by bellschedule script
 if [ ! -f $bellScheduleFile ]; then
-   sendToLog "$bellScheduleFile doesn't exist...  Creating folder structure..."
+   echo "$bellScheduleFile doesn't exist...  Creating folder structure..."
    mkdir -p /Users/Shared/BellSchedule/logs
+fi
+if [ $configBells == "d" ]; then
+   echo "disabled">$bellScheduleFile
+   plutil -replace Disabled -bool true /Library/LaunchAgents/bellschedule.plist
+elif [ $configBells == "h" ]; then
+   echo "highschool">$bellScheduleFile
+   plutil -replace Disabled -bool false /Library/LaunchAgents/bellschedule.plist
+elif [ $configBells == "m" ]; then
+   echo "middleschool">$bellScheduleFile
+   plutil -replace Disabled -bool false /Library/LaunchAgents/bellschedule.plist
 else
-   if [ $configBells == "d" ]; then
-      echo "disabled">$bellScheduleFile
-      plutil -replace Disabled -bool true /Library/LaunchAgents/bellschedule.plist
-   elif [ $configBells == "h" ]; then
-      echo "highschool">$bellScheduleFile
-      plutil -replace Disabled -bool false /Library/LaunchAgents/bellschedule.plist
-   elif [ $configBells == "m" ]; then
-      echo "middleschool">$bellScheduleFile
-      plutil -replace Disabled -bool false /Library/LaunchAgents/bellschedule.plist
-   else
-      echo "ERROR: var configBells is not d, h, or m in cfg_bells()"
-      exit; fi
+   echo "ERROR: var configBells is not d, h, or m in cfg_bells()"
+   exit; fi
 fi
 }
 
