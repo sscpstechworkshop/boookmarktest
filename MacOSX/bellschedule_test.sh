@@ -28,7 +28,7 @@ if [ ! -d $logPath ]; then
 fi
 
 function sendToLog {
-    if [ $logging ]; then
+    if [ $logging -eq 1 ]; then
         message="$currentDate $currentTime: $1"
         logger -s $message
         echo $message >> $logFile
