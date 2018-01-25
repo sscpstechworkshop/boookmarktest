@@ -53,11 +53,17 @@ scheduleURL=http://files.sscps.org/bellschedule/$remoteDir/bellschedule_$day.con
 scheduleFile=/Users/Shared/BellSchedule/bellschedule_$day.conf
 mp3URL=http://files.sscps.org/bellschedule/$remoteDir/bellschedule.mp3
 
-# If uptime is 2 minutes or less, download schedules
-# $uptime variable will look something like "1d, 6h, 5m"
-uptime=`uptime | sed 's/^.*up *//;s/, *[0-9]* user.*$/m/;s/ day[^0-9]*/d, /;s/ \([hms]\).*m$/\1/;s/:/h, /'`
+# if schedule file doesn't exist, download it
+if [ ! -f $scheduleFile ]; then
+   sendToLog "$scheduleFile doesn't exist, downloading for $day..."
+   curl -o $scheduleFile $scheduleURL
+   chmod g+rw $scheduleFile
+fi
 
+# if uptime is 2 minutes or less, download schedule
+# $uptime variable will look something like "1d, 6h, 5m"
 # NOTE:   if uptime is "1d, 5h, 1m" download wont trigger, it has to be an exact match
+uptime=`uptime | sed 's/^.*up *//;s/, *[0-9]* user.*$/m/;s/ day[^0-9]*/d, /;s/ \([hms]\).*m$/\1/;s/:/h, /'`
 if [[ $uptime = "1m" ]] || [[ $uptime = "2m" ]]; then
    sendToLog "Uptime is 2 minutes or less so downloading schedule file for $day."
    curl -o $scheduleFile $scheduleURL
