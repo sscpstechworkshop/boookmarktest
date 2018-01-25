@@ -53,8 +53,15 @@ function download_scripts {
 }
 
 function cfg_bells {
-# set conf file to disabled/high/middle school schedule
-# $bellScheduleFile will be used by bellschedule.sh, not this script
+# Create/check for $bellschedulefile
+# This shouldn't happen, but if the /Users/Shared/BellSchedule folder
+# is deleted or corrupted somehow after the intial run of this script
+# we need to recreate it here since the bellschedule.conf file is stored here
+# the other files will be refreshed by bellschedule script
+if [ ! -f $bellScheduleFile ]; then
+   sendToLog "$bellScheduleFile doesn't exist...  Creating folder structure..."
+   mkdir -p /Users/Shared/BellSchedule/logs
+else
    if [ $configBells == "d" ]; then
       echo "disabled">$bellScheduleFile
       plutil -replace Disabled -bool true /Library/LaunchAgents/bellschedule.plist
@@ -65,9 +72,10 @@ function cfg_bells {
       echo "middleschool">$bellScheduleFile
       plutil -replace Disabled -bool false /Library/LaunchAgents/bellschedule.plist
    else
-      echo "ERROR: var configBells is not d, h, or m in function cfg_bells()"
+      echo "ERROR: var configBells is not d, h, or m in cfg_bells()"
       exit; fi
- }
+fi
+}
 
 function cfg_captive_helper {
    if [ $enableCaptiveHelper -eq 1 ]; then
