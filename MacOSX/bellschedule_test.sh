@@ -19,7 +19,7 @@ mp3File=/Users/Shared/BellSchedule/bellschedule.mp3
 
 logPath=/Users/Shared/BellSchedule/logs/
 logFile=$logPath'bellschedule.log'
-# Change logging to 1 if you want to enable logging
+# Change logging to 1 to enable logging
 logging=0
 
 # create log folder
@@ -34,6 +34,8 @@ function sendToLog {
         echo $message >> $logFile
     fi
 }
+
+sendToLog "-----> Start script"
 
 # Read bellschedule.conf file to determine what schedule to use
 if [ ! -f $confFile ]; then
@@ -51,7 +53,6 @@ scheduleURL=http://files.sscps.org/bellschedule/$remoteDir/bellschedule_$day.con
 scheduleFile=/Users/Shared/BellSchedule/bellschedule_$day.conf
 mp3URL=http://files.sscps.org/bellschedule/$remoteDir/bellschedule.mp3
 
-sendToLog "-----> Start script"
 # If uptime is 2 minutes or less, download schedules
 # $uptime variable will look something like "1d, 6h, 5m"
 uptime=`uptime | sed 's/^.*up *//;s/, *[0-9]* user.*$/m/;s/ day[^0-9]*/d, /;s/ \([hms]\).*m$/\1/;s/:/h, /'`
@@ -79,8 +80,8 @@ fi
 # populate scheduleArray from scheduleFile
 sendToLog "Checking if scheduleFile exists"
 if [ ! -f $scheduleFile ]; then
-    sendToLog "$scheduleFile doesn't exist!   Exiting."
-    exit 1;
+    sendToLog "$scheduleFile doesn't exist!   Aborting!"
+    exit
 else
     sendToLog "Found $scheduleFile"
     IFS=$'\r\n' GLOBIGNORE='*'
