@@ -68,11 +68,14 @@ if [ $configBells == "d" ]; then
 elif [ $configBells == "h" ]; then
    echo "highschool">$bellScheduleFile
    plutil -replace Disabled -bool false /Library/LaunchAgents/bellschedule.plist
-elif [ $configBells == "m" ]; then
-   echo "middleschool">$bellScheduleFile
+elif [ $configBells == "3" ]; then
+   echo "level3">$bellScheduleFile
    plutil -replace Disabled -bool false /Library/LaunchAgents/bellschedule.plist
+elif [ $configBells == "4" ]; then
+   echo "level4">$bellScheduleFile
+   plutil -replace Disabled -bool false /Library/LaunchAgents/bellschedule.plist   
 else
-   echo "ERROR: var configBells is not d, h, or m in cfg_bells()"
+   echo "ERROR: var configBells is not d, h, 3 or 4 in cfg_bells()"
    exit
 fi
 }
@@ -120,15 +123,20 @@ function show_summary {
    if [ $downloadScripts -eq 1 ]; then 
       echo "Scripts will be downloaded --> REMINDER: Some scripts may need further modification!"
    else echo "Scripts will NOT be downloaded"; fi
+   
    if [ $configBells == "d" ]; then 
       echo "Bell schedule will be disabled"
    elif [ $configBells == "h" ]; then
-      echo "High school bell schedule will be used."
-   elif [ $configBells == "m" ]; then
-      echo "Middle school bell schedule will be used."; fi
+      echo "High school bell schedule will be used"
+   elif [ $configBells == "3" ]; then
+      echo "Level 3 bell schedule will be used"; 
+   elif [ $configBells == "4" ]; then
+      echo "Level 4 bell schedule will be used"; fi   
+   
    if [ $enableCaptiveHelper -eq 1 ]; then 
       echo "Captive Portal helper will be enabled"
    else echo "Captive Portal helper will NOT be enabled"; fi
+   
    if [ $enableCleanup -eq 1 ]; then 
       echo "Cleanup users will be enabled"
    else echo "Cleanup users will NOT be enabled"; fi
@@ -163,16 +171,18 @@ function cfg_prompted {
       echo "ERROR:  var downloadScripts does not equal 0 or 1.  Aborting"
       exit; fi
 
-   read -p "Select (D)isable bells, use (H)igh school or (M)iddle school bell schedule:  (D/h/m) " user_input
+   read -p "Select (D)isable bells, use (H)igh school, Level (3) or Level (4) schedule:  (D/h/3/4) " user_input
    user_input=$(echo "$user_input" | tr '[:upper:]' '[:lower:]')
    if [ "$user_input" == "" ] || [ "$user_input" == "d" ]; then
       configBells="d"
    elif [ "$user_input" == "h" ]; then
       configBells="h"
-   elif [ "$user_input" == "m" ]; then
-      configBells="m"
+   elif [ "$user_input" == "3" ]; then
+      configBells="3"
+   elif [ "$user_input" == "4" ]; then
+      configBells="4"   
    else
-      echo "ERROR:  User input in cfg_faculty() did not equal d, h or m"
+      echo "ERROR:  User input in cfg_faculty() did not equal d, h, 3 or 4"
       exit; fi 
    
    read -p "Enable captive portal helper?  (y/N) " user_input
