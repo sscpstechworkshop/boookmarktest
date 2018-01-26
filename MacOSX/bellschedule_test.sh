@@ -43,7 +43,7 @@ if [ ! -f $confFile ]; then
    exit
 else
    remoteDir=`head -1 $confFile`
-   if [ "${remoteDir}" != "middleschool" ] && [ "${remoteDir}" != "highschool" ]; then
+   if [ "${remoteDir}" != "highschool" ] && [ "${remoteDir}" != "level3" ] && [ "${remoteDir}" != "level4" ]; then
       sendToLog "remoteDir has an invalid value of $remoteDir.  Aborting!"
       exit
    fi
