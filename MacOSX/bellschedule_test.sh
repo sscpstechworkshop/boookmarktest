@@ -51,7 +51,7 @@ fi
 
 scheduleURL=http://files.sscps.org/bellschedule/$remoteDir/bellschedule_$day.conf
 scheduleFile=/Users/Shared/BellSchedule/bellschedule_$day.conf
-mp3URL=http://files.sscps.org/bellschedule/$remoteDir/bellschedule.mp3
+mp3URL=http://files.sscps.org/bellschedule/bellschedule.mp3
 
 # if schedule file doesn't exist, download it
 if [ ! -f $scheduleFile ]; then
