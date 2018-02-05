@@ -21,3 +21,4 @@ The scripts are:
   - bellschedule.plist       - /Library/LaunchAgents
   - bellschedule_perms.plist - /Library/LaunchDaemons
   - bellschedule_perms.sh    - sets up /Users/Shared/BellSchedule folder permissons
+  - rsync_ad_user.sh         - used before final issuance of laptop/desktop, to initially copy all user's files from server
