@@ -3,6 +3,8 @@ mac-login-scripts
 
 Mac Login Scripts (helper scripts for using in school network)
 
+PLIST Scripts
+-------------
 There are currently 4 bash scripts and their associated PLIST file.  The script is run when a user logs in, with the exception of cleanup_users.sh, which runs on boot up.   All PLIST files should be located at /Library/LaunchAgents (user logs in) or /Library/LaunchDaemons (boot up).  All .sh files should be located at /usr/local/bin/
 
 The scripts are:
@@ -21,4 +23,8 @@ The scripts are:
   - bellschedule.plist       - /Library/LaunchAgents
   - bellschedule_perms.plist - /Library/LaunchDaemons
   - bellschedule_perms.sh    - sets up /Users/Shared/BellSchedule folder permissons
+
+
+Misc Scripts
+------------
   - rsync_ad_user.sh         - used before final issuance of laptop/desktop, to initially copy all user's files from server
