@@ -3,11 +3,10 @@
 
 # set tempfolder for mounting
 vTempMountPoint=~/TempMnt/
+mkdir -p $vTempMountPoint
 
 # set everything up, don't forget to manually enter home folder location
-#vHomeFolder="\\\\<server>\\FacStaffUserFiles\\<username>\\"
-vHomeFolder=""
-mkdir -p "$vTempMountPoint"Documents
+#vHomeFolder="\\\\<adminuser>@<server>\\FacStaffUserFiles\\<username>\\"
 
 # mount all the folders
 mount -t smbfs $vHomeFolder/Documents "$vTempMountPoint"Documents
@@ -25,6 +24,14 @@ mkdir -p "$vTempMountPoint"Public
 mount -t smbfs $vHomeFolder/Public "$vTempMountPoint"Public
 
 #do rsync stuff
+#ls -hl "$vTempMountPoint"Documents
+rsync -amrtv --delete-before --progress "$vTempMountPoint"Documents ~/
+rsync -amrtv --delete-before --progress "$vTempMountPoint"Movies ~/
+rsync -amrtv --delete-before --progress "$vTempMountPoint"Music ~/
+rsync -amrtv --delete-before --progress "$vTempMountPoint"Pictures ~/
+rsync -amrtv --delete-before --progress "$vTempMountPoint"Downloads ~/
+rsync -amrtv --delete-before --progress "$vTempMountPoint"Desktop ~/
+rsync -amrtv --delete-before --progress "$vTempMountPoint"Public ~/
 
 #unmount folders
 umount "$vTempMountPoint"Documents
