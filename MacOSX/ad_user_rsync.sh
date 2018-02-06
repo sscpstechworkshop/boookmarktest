@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 # Bash skips errors and resumes by default
+# 
+# script is to copy user's files from AD File server to local mac.  
+# "companion" script then moves those files to the local profile after login
 
 # set tempfolder for mounting
 vTempMountPoint=~/TempMnt/
