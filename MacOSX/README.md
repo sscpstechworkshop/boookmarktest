@@ -1,11 +1,9 @@
-mac-login-scripts
-=================
+Mac OS X Helper Scripts
+=======================
 
-Mac Login Scripts (helper scripts for using in school network)
-
-PLIST Scripts
--------------
-There are currently 4 bash scripts and their associated PLIST file.  The script is run when a user logs in, with the exception of cleanup_users.sh, which runs on boot up.   All PLIST files should be located at /Library/LaunchAgents (user logs in) or /Library/LaunchDaemons (boot up).  All .sh files should be located at /usr/local/bin/
+System Scripts
+--------------
+There are currently 6 bash Mac Login Scripts (helper scripts for using in school network).  Each has an associated PLIST file. The ones with /Library/LaunchAgents are during login, and the /Library/LaunchDaemons are during bootup.  All .sh files should be located at /usr/local/bin/.
 
 The scripts are:
 
@@ -16,15 +14,16 @@ The scripts are:
   - untangle_logon.sh        - this is an adaptation of the scripts supplied by untangle.com for windows active
                                directory authentication integration.  PLEASE READ FILE FOR MORE INFORMATION.
   - untangle_logon.plist     - /Library/LaunchAgents
+  - bellschedule.sh          - runs bells
+  - bellschedule.plist       - /Library/LaunchAgents
+  - bellschedule_perms.sh    - sets up /Users/Shared/BellSchedule folder permissons
+  - bellschedule_perms.plist - /Library/LaunchDaemons
   - reset_chrome.sh          - this script erases the local student/teacher Chrome support files to remove any user data
   - cleanup_users.sh         - cleans up older user folders in /Users when drive is less than 10GB free.   Matching 
                                plist file (cleanup_users.plist) goes in /Library/LaunchDaemons/
-  - bellschedule.sh          - runs bells
-  - bellschedule.plist       - /Library/LaunchAgents
-  - bellschedule_perms.plist - /Library/LaunchDaemons
-  - bellschedule_perms.sh    - sets up /Users/Shared/BellSchedule folder permissons
 
 
 Misc Scripts
 ------------
-  - rsync_ad_user.sh         - used before final issuance of laptop/desktop, to initially copy all user's files from server
+  - ad_user_rsync.sh         - used before final issuance of laptop/desktop, to initially copy all user's files from server
+  - ad_user_move.sh          - used move files to new user profile.
