@@ -19,11 +19,14 @@ The scripts are:
   - bellschedule_perms.sh    - sets up /Users/Shared/BellSchedule folder permissons
   - bellschedule_perms.plist - /Library/LaunchDaemons
   - reset_chrome.sh          - this script erases the local student/teacher Chrome support files to remove any user data
+  - reset_chrome.plist       - /Library/LaunchDaemons
   - cleanup_users.sh         - cleans up older user folders in /Users when drive is less than 10GB free.   Matching 
                                plist file (cleanup_users.plist) goes in /Library/LaunchDaemons/
+  - cleanup_users.plist      - /Library/LaunchDaemons
 
 
 Misc Scripts
 ------------
-  - ad_user_rsync.sh         - used before final issuance of laptop/desktop, to initially copy all user's files from server
+  - ad_user_rsync.sh         - used before final issuance of laptop/desktop, to initially copy all user's files from server.
   - ad_user_move.sh          - used move files to new user profile.
+  - cfg_wkn.sh               - TBD.
