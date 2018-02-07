@@ -13,7 +13,7 @@ vTempDestination=/Users/Shared/<username>/
 mkdir -p $vTempDestination
 
 # set everything up, don't forget to manually enter home folder location
-#vHomeFolder="\\\\<adminuser>@<server>\\FacStaffUserFiles\\<username>\\"
+#vHomeFolder="//<adminuser>@<server>/FacStaffUserFiles$/<username>/"
 
 # mount all the folders
 mkdir -p "$vTempMountPoint"Documents
