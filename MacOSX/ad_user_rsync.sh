@@ -16,6 +16,7 @@ mkdir -p $vTempDestination
 #vHomeFolder="\\\\<adminuser>@<server>\\FacStaffUserFiles\\<username>\\"
 
 # mount all the folders
+mkdir -p "$vTempMountPoint"Documents
 mount -t smbfs $vHomeFolder/Documents "$vTempMountPoint"Documents
 mkdir -p "$vTempMountPoint"Movies
 mount -t smbfs $vHomeFolder/Movies "$vTempMountPoint"Movies
