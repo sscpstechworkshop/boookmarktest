@@ -8,6 +8,10 @@
 vTempMountPoint=~/TempMnt/
 mkdir -p $vTempMountPoint
 
+# set folder to store data until laptop deployed
+vTempDestination=/Users/Shared/<username>/
+mkdir -p $vTempDestination
+
 # set everything up, don't forget to manually enter home folder location
 #vHomeFolder="\\\\<adminuser>@<server>\\FacStaffUserFiles\\<username>\\"
 
@@ -28,13 +32,13 @@ mount -t smbfs $vHomeFolder/Public "$vTempMountPoint"Public
 
 #do rsync stuff
 #ls -hl "$vTempMountPoint"Documents
-rsync -amrtv --delete-before --progress "$vTempMountPoint"Documents ~/
-rsync -amrtv --delete-before --progress "$vTempMountPoint"Movies ~/
-rsync -amrtv --delete-before --progress "$vTempMountPoint"Music ~/
-rsync -amrtv --delete-before --progress "$vTempMountPoint"Pictures ~/
-rsync -amrtv --delete-before --progress "$vTempMountPoint"Downloads ~/
-rsync -amrtv --delete-before --progress "$vTempMountPoint"Desktop ~/
-rsync -amrtv --delete-before --progress "$vTempMountPoint"Public ~/
+rsync -amrtv --delete-before --progress "$vTempMountPoint"Documents "$vTempDestination"
+rsync -amrtv --delete-before --progress "$vTempMountPoint"Movies "$vTempDestination"
+rsync -amrtv --delete-before --progress "$vTempMountPoint"Music "$vTempDestination"
+rsync -amrtv --delete-before --progress "$vTempMountPoint"Pictures "$vTempDestination"
+rsync -amrtv --delete-before --progress "$vTempMountPoint"Downloads "$vTempDestination"
+rsync -amrtv --delete-before --progress "$vTempMountPoint"Desktop "$vTempDestination"
+rsync -amrtv --delete-before --progress "$vTempMountPoint"Public "$vTempDestination"
 
 #unmount folders
 umount "$vTempMountPoint"Documents
