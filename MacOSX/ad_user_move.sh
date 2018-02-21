@@ -3,8 +3,11 @@
 # 
 # script is to copy user's files copied with "companion" script from temp storage to user's folders
 
+# set username variable
+vUserName="<username>"
+
 # set folder that is storing user files 
-vTempSource=/Users/Shared/<username>/
+vTempSource=/Users/Shared/"$vUserName"/
 
 #rsync -amrtv --delete-before --progress "$vTempSource"Documents ~/
 #rsync -amrtv --delete-before --progress "$vTempSource"Movies ~/
@@ -24,13 +27,13 @@ mv "$vTempSource"Desktop/* ~/Desktop
 mv "$vTempSource"Public/* ~/Public
 
 # Change owner from sscpslocal to user
-chown -Rv <username> ~/Documents
-chown -Rv <username> ~/Movies
-chown -Rv <username> ~/Music
-chown -Rv <username> ~/Pictures
-chown -Rv <username> ~/Downloads
-chown -Rv <username> ~/Desktop
-chown -Rv <username> ~/Public
+chown -Rv "$vUserName" ~/Documents
+chown -Rv "$vUserName" ~/Movies
+chown -Rv "$vUserName" ~/Music
+chown -Rv "$vUserName" ~/Pictures
+chown -Rv "$vUserName" ~/Downloads
+chown -Rv "$vUserName" ~/Desktop
+chown -Rv "$vUserName" ~/Public
 
 # change permission to new user
 chmod -Rv u=rwX ~/Documents
