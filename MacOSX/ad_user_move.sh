@@ -2,6 +2,7 @@
 # Bash skips errors and resumes by default
 # 
 # script is to copy user's files copied with "companion" script from temp storage to user's folders
+# shortened URL = https://goo.gl/KZpX2a
 
 # set username variable
 vUserName="<username>"
