@@ -9,46 +9,38 @@ vUserName="<username>"
 # set folder that is storing user files 
 vTempSource=/Users/Shared/"$vUserName"/
 
-#rsync -amrtv --delete-before --progress "$vTempSource"Documents ~/
-#rsync -amrtv --delete-before --progress "$vTempSource"Movies ~/
-#rsync -amrtv --delete-before --progress "$vTempSource"Music ~/
-#rsync -amrtv --delete-before --progress "$vTempSource"Pictures ~/
-#rsync -amrtv --delete-before --progress "$vTempSource"Downloads ~/
-#rsync -amrtv --delete-before --progress "$vTempSource"Desktop ~/
-#rsync -amrtv --delete-before --progress "$vTempSource"Public ~/
-
 # Move files
-mv "$vTempSource"Documents/* ~/Documents
-mv "$vTempSource"Movies/* ~/Movies
-mv "$vTempSource"Music/* ~/Music
-mv "$vTempSource"Pictures/* ~/Pictures
-mv "$vTempSource"Downloads/* ~/Downloads
-mv "$vTempSource"Desktop/* ~/Desktop
-mv "$vTempSource"Public/* ~/Public
+mv "$vTempSource"Documents/* /Users/"$vUserName"/Documents
+mv "$vTempSource"Movies/* /Users/"$vUserName"/Movies
+mv "$vTempSource"Music/* /Users/"$vUserName"/Music
+mv "$vTempSource"Pictures/* /Users/"$vUserName"/Pictures
+mv "$vTempSource"Downloads/* /Users/"$vUserName"/Downloads
+mv "$vTempSource"Desktop/* /Users/"$vUserName"/Desktop
+mv "$vTempSource"Public/* /Users/"$vUserName"/Public
 
 # Change owner from sscpslocal to user
-chown -Rv "$vUserName" ~/Documents
-chown -Rv "$vUserName" ~/Movies
-chown -Rv "$vUserName" ~/Music
-chown -Rv "$vUserName" ~/Pictures
-chown -Rv "$vUserName" ~/Downloads
-chown -Rv "$vUserName" ~/Desktop
-chown -Rv "$vUserName" ~/Public
+chown -Rv "$vUserName" /Users/"$vUserName"/Documents
+chown -Rv "$vUserName" /Users/"$vUserName"/Movies
+chown -Rv "$vUserName" /Users/"$vUserName"/Music
+chown -Rv "$vUserName" /Users/"$vUserName"/Pictures
+chown -Rv "$vUserName" /Users/"$vUserName"/Downloads
+chown -Rv "$vUserName" /Users/"$vUserName"/Desktop
+chown -Rv "$vUserName" /Users/"$vUserName"/Public
 
 # change permission to new user
-chmod -Rv u=rwX ~/Documents
-chmod -Rv u=rwX ~/Movies
-chmod -Rv u=rwX ~/Music
-chmod -Rv u=rwX ~/Pictures
-chmod -Rv u=rwX ~/Downloads
-chmod -Rv u=rwX ~/Desktop
-chmod -Rv u=rwX ~/Public
+chmod -Rv u=rwX /Users/"$vUserName"/Documents
+chmod -Rv u=rwX /Users/"$vUserName"/Movies
+chmod -Rv u=rwX /Users/"$vUserName"/Music
+chmod -Rv u=rwX /Users/"$vUserName"/Pictures
+chmod -Rv u=rwX /Users/"$vUserName"/Downloads
+chmod -Rv u=rwX /Users/"$vUserName"/Desktop
+chmod -Rv u=rwX /Users/"$vUserName"/Public
 
 # remove permissions from everyone else
-chmod -Rv go-rwX ~/Documents
-chmod -Rv go-rwX ~/Movies
-chmod -Rv go-rwX ~/Music
-chmod -Rv go-rwX ~/Pictures
-chmod -Rv go-rwX ~/Downloads
-chmod -Rv go-rwX ~/Desktop
-chmod -Rv go-rwX ~/Public
+chmod -Rv go-rwX /Users/"$vUserName"/Documents
+chmod -Rv go-rwX /Users/"$vUserName"/Movies
+chmod -Rv go-rwX /Users/"$vUserName"/Music
+chmod -Rv go-rwX /Users/"$vUserName"/Pictures
+chmod -Rv go-rwX /Users/"$vUserName"/Downloads
+chmod -Rv go-rwX /Users/"$vUserName"/Desktop
+chmod -Rv go-rwX /Users/"$vUserName"/Public
