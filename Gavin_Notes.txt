@@ -1,0 +1,7 @@
+(use  git clone  for downoad)
+
+1. make edits (change file, delete file, make file)
+2. cd [repository folder] (in terminal, change location to project folder)
+3. git add --all [file name] (stages changes)
+4. git commit (describe changes, adds edits to repository)
+5. git push (copy changes to github) 
